@@ -1,0 +1,9 @@
+name: Start Release
+on: workflow_dispatch
+jobs:
+  start-release:
+    runs-on: ubuntu-latest
+    steps:
+     - uses: 'phantomcyber/dev-cicd-tools/github-actions/start-release@main'
+       with:
+         GITHUB_TOKEN: ${{ secrets.SOAR_APPS_TOKEN }}
