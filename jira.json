@@ -16,7 +16,7 @@
     "product_vendor": "Atlassian",
     "product_name": "Jira",
     "product_version_regex": ".*",
-    "min_phantom_version": "4.10.0.40961",
+    "min_phantom_version": "4.9.39220",
     "latest_tested_versions": [
         "On prem v7.1.9",
         "Cloud Copyright (c) 2002 - 2021 Atlassian Corporation Pty Ltd."
