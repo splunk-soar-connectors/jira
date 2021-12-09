@@ -597,20 +597,35 @@ class JiraConnector(phantom.BaseConnector):
         self.save_progress(phantom.APP_PROG_CONNECTING_TO_ELLIPSES, self._host)
 
         # Create the jira object
-        if (phantom.is_fail(self._create_jira_object(action_result))):
+        if phantom.is_fail(self._create_jira_object(action_result)):
             return action_result.get_status()
 
         kwargs = {}
 
         issue_id = self._handle_py_ver_compat_for_input_str(param[JIRA_JSON_ID])
+        param_update_fields = self._handle_py_ver_compat_for_input_str(param.get(JIRA_JSON_UPDATE_FIELDS, ''))
+        time_spent = self._handle_py_ver_compat_for_input_str(param.get(JIRA_JSON_TIMESPENT, ''))
 
         try:
             issue = self._jira.issue(issue_id)
         except Exception as e:
             return self._set_jira_error(action_result, "Unable to find ticket info. Please make sure the issue exists", e)
 
-        if (not issue):
+        if not issue:
             return action_result.set_status(phantom.APP_ERROR, "Unable to find ticket info. Please make sure the issue exists")
+
+        update_result = True
+
+        if param_update_fields:
+
+            update_result, update_fields = self._get_update_fields(param, issue_id, action_result)
+
+            if phantom.is_fail(update_result):
+                error_message = "Failed to update fields."
+                return action_result.set_status(phantom.APP_ERROR, '{0} Error message: {1}'.format(error_message, action_result.get_message()))
+
+            if update_fields:
+                update_result = self._add_update_fields(issue, update_fields, action_result)
 
         kwargs.update({'issue': issue_id})
 
@@ -624,10 +639,10 @@ class JiraConnector(phantom.BaseConnector):
         except:
             return action_result.set_status(phantom.APP_ERROR, "Unable to parse response from server while trying to get information about status values")
 
-        if (not transition_info):
+        if not transition_info:
             message = JIRA_ERR_ISSUE_VALID_TRANSITIONS
             valid_transitions = self._get_list_string(transitions)
-            if (valid_transitions):
+            if valid_transitions:
                 valid_transitions = self._handle_py_ver_compat_for_input_str(', '.join(valid_transitions))
                 message = "{0}. Valid status value(s): {1}".format(message, valid_transitions)
             return action_result.set_status(phantom.APP_ERROR, message)
@@ -641,7 +656,7 @@ class JiraConnector(phantom.BaseConnector):
 
         resolution_to_set = self._handle_py_ver_compat_for_input_str(param.get(JIRA_JSON_RESOLUTION, ''))
 
-        if (resolution_to_set):
+        if resolution_to_set:
 
             # get the list of resolutions that we can set to
             resolutions = self._jira.resolutions()
@@ -651,10 +666,10 @@ class JiraConnector(phantom.BaseConnector):
             except:
                 return action_result.set_status(phantom.APP_ERROR, "Unable to parse response from server while trying to get resolution about status values")
 
-            if (not resolution_info):
+            if not resolution_info:
                 message = JIRA_ERR_ISSUE_VALID_RESOLUTION
                 valid_resolutions = self._get_list_string(resolutions)
-                if (valid_resolutions):
+                if valid_resolutions:
                     valid_resolutions = self._handle_py_ver_compat_for_input_str(', '.join(valid_resolutions))
                     message = "{0} Valid resolution value(s): {1}".format(message, valid_resolutions)
                 return action_result.set_status(phantom.APP_ERROR, message)
@@ -664,15 +679,18 @@ class JiraConnector(phantom.BaseConnector):
             except:
                 return action_result.set_status(phantom.APP_ERROR, "Unable to parse response from server while trying to get information about resolution values")
 
-            if (resolution_to_set):
+            if resolution_to_set:
                 kwargs.update({'fields': {'resolution': {'id': resolution_id}}})
 
         # So far, so good, try to now set the values
         try:
+            if time_spent:
+                self._jira.add_worklog(issue=issue_id, timeSpent=time_spent)
+
             self._jira.transition_issue(**kwargs)
         except Exception as e:
-            message = "Unable to set ticket status"
-            if (transition_id and resolution_to_set):
+            message = "Unable to set ticket status or add worklog"
+            if transition_id and resolution_to_set:
                 # This period at the start is an intentional change for getting the error message in correct format
                 message += ". The combination of status and resolution could be invalid"
             return self._set_jira_error(action_result, message, e)
@@ -686,17 +704,16 @@ class JiraConnector(phantom.BaseConnector):
 
             # The on-premise Jira gives error when we try to add comment after closing the ticket.
             # Hence, not failing it but adding the message to the action_result
-            if (phantom.is_fail(ret_val)):
+            if phantom.is_fail(ret_val):
                 self.debug_print("Error occurred while adding the comment. Error message: {0}".format(action_result.get_message()))
                 comment_failure_msg = JIRA_ERR_COMMENT_SET_STATUS_FAIL
 
         self.save_progress("Re-querying the ticket")
         ret_val = self._set_issue_data(issue_id, action_result)
 
-        if (phantom.is_fail(ret_val)):
-            error_message = action_result.get_message()
-            if not error_message:
-                error_message = ""
+        if phantom.is_fail(ret_val):
+            action_result_msg = action_result.get_message()
+            error_message = action_result_msg if action_result_msg else ""
 
             if JIRA_ERR_FETCH_CUSTOM_FIELDS not in error_message:
                 return action_result.get_status()
