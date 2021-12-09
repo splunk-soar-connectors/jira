@@ -130,12 +130,12 @@
             "data_type": "string",
             "order": 2,
             "description": "Username",
-            "required": true
+            "required": false
         },
         "password": {
             "data_type": "password",
             "order": 3,
-            "description": "Password (or API token if using Jira Cloud)",
+            "description": "Password / API token (Jira Cloud) / PAT",
             "required": true
         },
         "project_key": {

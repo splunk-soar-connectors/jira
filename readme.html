@@ -77,6 +77,29 @@ One helpful debugging tool: simplify your action, instead of filling out all the
 </p>
 
 <p>
+	<b>Authentication via Personal Access Token (PAT)</b>
+<ul>
+	<li><a href="https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html#UsingPersonalAccessTokens-CreatingPATsinapplication" target="_blank">Click here</a> for instructions to create PATs</li>
+	<p>Personal Access Tokens are a safe alternative to using username and password for authentication with various services
+	in <b>Data Center and server editions</b> of the following applications:</p>
+	<ul>
+		<li>Jira Core 8.14 and later</li>
+		<li>Jira Software 8.14 and later</li>
+		<li>Jira Service Management 4.15 and later</li>
+		<li>Confluence 7.9 and later</li>
+	</ul>
+	<br>
+	<li>Use a PAT</li>
+	<ul>
+		<li>A primary use case for PATs is to use scripts and integrate external apps with your Atlassian application by
+		leveraging REST APIs upon Bearer Token Authorization.</li>
+		<li>To use Bearer Token Authorization, configure your asset with PAT in the "Password" field and leave "Username" blank.</li>
+	</ul>
+	<br>
+</ul>
+</p>
+
+<p>
 	<b>The functioning of On Poll</b>
 		<ul>
 			<li><b>NOTE (Consider below points due to a minute's granularity (instead of a second or lesser) for querying tickets in the JIRA)</b></li>

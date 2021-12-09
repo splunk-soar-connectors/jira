@@ -104,7 +104,17 @@ information to assist in debugging.
     -   HTTP basic authentication would require a username and API token to access REST APIs for
         Atlassian Cloud applications.
 
-      
+**Authentication via Personal Access Token (PAT)**
+-   [Create PATs](https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html#UsingPersonalAccessTokens-CreatingPATsinapplication) - Personal Access Tokens are a safe alternative to using username and password for authentication with various services in **Data Center and server editions** of the following applications:
+
+    - Jira Core 8.14 and later
+    - Jira Software 8.14 and later
+    - Jira Service Management 4.15 and later
+    - Confluence 7.9 and later
+
+-   Use a PAT
+    -   A primary use case for PATs is to use scripts and integrate external apps with your Atlassian application by leveraging REST APIs upon Bearer Token Authorization.
+    -   To use Bearer Token Authorization, configure your asset with PAT in the `Password` field and leave `Username` blank.
 
 **The functioning of On Poll**
 

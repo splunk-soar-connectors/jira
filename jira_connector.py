@@ -88,7 +88,7 @@ class JiraConnector(phantom.BaseConnector):
         self._timezone = self._handle_py_ver_compat_for_input_str(config.get(JIRA_JSON_TIMEZONE, JIRA_JSON_DEFAULT_TIMEZONE))
 
         self._verify_cert = config.get(phantom.APP_JSON_VERIFY, False)
-        self._username = self._handle_py_ver_compat_for_input_str(config[phantom.APP_JSON_USERNAME])
+        self._username = self._handle_py_ver_compat_for_input_str(config.get(phantom.APP_JSON_USERNAME, ""))
         self._password = config[phantom.APP_JSON_PASSWORD]
         self._custom_fields_list = None
         self._custom_fields = self._handle_py_ver_compat_for_input_str(config.get(JIRA_JSON_CUSTOM_FIELDS))
@@ -244,7 +244,12 @@ class JiraConnector(phantom.BaseConnector):
         self.debug_print("Making a REST call with provided request parameters")
 
         try:
-            r = request_func(url, auth=(self._username, self._password), params=params, headers=headers, data=data)
+            if self._username:
+                r = request_func(url, auth=(self._username, self._password), params=params, headers=headers, data=data)
+            else:
+                self.debug_print("Updating headers with Bearer token authorization")
+                headers.update({'Authorization': 'Bearer {}'.format(self._password)})
+                r = request_func(url, params=params, headers=headers, data=data)
         except Exception as e:
             error_code, error_msg = self._get_error_message_from_exception(e)
             return action_result.set_status(phantom.APP_ERROR, "Error connecting to server. Error Code: {0}. Error Message: {1}".format(error_code, error_msg)), resp_json
@@ -387,7 +392,12 @@ class JiraConnector(phantom.BaseConnector):
         signal.alarm(JIRA_START_TIMEOUT)
 
         try:
-            self._jira = JIRA(options=options, basic_auth=(self._username, self._password))
+            if self._username:
+                self.save_progress("Creating JIRA client with HTTP Basic Authentication")
+                self._jira = JIRA(options=options, basic_auth=(self._username, self._password))
+            else:
+                self.save_progress("Creating JIRA client with Bearer Token Authentication")
+                self._jira = JIRA(options=options, token_auth=self._password)
         except Timeout:
             return action_result.set_status(phantom.APP_ERROR, JIRA_ERR_API_TIMEOUT)
         except Exception as e:
