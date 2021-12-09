@@ -1119,7 +1119,8 @@ class JiraConnector(phantom.BaseConnector):
                 return None
 
             if users is None:
-                action_result.set_status(phantom.APP_ERROR, 'Unknown error occurred while fetching list of users using pagination for Jira cloud')
+                action_result.set_status(phantom.APP_ERROR,
+                    'Unknown error occurred while fetching list of users using pagination for Jira cloud')
                 return None
 
             users_list.extend(users)
@@ -1330,8 +1331,9 @@ class JiraConnector(phantom.BaseConnector):
                 # Remove this block of exception handling once the PAPP-9898 bug is fixed
                 self.debug_print("First attempt failed while adding attachment to the given Jira ticket ID")
                 try:
-                    # This faliure might be happened beacuse if we let pass the Unicode chars with filename into the add_attachment() method of Jira SDK,
-                    # it throws 500 Internal Server Error and it will fail to add attachment on the Jira ticket.
+                    # This faliure might be happened beacuse if we let pass the Unicode chars with filename
+                    # into the add_attachment() method of Jira SDK, it throws 500 Internal Server Error
+                    # and it will fail to add attachment on the Jira ticket.
                     self.debug_print("Try to remove non-ASCII Unicode chars from the filename")
                     modified_filename = filename.encode('ascii', 'ignore').decode('ascii')
                     modified_filename = modified_filename.replace("\r", " ").replace("\n", " ")
@@ -1799,7 +1801,8 @@ class JiraConnector(phantom.BaseConnector):
         while True:
             try:
                 if fields:
-                    issues = self._jira.search_issues(jql_str=jql_query, startAt=start_index, maxResults=DEFAULT_MAX_RESULTS_PER_PAGE, fields='updated')
+                    issues = self._jira.search_issues(
+                        jql_str=jql_query, startAt=start_index, maxResults=DEFAULT_MAX_RESULTS_PER_PAGE, fields='updated')
                 else:
                     issues = self._jira.search_issues(jql_str=jql_query, startAt=start_index, maxResults=DEFAULT_MAX_RESULTS_PER_PAGE)
             except Exception as e:
@@ -1993,7 +1996,8 @@ class JiraConnector(phantom.BaseConnector):
 
             err = "Response from the server: {0}".format(error_text)
             self.save_progress(err)
-            return action_result.set_status(phantom.APP_ERROR, "Failed to remove the watcher. Please check the provided parameters. {}".format(err))
+            return action_result.set_status(phantom.APP_ERROR,
+                "Failed to remove the watcher. Please check the provided parameters. {}".format(err))
 
         return action_result.set_status(phantom.APP_SUCCESS,
             "Successfully removed the user from the watchers list of the issue ID: {0}".format(issue_id))
@@ -2163,7 +2167,8 @@ class JiraConnector(phantom.BaseConnector):
 
                 if comment_artifact_current_updated_time:
                     comment_artifact_updated_time_jira_server_tz_specific = parse(comment_artifact_current_updated_time)
-                    comment_artifact_updated_time_utc_tz_specific = comment_artifact_updated_time_jira_server_tz_specific.astimezone(dateutil.tz.UTC)
+                    comment_artifact_updated_time_utc_tz_specific = \
+                        comment_artifact_updated_time_jira_server_tz_specific.astimezone(dateutil.tz.UTC)
 
                 # By default, we won't create the artifact for current comment
                 # to avoid duplicate artifacts for comments even if the fields are updated for the ticket
@@ -2173,7 +2178,8 @@ class JiraConnector(phantom.BaseConnector):
                     create_updated_comment_artifact_not_req = True
 
                 if self.is_poll_now() or not comment_artifact_current_updated_time or not create_updated_comment_artifact_not_req:
-                    ret_val = self._handle_comment(comment, container_id, '{0}_{1}'.format('comment', comment.updated), artifact_list, action_result)
+                    ret_val = self._handle_comment(
+                        comment, container_id, '{0}_{1}'.format('comment', comment.updated), artifact_list, action_result)
 
                     if phantom.is_fail(ret_val):
                         self.debug_print("Issue key: {}. {}".format(issue.key, action_result.get_message()))
@@ -2451,7 +2457,8 @@ class JiraConnector(phantom.BaseConnector):
                     action_result.set_status(phantom.APP_ERROR, JIRA_LIMIT_VALIDATION_MSG.format(parameter=key))
                     return None
         except:
-            error_text = JIRA_LIMIT_VALIDATION_ALLOW_ZERO_MSG.format(parameter=key) if allow_zero else JIRA_LIMIT_VALIDATION_MSG.format(parameter=key)
+            error_text = \
+                JIRA_LIMIT_VALIDATION_ALLOW_ZERO_MSG.format(parameter=key) if allow_zero else JIRA_LIMIT_VALIDATION_MSG.format(parameter=key)
             action_result.set_status(phantom.APP_ERROR, error_text)
             return None
 
