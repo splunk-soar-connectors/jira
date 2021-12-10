@@ -372,8 +372,10 @@ class JiraConnector(phantom.BaseConnector):
                 error_text = "Unable to parse the details of the error received in the output response"
 
         if "Epic Name is required" in error_text:
-            error_text = "{}. {}".format(error_text, "Please create a custom field for Epic Name and provide it in the fields parameter as\
-                 { \"customfield_Id\" : \"epic_name\" }")
+            error_text = "{}. {}".format(
+                error_text,
+                "Please create a custom field for Epic Name and provide it in the fields parameter as { \"customfield_Id\" : \"epic_name\" }"
+            )
 
         if error_text:
             error_text = self._handle_py_ver_compat_for_input_str(error_text)
@@ -594,7 +596,7 @@ class JiraConnector(phantom.BaseConnector):
 
         return (phantom.APP_SUCCESS, update_fields_to_ret)
 
-    def _set_ticket_status(self, param):
+    def _set_ticket_status(self, param):  # noqa: C901
 
         action_result = self.add_action_result(phantom.ActionResult(dict(param)))
         # Progress
@@ -644,8 +646,10 @@ class JiraConnector(phantom.BaseConnector):
         try:
             transition_info = [x for x in transitions if self._handle_py_ver_compat_for_input_str(x['name']) == status_to_set]
         except:
-            return action_result.set_status(phantom.APP_ERROR, "Unable to parse response from server while trying to get information about\
-                 status values")
+            return action_result.set_status(
+                phantom.APP_ERROR,
+                "Unable to parse response from server while trying to get information about status values"
+            )
 
         if not transition_info:
             message = JIRA_ERR_ISSUE_VALID_TRANSITIONS
@@ -658,8 +662,10 @@ class JiraConnector(phantom.BaseConnector):
         try:
             transition_id = transition_info[0]['id']
         except:
-            return action_result.set_status(phantom.APP_ERROR, "Unable to parse response from server while trying to get information about\
-                 status values")
+            return action_result.set_status(
+                phantom.APP_ERROR,
+                "Unable to parse response from server while trying to get information about status values"
+            )
 
         kwargs.update({'transition': transition_id})
 
@@ -673,8 +679,10 @@ class JiraConnector(phantom.BaseConnector):
             try:
                 resolution_info = [x for x in resolutions if self._handle_py_ver_compat_for_input_str(x.name) == resolution_to_set]
             except:
-                return action_result.set_status(phantom.APP_ERROR, "Unable to parse response from server while trying to get resolution\
-                     about status values")
+                return action_result.set_status(
+                    phantom.APP_ERROR,
+                    "Unable to parse response from server while trying to get resolution about status values"
+                )
 
             if not resolution_info:
                 message = JIRA_ERR_ISSUE_VALID_RESOLUTION
@@ -687,8 +695,10 @@ class JiraConnector(phantom.BaseConnector):
             try:
                 resolution_id = resolution_info[0].id
             except:
-                return action_result.set_status(phantom.APP_ERROR, "Unable to parse response from server while trying to get information\
-                     about resolution values")
+                return action_result.set_status(
+                    phantom.APP_ERROR,
+                    "Unable to parse response from server while trying to get information about resolution values"
+                )
 
             if resolution_to_set:
                 kwargs.update({'fields': {'resolution': {'id': resolution_id}}})
@@ -1082,8 +1092,10 @@ class JiraConnector(phantom.BaseConnector):
                 return None
 
             if users is None:
-                action_result.set_status(phantom.APP_ERROR, 'Unknown error occurred while fetching list of users using"\
-                    " pagination for Jira on-prem')
+                action_result.set_status(
+                    phantom.APP_ERROR,
+                    'Unknown error occurred while fetching list of users using pagination for Jira on-prem'
+                )
                 return None
 
             users_list.extend(users)
@@ -1125,8 +1137,10 @@ class JiraConnector(phantom.BaseConnector):
                 return None
 
             if users is None:
-                action_result.set_status(phantom.APP_ERROR, 'Unknown error occurred while fetching list of users using"\
-                    " pagination for Jira cloud')
+                action_result.set_status(
+                    phantom.APP_ERROR,
+                    'Unknown error occurred while fetching list of users using pagination for Jira cloud'
+                )
                 return None
 
             users_list.extend(users)
@@ -1729,8 +1743,9 @@ class JiraConnector(phantom.BaseConnector):
                 artifact_cef['author_account_id'] = None
                 artifact_cef['is_on_prem'] = True
             except:
-                self.debug_print("Error occurred while fetching author name as server is Jira cloud. So try to fetch author display name\
-                     and account ID")
+                self.debug_print(
+                    "Error occurred while fetching author name as server is Jira cloud. So try to fetch author display name and account ID"
+                )
                 artifact_cef['author_account_id'] = attachment.author.accountId
                 artifact_cef['author'] = attachment.author.displayName
                 artifact_cef['is_on_prem'] = False
@@ -1762,8 +1777,9 @@ class JiraConnector(phantom.BaseConnector):
                 updateAuthor_account_id = None
                 is_on_prem = True
             except:
-                self.debug_print("Error occurred while fetching author name as server is Jira cloud. So try to fetch author display\
-                     name and account ID")
+                self.debug_print(
+                    "Error occurred while fetching author name as server is Jira cloud. So try to fetch author display name and account ID"
+                )
                 author = comment.author.displayName
                 updateAuthor = comment.updateAuthor.displayName
                 author_account_id = comment.author.accountId
@@ -2095,8 +2111,10 @@ class JiraConnector(phantom.BaseConnector):
                 return action_result.set_status(phantom.APP_SUCCESS, msg)
 
             else:
-                return action_result.set_status(phantom.APP_SUCCESS, "Please check the Jira Ticket ID. This issue has no attachments.\
-                     Please check the provided parameters")
+                return action_result.set_status(
+                    phantom.APP_SUCCESS, "Please check the Jira Ticket ID. This issue has no attachments.",
+                    "Please check the provided parameters"
+                )
         except Exception as e:
             error_code, error_msg = self._get_error_message_from_exception(e)
             error_text = "Unable to get attachments. Error Code:{0}. Error Message:{1}".format(error_code, error_msg)
@@ -2342,9 +2360,10 @@ class JiraConnector(phantom.BaseConnector):
             last_time_str = ts_dt_jira_ui_tzinfo.strftime(JIRA_TIME_FORMAT)
 
         except:
-            return action_result.set_status(phantom.APP_ERROR,
-                                            "Error occurred while parsing the last ingested ticket's (issue's)\
-                                                 'updated' timestamp from the previous ingestion run")
+            return action_result.set_status(
+                phantom.APP_ERROR,
+                "Error occurred while parsing the last ingested ticket's (issue's) updated' timestamp from the previous ingestion run"
+            )
 
         # Build the query for the issue search
         query = ""
@@ -2422,8 +2441,10 @@ class JiraConnector(phantom.BaseConnector):
                 self.debug_print("State File: {0}".format(str(state)))
                 self.debug_print("Last fetched Jira ticket: {0}".format(issues[-1].key))
             except:
-                self.debug_print("Error occurred while logging the value of state file and last fetched Jira ticket, continuing the on\
-                     poll execution")
+                self.debug_print(
+                    "Error occurred while logging the value of state file and last fetched Jira ticket,",
+                    " continuing the on poll execution"
+                )
                 pass
 
         # Mark the first_run as False once the scheduled or ingestion polling
