@@ -14,29 +14,26 @@
 # and limitations under the License.
 #
 #
-# Phantom imports
-import phantom.app as phantom
-from phantom.vault import Vault
-import phantom.rules as phantom_rules
+import json
+import os
+import signal
+import sys
+import tempfile
+import time
+from builtins import str
+from datetime import *
 
-# THIS Connector imports
-from jira_consts import *
+import dateutil
+import phantom.app as phantom
+import phantom.rules as phantom_rules
+import pytz
+import requests
 from bs4 import BeautifulSoup, UnicodeDammit
+from dateutil.parser import parse
+from phantom.vault import Vault
 
 from jira.client import JIRA
-from datetime import *
-from dateutil.parser import parse
-
-from builtins import str
-import dateutil
-import requests
-import tempfile
-import signal
-import json
-import time
-import os
-import sys
-import pytz
+from jira_consts import *
 
 
 def timeout_handler(signum, frame):
@@ -2531,8 +2528,9 @@ class JiraConnector(phantom.BaseConnector):
 
 if __name__ == '__main__':
 
-    import pudb
     import argparse
+
+    import pudb
 
     pudb.set_trace()
 
