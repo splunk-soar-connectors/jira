@@ -627,11 +627,18 @@ class JiraConnector(phantom.BaseConnector):
             update_result, update_fields = self._get_update_fields(param, issue_id, action_result)
 
             if phantom.is_fail(update_result):
-                error_message = "Failed to update fields."
-                return action_result.set_status(phantom.APP_ERROR, '{0} Error message: {1}'.format(error_message, action_result.get_message()))
+                action_result_msg = action_result.get_message()
+                error_message = action_result_msg if action_result_msg else ""
+
+                if JIRA_ERR_FETCH_CUSTOM_FIELDS not in error_message:
+                    return action_result.get_status()
 
             if update_fields:
                 update_result = self._add_update_fields(issue, update_fields, action_result)
+
+        if not update_result:
+            error_msg = "Error occurred while updating the ticket: Failed to update fields"
+            return action_result.set_status(phantom.APP_ERROR, '{0} Error message: {1}'.format(error_msg, action_result.get_message()))
 
         kwargs.update({'issue': issue_id})
 
