@@ -1504,7 +1504,7 @@ class JiraConnector(phantom.BaseConnector):
          issue_key, self.get_asset_id())
 
         try:
-            r = requests.get(url, verify=self._verify_cert)
+            r = requests.get(url, verify=self._verify_cert)  # nosemgrep
             resp_json = r.json()
         except Exception as e:
             self.debug_print("Unable to query JIRA ticket container: ", e)
@@ -1528,7 +1528,7 @@ class JiraConnector(phantom.BaseConnector):
                         self.get_phantom_base_url(), sdi, container_id)
 
         try:
-            r = requests.get(url, verify=self._verify_cert)
+            r = requests.get(url, verify=self._verify_cert)  # nosemgrep
             resp_json = r.json()
         except Exception as e:
             self.debug_print("Unable to query JIRA artifact: ", e)
@@ -2133,7 +2133,7 @@ class JiraConnector(phantom.BaseConnector):
         url = '{0}rest/container/{1}'.format(self.get_phantom_base_url(), container_id)
 
         try:
-            r = requests.post(url, data=json.dumps(update_json), verify=self._verify_cert)
+            r = requests.post(url, data=json.dumps(update_json), verify=self._verify_cert)  # nosemgrep
             resp_json = r.json()
         except Exception as e:
             error_code, error_msg = self._get_error_message_from_exception(e)
