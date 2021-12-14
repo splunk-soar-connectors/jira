@@ -528,7 +528,7 @@ class JiraConnector(phantom.BaseConnector):
         update_fields = self._handle_py_ver_compat_for_input_str(param.get(key, ''))
 
         # update_fields is an optional field
-        if (not update_fields):
+        if not update_fields:
             return (phantom.APP_SUCCESS, None)
 
         # we take in as a dictionary string, first try to load it as is
@@ -541,7 +541,10 @@ class JiraConnector(phantom.BaseConnector):
 
             return (action_result.set_status(phantom.APP_ERROR, error_text.replace('{', '(').replace('}', ')')), None)
 
-        if (not update_fields):
+        if not isinstance(update_fields, dict):
+            return (action_result.set_status(phantom.APP_ERROR, "Please provide a valid JSON formatted dictonary"), None)
+
+        if not update_fields:
             return (action_result.set_status(phantom.APP_ERROR, "The input dictionary seems to be empty"), None)
 
         # make a copy of it
@@ -555,16 +558,9 @@ class JiraConnector(phantom.BaseConnector):
 
         ret_val = True
 
-        try:
-            fields = update_fields.get('fields')
-        except Exception as e:
-            error_code, error_msg = self._get_error_message_from_exception(e)
-            err_fields_json_parse = JIRA_ERR_FIELDS_JSON_PARSE.format(field_name=JIRA_JSON_UPDATE_FIELDS)
-            error_text = "{0} Error Code:{1}. Error Message:{2}".format(err_fields_json_parse, error_code, error_msg)
+        fields = update_fields.get('fields')
 
-            return (action_result.set_status(phantom.APP_ERROR, error_text.replace('{', '(').replace('}', ')')), None)
-
-        if (fields):
+        if fields:
             status, fields = self._replace_custom_name_with_id(fields, custom_name_to_id, action_result)
             del update_fields_copy['fields']
             ret_val &= status
@@ -572,32 +568,32 @@ class JiraConnector(phantom.BaseConnector):
                 fields = None
 
         update = update_fields.get('update')
-        if (update):
+        if update:
             status, update = self._replace_custom_name_with_id(update, custom_name_to_id, action_result)
             del update_fields_copy['update']
             ret_val &= status
-            if (not status):
+            if not status:
                 update = None
 
         # Any more keys left?
         keys = None
-        if (update_fields_copy):
+        if update_fields_copy:
             status, keys = self._replace_custom_name_with_id(update_fields_copy, custom_name_to_id, action_result)
             ret_val &= status
-            if (not status):
+            if not status:
                 keys = None
 
         # Create a new dictionary, because we want to replace all the keys in it
         update_fields_to_ret = {}
 
-        if (fields):
+        if fields:
             update_fields_to_ret['fields'] = fields
-        if (update):
+        if update:
             update_fields_to_ret['update'] = update
-        if (keys):
+        if keys:
             update_fields_to_ret.update(keys)
 
-        if (not ret_val):
+        if not ret_val:
             return (action_result.get_status(), None)
 
         return (phantom.APP_SUCCESS, update_fields_to_ret)
