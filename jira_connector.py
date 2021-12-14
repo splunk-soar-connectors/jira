@@ -554,7 +554,16 @@ class JiraConnector(phantom.BaseConnector):
             return (phantom.APP_SUCCESS, update_fields)
 
         ret_val = True
-        fields = update_fields.get('fields')
+
+        try:
+            fields = update_fields.get('fields')
+        except Exception as e:
+            error_code, error_msg = self._get_error_message_from_exception(e)
+            err_fields_json_parse = JIRA_ERR_FIELDS_JSON_PARSE.format(field_name=JIRA_JSON_UPDATE_FIELDS)
+            error_text = "{0} Error Code:{1}. Error Message:{2}".format(err_fields_json_parse, error_code, error_msg)
+
+            return (action_result.set_status(phantom.APP_ERROR, error_text.replace('{', '(').replace('}', ')')), None)
+
         if (fields):
             status, fields = self._replace_custom_name_with_id(fields, custom_name_to_id, action_result)
             del update_fields_copy['fields']
