@@ -117,6 +117,18 @@
 							<td>{{ result.param.comment }}</td>
 						</tr>
 					{% endif %}
+                    {% if result.param.update_fields %}
+						<tr>
+							<td>Update fields</td>
+							<td>{{ result.param.update_fields }}</td>
+						</tr>
+                    {% endif %}
+                    {% if result.param.time_spent %}
+						<tr>
+							<td>Time Spent</td>
+							<td>{{ result.param.time_spent }}</td>
+						</tr>
+                    {% endif %}
 				</table>
 			{% endif %}
 

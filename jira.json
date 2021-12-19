@@ -10,13 +10,13 @@
     ],
     "type": "ticketing",
     "main_module": "jira_connector.py",
-    "app_version": "3.1.1",
+    "app_version": "3.2.0",
     "utctime_updated": "2021-12-02T00:52:39.000000Z",
     "package_name": "phantom_jira",
     "product_vendor": "Atlassian",
     "product_name": "Jira",
     "product_version_regex": ".*",
-    "min_phantom_version": "4.9.39220",
+    "min_phantom_version": "5.0.0",
     "latest_tested_versions": [
         "On prem v7.1.9",
         "Cloud Copyright (c) 2002 - 2021 Atlassian Corporation Pty Ltd."
@@ -274,6 +274,14 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.assignee",
                     "data_type": "string",
                     "example_values": [
@@ -388,20 +396,25 @@
                 },
                 {
                     "data_path": "action_result.data.*.fields.CustomerSanText",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.Domain Test",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.Epic Link",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.Epic Name",
+                    "data_type": "string",
+                    "example_values": [
+                        "Test epic"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.Phantom Test",
                     "data_type": "string"
                 },
                 {
@@ -410,6 +423,14 @@
                 },
                 {
                     "data_path": "action_result.data.*.fields.Sprint",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.[\"\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00e8 \u00eb \u00ef \u00f6 \u00fc \u0133 \u00eb, \u00ef, \u00fc\"]",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.[\"\u3053\u058d\u6f22<\u0a0a\u1e08\u17a6\u1864\u11d7\u2230\u1cc0\u5b57\u8fc7\u4ebf\uff0c\"]",
                     "data_type": "string"
                 },
                 {
@@ -548,6 +569,139 @@
                 {
                     "data_path": "action_result.data.*.fields.assignee.timeZone",
                     "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.attachment.*.author.active",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.attachment.*.author.avatarUrls.16x16",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/secure/useravatar?size=xsmall&ownerId=admin&avatarId=10500"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.attachment.*.author.avatarUrls.24x24",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/secure/useravatar?size=small&ownerId=admin&avatarId=10500"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.attachment.*.author.avatarUrls.32x32",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/secure/useravatar?size=medium&ownerId=admin&avatarId=10500"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.attachment.*.author.avatarUrls.48x48",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/secure/useravatar?ownerId=admin&avatarId=10500"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.attachment.*.author.displayName",
+                    "data_type": "string",
+                    "example_values": [
+                        "Phantom Admin"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.attachment.*.author.emailAddress",
+                    "data_type": "string",
+                    "example_values": [
+                        "notifications@phantom.us"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.attachment.*.author.key",
+                    "data_type": "string",
+                    "example_values": [
+                        "admin"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.attachment.*.author.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "admin"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.attachment.*.author.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/user?username=admin"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.attachment.*.author.timeZone",
+                    "data_type": "string",
+                    "example_values": [
+                        "Etc/GMT"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.attachment.*.content",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/secure/attachment/11634/testfile%281%29.jpg"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.attachment.*.created",
+                    "data_type": "string",
+                    "example_values": [
+                        "2021-12-09T05:35:30.242+0000"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.attachment.*.filename",
+                    "data_type": "string",
+                    "example_values": [
+                        "testfile(1).jpg"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.attachment.*.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "11634"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.attachment.*.mimeType",
+                    "data_type": "string",
+                    "example_values": [
+                        "image/jpeg"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.attachment.*.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/attachment/11634"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.attachment.*.size",
+                    "data_type": "numeric",
+                    "example_values": [
+                        6667
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.attachment.*.thumbnail",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/secure/thumbnail/11634/_thumb_11634.png"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.fields.comment.maxResults",
@@ -725,6 +879,85 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.fields.customfield_10100",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10101",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10102",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10103",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10104",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10106",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10107.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "10103"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10107.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/customFieldOption/10103"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10107.value",
+                    "data_type": "string",
+                    "example_values": [
+                        "To Do"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10108",
+                    "data_type": "string",
+                    "example_values": [
+                        "ghx-label-8"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10109",
+                    "data_type": "string",
+                    "example_values": [
+                        "0|i01kvz:"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10200",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10201",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10202",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10300",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10301",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.data.*.fields.customfield_10400.errorMessage",
                     "data_type": "string",
                     "example_values": [
@@ -737,6 +970,202 @@
                     "example_values": [
                         "sd.agent.servicedesk.error.servicedesk.missing"
                     ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10401",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10402",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10500",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10501",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10600",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10601",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10602",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10603",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10605",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10606",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10701",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10702",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10703",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10704",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10801",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10802",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10900",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10901",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10902",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10903",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10904",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10905",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10906",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10907",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10908",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10909",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10910",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10911",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10912",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10915",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10916",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10917",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10918",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10919",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10920",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10921",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10922",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10923",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10924",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10925",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10926",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10927",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11002",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11003",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11100",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11101",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11102",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11103",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customtextfield1",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.description",
@@ -1111,10 +1540,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.fields.security",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.status.description",
@@ -1311,6 +1737,14 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.fields.\u3053\u058d\u6f22<\u0a0a\u1e08\u17a6\u1864\u11d7\u2230\u1cc0\u5b57\u8fc7\u4ebf\uff0c\u65e5\u6d3b\u767e\u4e07+\u7684\u6f22\u5b57\u00a9\u00ac\u0278\u0460\u058d\u06de\u0a0a\u0bf5\u0d6c\u0f03\u1024\u1128\u11d7\u1296\u13cc\u1520\u16ef\u1720\u17a6\u1864\u18bb\u1910\u19aa\u1a03\u1a54\u1ab8\u1b52\u1b88\u1be1\u1c26\u1cc0\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2130\u214f\u2177\u2230\u22d0\u23fb\u30b5\u30a4\u30d0\u30fc\u30bb\u30ad\u30e5\u30ea\u30c6\u30a3\u30a4\u30f3\u30b7\u30c7\u30f3\u30c8\u65e5\u672c\u6a19\u6e96\u6642\u26f0\u26f1\u26f2\u26f3\u26f5\u2714\ufe0f\u2764\ufe0f\ufb17\u256c\u238b\u231a\u214d\u214e\u20ac\t\u20ad\u2042\u1fa7\u0488\u20ae\u20af\u214f\u231b\u238e\u2606\u1e02\u5e73\u4eee\u540d, \u3072\u3089\u304c\u306a~!@#$%^&*()_+<>?:\"}|{,./;'[]\\/`\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00e8 \u00eb \u00ef \u00f6 \u00fc \u0133 \u00eb, \u00ef, \u00fc\u0627\u0631\u062f\u0648 \u062a\u06c1\u062c\u06cc",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.\u6f22\u5b57\u00a9\u00ac\u0278\u0460\u058d\u06de\u0a0a\u0bf5\u0d6c\u0f03\u1024\u1128\u11d7\u1296\u13cc\u1520\u16ef\u1720\u17a6\u1864\u18bb\u1910\u19aa\u1a03\u1a54\u1ab8\u1b52\u1b88\u1be1\u1c26\u1cc0\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2130\u214f\u2177\u2230\u22d0\u23fb\u30b5\u30a4\u30d0\u30fc\u30bb\u30ad\u30e5\u30ea\u30c6 \u30a3\u30a4\u30f3\u30b7\u30c7\u30f3\u30c8\u65e5\u672c\u6a19\u6e96\u6642\u26f0\u26f1\u26f2\u26f3\u26f5\u2714\ufe0f\u2764\ufe0f\ufb17\u256c\u238b\u231a\u214d\u214e\u20ac \u20ad\u2042\u1fa7\u0488\u20ae\u20af\u214f\u231b\u238e\u2606\u1e02\u5e73\u4eee\u540d, \u3072\u3089\u304c\u306a~!@# $%^&*()_+<>?:\"}|{,./;'[]\\/`\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00eb \u00ef \u00f6 \u00fc\u0627\u0631\u062f\u0648 \u062a\u06c1\u062c\u06cc\u0a97\u0ac1\u0a9c\u0ab0\u0abe\u0aa4\u0ac0\u0939\u093f\u0928\u094d\u0926\u0940\u0433\u0443\u0434\u0436\u0430\u0440\u0430\u0442\u0438\u10d2\u10e3\u10ef\u10d0\u10e0\u10d0\u10d7\u10d8\u0997\u09c1\u099c\u09b0\u09be\u099f\u09bf",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.data.*.id",
                     "data_type": "string",
                     "column_name": "ID",
@@ -1417,12 +1851,8 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ]
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -1431,10 +1861,6 @@
                         "Created ticket with id: 11850, key: MAN-240",
                         "Created ticket with id: 11911, key: PHANINCIDE-370"
                     ]
-                },
-                {
-                    "data_path": "action_result.summary",
-                    "data_type": "string"
                 },
                 {
                     "data_path": "summary.total_objects",
@@ -1496,6 +1922,16 @@
                 "height": 5
             },
             "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ],
+                    "column_name": "Status",
+                    "column_order": 0
+                },
                 {
                     "data_path": "action_result.parameter.container_id",
                     "data_type": "string",
@@ -1589,14 +2025,8 @@
                     "column_order": 1
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ],
-                    "column_name": "Status",
-                    "column_order": 0
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -1604,10 +2034,6 @@
                     "example_values": [
                         "Successfully retrieved attachments from Jira ticket"
                     ]
-                },
-                {
-                    "data_path": "action_result.summary",
-                    "data_type": "string"
                 },
                 {
                     "data_path": "summary.total_objects",
@@ -1665,6 +2091,14 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.id",
                     "data_type": "string",
                     "contains": [
@@ -1701,25 +2135,32 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.fields.Custom Checkbox Field Three",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.Custom Label Field Two",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.Custom Text Field One",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.data.*.fields.CustomerSanText",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.Domain Test",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.Epic Link",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.Phantom Test",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.Sprint",
@@ -1727,6 +2168,14 @@
                     "example_values": [
                         "com.atlassian.greenhopper.service.sprint.Sprint@6bb9ab97[id=1,rapidViewId=1,state=ACTIVE,name=MAN Sprint 1,startDate=2017-10-30T16:22:44.954-07:00,endDate=2017-11-13T16:22:00.000-08:00,completeDate=<null>,sequence=1]"
                     ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.[\"\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00e8 \u00eb \u00ef \u00f6 \u00fc \u0133 \u00eb, \u00ef, \u00fc\"]",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.[\"\u3053\u058d\u6f22<\u0a0a\u1e08\u17a6\u1864\u11d7\u2230\u1cc0\u5b57\u8fc7\u4ebf\uff0c\"]",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.aggregateprogress.progress",
@@ -1744,31 +2193,19 @@
                 },
                 {
                     "data_path": "action_result.data.*.fields.aggregatetimeestimate",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.aggregatetimeoriginalestimate",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.aggregatetimespent",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.assignee",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.assignee.accountId",
@@ -2528,6 +2965,49 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.fields.customfield_10100",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10101",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10104",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10106",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10109",
+                    "data_type": "string",
+                    "example_values": [
+                        "0|i00j5j:"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10200",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10201",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10202",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10300",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10301",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.data.*.fields.customfield_10400.errorMessage",
                     "data_type": "string",
                     "example_values": [
@@ -2542,6 +3022,205 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.fields.customfield_10401",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10402",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10500",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10501",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10600",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10601",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10602",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10603",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10605",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10606",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10701",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10702",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10703",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10704",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10801",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10802",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10900",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10901",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10902",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10903",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10904",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10905",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10906",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10907",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10908",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10909",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10910",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10911",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10912",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10915",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10916",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10917",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10918",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10919",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10920",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10921",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10922",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10923",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10924",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10925",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10926",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10927",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11002",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11003",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11100",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11101",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11102",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11103",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customtextfield1",
+                    "data_type": "string",
+                    "example_values": [
+                        "test"
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.fields.description",
                     "data_type": "string",
                     "example_values": [
@@ -2550,10 +3229,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.fields.duedate",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.environment",
@@ -2607,6 +3283,181 @@
                     "data_type": "string",
                     "example_values": [
                         "10615"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.avatarId",
+                    "data_type": "numeric",
+                    "example_values": [
+                        10300
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "gh.issue.epic.desc"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.iconUrl",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/images/icons/issuetypes/epic.svg"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "10100"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "Epic"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/issuetype/10100"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.subtask",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.priority.iconUrl",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/images/border/spacer.gif"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.priority.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "10002"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.priority.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "\u6f22\u5b57\u00a9\u00ac\u0278\u0460\u058d\u06de\u0a0a\u0bf5\u0d6c\u0f03\u1024\u1128\u11d7\u1296\u13cc\u1520\u16ef\u1720\u17a6\u1864\u18bb\u1910\u19aa\u1a03\u1a54\u1ab8\u1b52\u1b88\u1be1\u1c26\u1cc0\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2130\u214f\u2177\u2230\u22d0\u23fb\u30b5\u30a4\u30d0\u30fc\u30bb\u30ad\u30e5\u30ea\u30c6\u30a3\u30a4\u30f3\u30b7\u30c7\u30f3\u30c8\u65e5\u672c\u6a19\u6e96\u6642\u26f0\u26f1\u26f2\u26f3\u26f5\u2714\ufe0f\u2764\ufe0f\ufb17\u256c\u238b\u231a\u214d\u214e\u20ac \u20ad\u2042\u1fa7\u0488\u20ae\u20af\u214f\u231b\u238e\u2606\u1e02\u5e73\u4eee\u540d, \u3072\u3089\u304c\u306a~!@#$%^&*()_+<>?:\"}|{,./;'[]\\/`\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00e8 \u00eb \u00ef \u00f6 \u00fc \u0133 \u00eb, \u00ef, \u00fc"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.priority.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/priority/10002"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "\u6f22\u5b57\u00a9\u00ac\u0278\u0460\u058d\u06de\u0a0a\u0bf5\u0d6c\u0f03\u1024\u1128\u11d7\u1296\u13cc\u1520\u16ef\u1720\u17a6\u1864\u18bb\u1910\u19aa\u1a03\u1a54\u1ab8\u1b52\u1b88\u1be1\u1c26\u1cc0\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2130\u214f\u2177\u2230\u22d0\u23fb\u30b5\u30a4\u30d0\u30fc\u30bb\u30ad\u30e5\u30ea\u30c6 \u30a3\u30a4\u30f3\u30b7\u30c7\u30f3\u30c8\u65e5\u672c\u6a19\u6e96\u6642\u26f0\u26f1\u26f2\u26f3\u26f5\u2714\ufe0f\u2764\ufe0f\ufb17\u256c\u238b\u231a\u214d\u214e\u20ac \u20ad\u2042\u1fa7\u0488\u20ae\u20af\u214f\u231b\u238e\u2606\u1e02\u5e73\u4eee\u540d, \u3072\u3089\u304c\u306a~!@# $%^&*()_+<>?:\"}|{,./;'[]\\/`\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00eb \u00ef \u00f6 \u00fc\u0627\u0631\u062f\u0648 \u062a\u06c1\u062c\u06cc\u0a97\u0ac1\u0a9c\u0ab0\u0abe\u0aa4\u0ac0\u0939\u093f\u0928\u094d\u0926\u0940\u0433\u0443\u0434\u0436\u0430\u0440\u0430\u0442\u0438\u10d2\u10e3\u10ef\u10d0\u10e0\u10d0\u10d7\u10d8\u0997\u09c1\u099c\u09b0\u09be\u099f\u09bf"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.iconUrl",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/images/icons/statuses/generic.png"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "10500"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "\u6f22\u00ac\u1024\u1296\u13cc\u16ef\u1720\u17a6\u1864\u19aa\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2230\u22d0\u30b5\u30fc\u30bb\u231a\u214d\u214e\u1e02\u5e73\u4eee\u540d\u3072%^&*()_+</;'[]\\/`\u00e1\u062f\u062a\u06c1\u062c\u06cc\u0a97\u0ac1\u0928\u094d\u0436\u0430"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/status/10500"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.statusCategory.colorName",
+                    "data_type": "string",
+                    "example_values": [
+                        "yellow"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.statusCategory.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        4
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.statusCategory.key",
+                    "data_type": "string",
+                    "example_values": [
+                        "indeterminate"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.statusCategory.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "In Progress"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.statusCategory.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/statuscategory/4"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.summary",
+                    "data_type": "string",
+                    "example_values": [
+                        "Test epic - \u6f22\u5b57\u00a9\u00ac\u0278\u0460\u058d\u06de\u0a0a\u0bf5\u0d6c\u0f03\u1024\u1128\u11d7\u1296\u13cc\u1520\u16ef\u1720\u17a6\u1864\u18bb\u1910\u19aa\u1a03\u1a54\u1ab8\u1b52\u1b88\u1be1\u1c26\u1cc0\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2130\u214f\u2177\u2230\u22d0\u23fb\u30b5\u30a4\u30d0\u30fc\u30bb\u30ad\u30e5\u30ea\u30c6 \u30a3\u30a4\u30f3\u30b7\u30c7\u30f3\u30c8\u65e5\u672c\u6a19\u6e96\u6642\u26f0\u26f1\u26f2\u26f3\u26f5\u2714\ufe0f\u2764\ufe0f\ufb17\u256c\u238b\u231a\u214d\u214e\u20ac \u20ad\u2042\u1fa7\u0488\u20ae\u20af\u214f\u231b\u238e\u2606\u1e02\u5e73\u4eee\u540d, \u3072\u3089\u304c\u306a~!@# $%^&*()_+<>?:\"}|{,./;'[]\\/`\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00eb \u00ef \u00f6 \u00fc\u0627\u0631\u062f\u0648 \u062a\u06c1\u062c\u06cc\u0a97\u0ac1\u0a9c\u0ab0\u0abe\u0aa4\u0ac0\u0939\u093f\u0928\u094d\u0926\u0940\u0433\u0443\u0434\u0436\u0430\u0440\u0430\u0442\u0438\u10d2\u10e3\u10ef\u10d0\u10e0\u10d0\u10d7\u10d8\u0997\u09c1\u099c\u09b0\u09be\u099f\u09bf"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "21237"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.key",
+                    "data_type": "string",
+                    "example_values": [
+                        "SPOL-133"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/issue/21237"
                     ]
                 },
                 {
@@ -2701,10 +3552,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.status.description",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.status.iconUrl",
@@ -3257,10 +4105,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.fields.security",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.status.description",
@@ -3357,24 +4202,15 @@
                 },
                 {
                     "data_path": "action_result.data.*.fields.timeestimate",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.timeoriginalestimate",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.timespent",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.updated",
@@ -3502,6 +4338,14 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.fields.\u3053\u058d\u6f22<\u0a0a\u1e08\u17a6\u1864\u11d7\u2230\u1cc0\u5b57\u8fc7\u4ebf\uff0c\u65e5\u6d3b\u767e\u4e07+\u7684\u6f22\u5b57\u00a9\u00ac\u0278\u0460\u058d\u06de\u0a0a\u0bf5\u0d6c\u0f03\u1024\u1128\u11d7\u1296\u13cc\u1520\u16ef\u1720\u17a6\u1864\u18bb\u1910\u19aa\u1a03\u1a54\u1ab8\u1b52\u1b88\u1be1\u1c26\u1cc0\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2130\u214f\u2177\u2230\u22d0\u23fb\u30b5\u30a4\u30d0\u30fc\u30bb\u30ad\u30e5\u30ea\u30c6\u30a3\u30a4\u30f3\u30b7\u30c7\u30f3\u30c8\u65e5\u672c\u6a19\u6e96\u6642\u26f0\u26f1\u26f2\u26f3\u26f5\u2714\ufe0f\u2764\ufe0f\ufb17\u256c\u238b\u231a\u214d\u214e\u20ac\t\u20ad\u2042\u1fa7\u0488\u20ae\u20af\u214f\u231b\u238e\u2606\u1e02\u5e73\u4eee\u540d, \u3072\u3089\u304c\u306a~!@#$%^&*()_+<>?:\"}|{,./;'[]\\/`\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00e8 \u00eb \u00ef \u00f6 \u00fc \u0133 \u00eb, \u00ef, \u00fc\u0627\u0631\u062f\u0648 \u062a\u06c1\u062c\u06cc",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.\u6f22\u5b57\u00a9\u00ac\u0278\u0460\u058d\u06de\u0a0a\u0bf5\u0d6c\u0f03\u1024\u1128\u11d7\u1296\u13cc\u1520\u16ef\u1720\u17a6\u1864\u18bb\u1910\u19aa\u1a03\u1a54\u1ab8\u1b52\u1b88\u1be1\u1c26\u1cc0\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2130\u214f\u2177\u2230\u22d0\u23fb\u30b5\u30a4\u30d0\u30fc\u30bb\u30ad\u30e5\u30ea\u30c6 \u30a3\u30a4\u30f3\u30b7\u30c7\u30f3\u30c8\u65e5\u672c\u6a19\u6e96\u6642\u26f0\u26f1\u26f2\u26f3\u26f5\u2714\ufe0f\u2764\ufe0f\ufb17\u256c\u238b\u231a\u214d\u214e\u20ac \u20ad\u2042\u1fa7\u0488\u20ae\u20af\u214f\u231b\u238e\u2606\u1e02\u5e73\u4eee\u540d, \u3072\u3089\u304c\u306a~!@# $%^&*()_+<>?:\"}|{,./;'[]\\/`\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00eb \u00ef \u00f6 \u00fc\u0627\u0631\u062f\u0648 \u062a\u06c1\u062c\u06cc\u0a97\u0ac1\u0a9c\u0ab0\u0abe\u0aa4\u0ac0\u0939\u093f\u0928\u094d\u0926\u0940\u0433\u0443\u0434\u0436\u0430\u0440\u0430\u0442\u0438\u10d2\u10e3\u10ef\u10d0\u10e0\u10d0\u10d7\u10d8\u0997\u09c1\u099c\u09b0\u09be\u099f\u09bf",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.data.*.id",
                     "data_type": "string",
                     "example_values": [
@@ -3584,12 +4428,8 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ]
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -3597,10 +4437,6 @@
                     "example_values": [
                         "Successfully updated ticket"
                     ]
-                },
-                {
-                    "data_path": "action_result.summary",
-                    "data_type": "string"
                 },
                 {
                     "data_path": "summary.total_objects",
@@ -3657,6 +4493,16 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ],
+                    "column_name": "Status",
+                    "column_order": 2
+                },
+                {
                     "data_path": "action_result.parameter.comment",
                     "data_type": "string",
                     "example_values": [
@@ -3690,14 +4536,8 @@
                     "data_type": "string"
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ],
-                    "column_name": "Status",
-                    "column_order": 2
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -3705,10 +4545,6 @@
                     "example_values": [
                         "Successfully added comment"
                     ]
-                },
-                {
-                    "data_path": "action_result.summary",
-                    "data_type": "string"
                 },
                 {
                     "data_path": "summary.total_objects",
@@ -3753,6 +4589,16 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ],
+                    "column_name": "Status",
+                    "column_order": 1
+                },
+                {
                     "data_path": "action_result.parameter.id",
                     "data_type": "string",
                     "contains": [
@@ -3769,14 +4615,8 @@
                     "data_type": "string"
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ],
-                    "column_name": "Status",
-                    "column_order": 1
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -3784,10 +4624,6 @@
                     "example_values": [
                         "Successfully deleted ticket"
                     ]
-                },
-                {
-                    "data_path": "action_result.summary",
-                    "data_type": "string"
                 },
                 {
                     "data_path": "summary.total_objects",
@@ -3821,6 +4657,14 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.id",
                     "data_type": "string",
                     "column_name": "Project ID",
@@ -3851,11 +4695,10 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
+                    "data_path": "action_result.summary.total_projects",
+                    "data_type": "numeric",
                     "example_values": [
-                        "success",
-                        "failed"
+                        16
                     ]
                 },
                 {
@@ -3863,13 +4706,6 @@
                     "data_type": "string",
                     "example_values": [
                         "Total projects: 16"
-                    ]
-                },
-                {
-                    "data_path": "action_result.summary.total_projects",
-                    "data_type": "numeric",
-                    "example_values": [
-                        16
                     ]
                 },
                 {
@@ -3931,6 +4767,14 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.max_results",
                     "data_type": "numeric",
                     "example_values": [
@@ -3979,17 +4823,11 @@
                 },
                 {
                     "data_path": "action_result.data.*.fields.CustomerSanText",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.Domain Test",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.aggregateprogress.progress",
@@ -5252,10 +6090,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.fields.security",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.status.description",
@@ -5726,11 +6561,10 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
+                    "data_path": "action_result.summary.total_issues",
+                    "data_type": "numeric",
                     "example_values": [
-                        "success",
-                        "failed"
+                        50
                     ]
                 },
                 {
@@ -5738,13 +6572,6 @@
                     "data_type": "string",
                     "example_values": [
                         "Total issues: 50"
-                    ]
-                },
-                {
-                    "data_path": "action_result.summary.total_issues",
-                    "data_type": "numeric",
-                    "example_values": [
-                        50
                     ]
                 },
                 {
@@ -5802,6 +6629,14 @@
                 "view": "jira_view.display_view"
             },
             "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
                 {
                     "data_path": "action_result.parameter.display_name",
                     "data_type": "string",
@@ -5957,11 +6792,11 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
+                    "data_path": "action_result.summary.total_users",
+                    "data_type": "numeric",
                     "example_values": [
-                        "success",
-                        "failed"
+                        1,
+                        4
                     ]
                 },
                 {
@@ -5969,14 +6804,6 @@
                     "data_type": "string",
                     "example_values": [
                         "Total users: 1"
-                    ]
-                },
-                {
-                    "data_path": "action_result.summary.total_users",
-                    "data_type": "numeric",
-                    "example_values": [
-                        1,
-                        4
                     ]
                 },
                 {
@@ -6021,6 +6848,14 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.id",
                     "data_type": "string",
                     "contains": [
@@ -6038,21 +6873,31 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.fields.Custom Checkbox Field Three",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.Custom Label Field Two",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.Custom Text Field One",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.data.*.fields.CustomerSanText",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.Domain Test",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.Epic Link",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.Phantom Test",
                     "data_type": "string"
                 },
                 {
@@ -6061,6 +6906,14 @@
                     "example_values": [
                         "com.atlassian.greenhopper.service.sprint.Sprint@6bb9ab97[id=1,rapidViewId=1,state=ACTIVE,name=MAN Sprint 1,startDate=2017-10-30T16:22:44.954-07:00,endDate=2017-11-13T16:22:00.000-08:00,completeDate=<null>,sequence=1]"
                     ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.[\"\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00e8 \u00eb \u00ef \u00f6 \u00fc \u0133 \u00eb, \u00ef, \u00fc\"]",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.[\"\u3053\u058d\u6f22<\u0a0a\u1e08\u17a6\u1864\u11d7\u2230\u1cc0\u5b57\u8fc7\u4ebf\uff0c\"]",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.aggregateprogress.progress",
@@ -6844,6 +7697,49 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.fields.customfield_10100",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10101",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10104",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10106",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10109",
+                    "data_type": "string",
+                    "example_values": [
+                        "0|i00j5j:"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10200",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10201",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10202",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10300",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10301",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.data.*.fields.customfield_10400.errorMessage",
                     "data_type": "string",
                     "example_values": [
@@ -6855,6 +7751,205 @@
                     "data_type": "string",
                     "example_values": [
                         "sd.agent.servicedesk.error.servicedesk.missing"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10401",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10402",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10500",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10501",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10600",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10601",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10602",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10603",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10605",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10606",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10701",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10702",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10703",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10704",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10801",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10802",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10900",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10901",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10902",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10903",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10904",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10905",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10906",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10907",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10908",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10909",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10910",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10911",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10912",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10915",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10916",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10917",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10918",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10919",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10920",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10921",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10922",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10923",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10924",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10925",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10926",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10927",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11002",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11003",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11100",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11101",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11102",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11103",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customtextfield1",
+                    "data_type": "string",
+                    "example_values": [
+                        "test"
                     ]
                 },
                 {
@@ -6920,6 +8015,181 @@
                     "data_type": "string",
                     "example_values": [
                         "10615"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.avatarId",
+                    "data_type": "numeric",
+                    "example_values": [
+                        10300
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "gh.issue.epic.desc"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.iconUrl",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/images/icons/issuetypes/epic.svg"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "10100"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "Epic"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/issuetype/10100"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.subtask",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.priority.iconUrl",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/images/border/spacer.gif"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.priority.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "10002"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.priority.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "\u6f22\u5b57\u00a9\u00ac\u0278\u0460\u058d\u06de\u0a0a\u0bf5\u0d6c\u0f03\u1024\u1128\u11d7\u1296\u13cc\u1520\u16ef\u1720\u17a6\u1864\u18bb\u1910\u19aa\u1a03\u1a54\u1ab8\u1b52\u1b88\u1be1\u1c26\u1cc0\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2130\u214f\u2177\u2230\u22d0\u23fb\u30b5\u30a4\u30d0\u30fc\u30bb\u30ad\u30e5\u30ea\u30c6\u30a3\u30a4\u30f3\u30b7\u30c7\u30f3\u30c8\u65e5\u672c\u6a19\u6e96\u6642\u26f0\u26f1\u26f2\u26f3\u26f5\u2714\ufe0f\u2764\ufe0f\ufb17\u256c\u238b\u231a\u214d\u214e\u20ac \u20ad\u2042\u1fa7\u0488\u20ae\u20af\u214f\u231b\u238e\u2606\u1e02\u5e73\u4eee\u540d, \u3072\u3089\u304c\u306a~!@#$%^&*()_+<>?:\"}|{,./;'[]\\/`\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00e8 \u00eb \u00ef \u00f6 \u00fc \u0133 \u00eb, \u00ef, \u00fc"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.priority.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/priority/10002"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "\u6f22\u5b57\u00a9\u00ac\u0278\u0460\u058d\u06de\u0a0a\u0bf5\u0d6c\u0f03\u1024\u1128\u11d7\u1296\u13cc\u1520\u16ef\u1720\u17a6\u1864\u18bb\u1910\u19aa\u1a03\u1a54\u1ab8\u1b52\u1b88\u1be1\u1c26\u1cc0\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2130\u214f\u2177\u2230\u22d0\u23fb\u30b5\u30a4\u30d0\u30fc\u30bb\u30ad\u30e5\u30ea\u30c6 \u30a3\u30a4\u30f3\u30b7\u30c7\u30f3\u30c8\u65e5\u672c\u6a19\u6e96\u6642\u26f0\u26f1\u26f2\u26f3\u26f5\u2714\ufe0f\u2764\ufe0f\ufb17\u256c\u238b\u231a\u214d\u214e\u20ac \u20ad\u2042\u1fa7\u0488\u20ae\u20af\u214f\u231b\u238e\u2606\u1e02\u5e73\u4eee\u540d, \u3072\u3089\u304c\u306a~!@# $%^&*()_+<>?:\"}|{,./;'[]\\/`\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00eb \u00ef \u00f6 \u00fc\u0627\u0631\u062f\u0648 \u062a\u06c1\u062c\u06cc\u0a97\u0ac1\u0a9c\u0ab0\u0abe\u0aa4\u0ac0\u0939\u093f\u0928\u094d\u0926\u0940\u0433\u0443\u0434\u0436\u0430\u0440\u0430\u0442\u0438\u10d2\u10e3\u10ef\u10d0\u10e0\u10d0\u10d7\u10d8\u0997\u09c1\u099c\u09b0\u09be\u099f\u09bf"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.iconUrl",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/images/icons/statuses/generic.png"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "10500"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "\u6f22\u00ac\u1024\u1296\u13cc\u16ef\u1720\u17a6\u1864\u19aa\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2230\u22d0\u30b5\u30fc\u30bb\u231a\u214d\u214e\u1e02\u5e73\u4eee\u540d\u3072%^&*()_+</;'[]\\/`\u00e1\u062f\u062a\u06c1\u062c\u06cc\u0a97\u0ac1\u0928\u094d\u0436\u0430"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/status/10500"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.statusCategory.colorName",
+                    "data_type": "string",
+                    "example_values": [
+                        "yellow"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.statusCategory.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        4
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.statusCategory.key",
+                    "data_type": "string",
+                    "example_values": [
+                        "indeterminate"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.statusCategory.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "In Progress"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.statusCategory.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/statuscategory/4"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.summary",
+                    "data_type": "string",
+                    "example_values": [
+                        "Test epic - \u6f22\u5b57\u00a9\u00ac\u0278\u0460\u058d\u06de\u0a0a\u0bf5\u0d6c\u0f03\u1024\u1128\u11d7\u1296\u13cc\u1520\u16ef\u1720\u17a6\u1864\u18bb\u1910\u19aa\u1a03\u1a54\u1ab8\u1b52\u1b88\u1be1\u1c26\u1cc0\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2130\u214f\u2177\u2230\u22d0\u23fb\u30b5\u30a4\u30d0\u30fc\u30bb\u30ad\u30e5\u30ea\u30c6 \u30a3\u30a4\u30f3\u30b7\u30c7\u30f3\u30c8\u65e5\u672c\u6a19\u6e96\u6642\u26f0\u26f1\u26f2\u26f3\u26f5\u2714\ufe0f\u2764\ufe0f\ufb17\u256c\u238b\u231a\u214d\u214e\u20ac \u20ad\u2042\u1fa7\u0488\u20ae\u20af\u214f\u231b\u238e\u2606\u1e02\u5e73\u4eee\u540d, \u3072\u3089\u304c\u306a~!@# $%^&*()_+<>?:\"}|{,./;'[]\\/`\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00eb \u00ef \u00f6 \u00fc\u0627\u0631\u062f\u0648 \u062a\u06c1\u062c\u06cc\u0a97\u0ac1\u0a9c\u0ab0\u0abe\u0aa4\u0ac0\u0939\u093f\u0928\u094d\u0926\u0940\u0433\u0443\u0434\u0436\u0430\u0440\u0430\u0442\u0438\u10d2\u10e3\u10ef\u10d0\u10e0\u10d0\u10d7\u10d8\u0997\u09c1\u099c\u09b0\u09be\u099f\u09bf"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "21237"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.key",
+                    "data_type": "string",
+                    "example_values": [
+                        "SPOL-133"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/issue/21237"
                     ]
                 },
                 {
@@ -7017,10 +8287,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.status.description",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.status.iconUrl",
@@ -7573,10 +8840,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.fields.security",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.status.description",
@@ -7809,6 +9073,14 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.fields.\u3053\u058d\u6f22<\u0a0a\u1e08\u17a6\u1864\u11d7\u2230\u1cc0\u5b57\u8fc7\u4ebf\uff0c\u65e5\u6d3b\u767e\u4e07+\u7684\u6f22\u5b57\u00a9\u00ac\u0278\u0460\u058d\u06de\u0a0a\u0bf5\u0d6c\u0f03\u1024\u1128\u11d7\u1296\u13cc\u1520\u16ef\u1720\u17a6\u1864\u18bb\u1910\u19aa\u1a03\u1a54\u1ab8\u1b52\u1b88\u1be1\u1c26\u1cc0\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2130\u214f\u2177\u2230\u22d0\u23fb\u30b5\u30a4\u30d0\u30fc\u30bb\u30ad\u30e5\u30ea\u30c6\u30a3\u30a4\u30f3\u30b7\u30c7\u30f3\u30c8\u65e5\u672c\u6a19\u6e96\u6642\u26f0\u26f1\u26f2\u26f3\u26f5\u2714\ufe0f\u2764\ufe0f\ufb17\u256c\u238b\u231a\u214d\u214e\u20ac\t\u20ad\u2042\u1fa7\u0488\u20ae\u20af\u214f\u231b\u238e\u2606\u1e02\u5e73\u4eee\u540d, \u3072\u3089\u304c\u306a~!@#$%^&*()_+<>?:\"}|{,./;'[]\\/`\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00e8 \u00eb \u00ef \u00f6 \u00fc \u0133 \u00eb, \u00ef, \u00fc\u0627\u0631\u062f\u0648 \u062a\u06c1\u062c\u06cc",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.\u6f22\u5b57\u00a9\u00ac\u0278\u0460\u058d\u06de\u0a0a\u0bf5\u0d6c\u0f03\u1024\u1128\u11d7\u1296\u13cc\u1520\u16ef\u1720\u17a6\u1864\u18bb\u1910\u19aa\u1a03\u1a54\u1ab8\u1b52\u1b88\u1be1\u1c26\u1cc0\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2130\u214f\u2177\u2230\u22d0\u23fb\u30b5\u30a4\u30d0\u30fc\u30bb\u30ad\u30e5\u30ea\u30c6 \u30a3\u30a4\u30f3\u30b7\u30c7\u30f3\u30c8\u65e5\u672c\u6a19\u6e96\u6642\u26f0\u26f1\u26f2\u26f3\u26f5\u2714\ufe0f\u2764\ufe0f\ufb17\u256c\u238b\u231a\u214d\u214e\u20ac \u20ad\u2042\u1fa7\u0488\u20ae\u20af\u214f\u231b\u238e\u2606\u1e02\u5e73\u4eee\u540d, \u3072\u3089\u304c\u306a~!@# $%^&*()_+<>?:\"}|{,./;'[]\\/`\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00eb \u00ef \u00f6 \u00fc\u0627\u0631\u062f\u0648 \u062a\u06c1\u062c\u06cc\u0a97\u0ac1\u0a9c\u0ab0\u0abe\u0aa4\u0ac0\u0939\u093f\u0928\u094d\u0926\u0940\u0433\u0443\u0434\u0436\u0430\u0440\u0430\u0442\u0438\u10d2\u10e3\u10ef\u10d0\u10e0\u10d0\u10d7\u10d8\u0997\u09c1\u099c\u09b0\u09be\u099f\u09bf",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.data.*.id",
                     "data_type": "string",
                     "example_values": [
@@ -7890,19 +9162,11 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ]
-                },
-                {
-                    "data_path": "action_result.message",
+                    "data_path": "action_result.summary",
                     "data_type": "string"
                 },
                 {
-                    "data_path": "action_result.summary",
+                    "data_path": "action_result.message",
                     "data_type": "string"
                 },
                 {
@@ -7963,6 +9227,16 @@
                     "description": "Comment to set",
                     "data_type": "string",
                     "order": 3
+                },
+                "update_fields": {
+                    "description": "JSON containing field values",
+                    "data_type": "string",
+                    "order": 4
+                },
+                "time_spent": {
+                    "description": "Time Spent to Log",
+                    "data_type": "string",
+                    "order": 5
                 }
             },
             "render": {
@@ -7970,6 +9244,14 @@
                 "view": "jira_view.display_view"
             },
             "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
                 {
                     "data_path": "action_result.parameter.comment",
                     "data_type": "string",
@@ -8008,6 +9290,22 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.parameter.time_spent",
+                    "data_type": "string",
+                    "example_values": [
+                        "3w 4d 12h"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.update_fields",
+                    "data_type": "string",
+                    "example_values": [
+                        "{\"update\": {\"comment\": [{\"add\": {\"body\": \"test comment update\"}}]}}",
+                        "{ \"priority\":{ \"name\": \"test/\\\"\"}}",
+                        "{\"fields\":{\"test-label\" : [\"test\"]}}"
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.description",
                     "data_type": "string",
                     "example_values": [
@@ -8016,20 +9314,42 @@
                 },
                 {
                     "data_path": "action_result.data.*.fields.",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.Chinese \u6587\u5b57- Kanji \u6f22\u5b57- Hanja \u6f22\u5b57(UTF-8)",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.Custom Checkbox Field Three",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.Custom Label Field Two",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.Custom Text Field One",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.CustomerSanText",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.Domain Test",
-                    "data_type": "string",
-                    "example_values": [
-                        ""
-                    ]
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.Epic Link",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.Phantom Test",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.Severity",
                     "data_type": "string"
                 },
                 {
@@ -8037,6 +9357,33 @@
                     "data_type": "string",
                     "example_values": [
                         "com.atlassian.greenhopper.service.sprint.Sprint@6bb9ab97[id=1,rapidViewId=1,state=ACTIVE,name=MAN Sprint 1,startDate=2017-10-30T16:22:44.954-07:00,endDate=2017-11-13T16:22:00.000-08:00,completeDate=<null>,sequence=1]"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.Test1",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.Test_label1",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.Test_user_field_cf",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.[\"\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00e8 \u00eb \u00ef \u00f6 \u00fc \u0133 \u00eb, \u00ef, \u00fc\"]",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.[\"\u3053\u058d\u6f22<\u0a0a\u1e08\u17a6\u1864\u11d7\u2230\u1cc0\u5b57\u8fc7\u4ebf\uff0c\"]",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.aggregateprogress.percent",
+                    "data_type": "numeric",
+                    "example_values": [
+                        100
                     ]
                 },
                 {
@@ -8055,7 +9402,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.fields.aggregatetimeestimate",
-                    "data_type": "string"
+                    "data_type": "numeric"
                 },
                 {
                     "data_path": "action_result.data.*.fields.aggregatetimeoriginalestimate",
@@ -8063,7 +9410,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.fields.aggregatetimespent",
-                    "data_type": "string"
+                    "data_type": "numeric"
                 },
                 {
                     "data_path": "action_result.data.*.fields.assignee",
@@ -8578,6 +9925,20 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.fields.comment.comments.*.visibility.type",
+                    "data_type": "string",
+                    "example_values": [
+                        "role"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.comment.comments.*.visibility.value",
+                    "data_type": "string",
+                    "example_values": [
+                        "Users"
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.fields.comment.maxResults",
                     "data_type": "numeric",
                     "example_values": [
@@ -8757,6 +10118,49 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.fields.customfield_10100",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10101",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10104",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10106",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10109",
+                    "data_type": "string",
+                    "example_values": [
+                        "0|i00hyn:"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10200",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10201",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10202",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10300",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10301",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.data.*.fields.customfield_10400.errorMessage",
                     "data_type": "string",
                     "example_values": [
@@ -8769,6 +10173,218 @@
                     "example_values": [
                         "sd.agent.servicedesk.error.servicedesk.missing"
                     ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10401",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10402",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10500",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10501",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10600",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10601",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10602",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10603",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10605",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10606",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10701",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10702",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10703",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10704",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10801",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10802",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10900",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10901",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10902",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10903",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10904",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10905",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10906",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10907",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10908",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10909",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10910",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10911",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10912",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10913",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10914",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10915",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10916",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10917",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10918",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10919",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10920",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10921",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10922",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10923",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10924",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10925",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10926",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_10927",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11000",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11001",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11002",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11003",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11100",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11101",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11102",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customfield_11103",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.customtextfield1",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.description",
@@ -8826,6 +10442,405 @@
                     ],
                     "contains": [
                         "url"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "10727"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.avatarId",
+                    "data_type": "numeric",
+                    "example_values": [
+                        10318
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "A task that needs to be done."
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.iconUrl",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "3"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "Task"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/issuetype/3"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.issuetype.subtask",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.priority.iconUrl",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/images/border/spacer.gif"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.priority.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "10002"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.priority.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "\u6f22\u5b57\u00a9\u00ac\u0278\u0460\u058d\u06de\u0a0a\u0bf5\u0d6c\u0f03\u1024\u1128\u11d7\u1296\u13cc\u1520\u16ef\u1720\u17a6\u1864\u18bb\u1910\u19aa\u1a03\u1a54\u1ab8\u1b52\u1b88\u1be1\u1c26\u1cc0\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2130\u214f\u2177\u2230\u22d0\u23fb\u30b5\u30a4\u30d0\u30fc\u30bb\u30ad\u30e5\u30ea\u30c6\u30a3\u30a4\u30f3\u30b7\u30c7\u30f3\u30c8\u65e5\u672c\u6a19\u6e96\u6642\u26f0\u26f1\u26f2\u26f3\u26f5\u2714\ufe0f\u2764\ufe0f\ufb17\u256c\u238b\u231a\u214d\u214e\u20ac \u20ad\u2042\u1fa7\u0488\u20ae\u20af\u214f\u231b\u238e\u2606\u1e02\u5e73\u4eee\u540d, \u3072\u3089\u304c\u306a~!@#$%^&*()_+<>?:\"}|{,./;'[]\\/`\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00e8 \u00eb \u00ef \u00f6 \u00fc \u0133 \u00eb, \u00ef, \u00fc"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.priority.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/priority/10002"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "The issue is open and ready for the assignee to start work on it."
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.iconUrl",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/images/icons/statuses/open.png"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "1"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "Open"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/status/1"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.statusCategory.colorName",
+                    "data_type": "string",
+                    "example_values": [
+                        "blue-gray"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.statusCategory.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.statusCategory.key",
+                    "data_type": "string",
+                    "example_values": [
+                        "new"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.statusCategory.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "To Do"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.status.statusCategory.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/statuscategory/2"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.fields.summary",
+                    "data_type": "string",
+                    "example_values": [
+                        "CLONE - 7607 - test123"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "21576"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.key",
+                    "data_type": "string",
+                    "example_values": [
+                        "MAN-278"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.inwardIssue.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/issue/21576"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.issuetype.avatarId",
+                    "data_type": "numeric",
+                    "example_values": [
+                        10300
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.issuetype.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "test"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.issuetype.iconUrl",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/secure/viewavatar?size=xsmall&avatarId=10300&avatarType=issuetype"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.issuetype.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "10500"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.issuetype.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "\u3053\u058d\u6f22<\u0a0a\u1e08\u17a6\u1864\u11d7\u2230\u1cc0\u5b57"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.issuetype.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/issuetype/10500"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.issuetype.subtask",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.priority.iconUrl",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/images/border/spacer.gif"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.priority.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "10002"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.priority.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "\u6f22\u5b57\u00a9\u00ac\u0278\u0460\u058d\u06de\u0a0a\u0bf5\u0d6c\u0f03\u1024\u1128\u11d7\u1296\u13cc\u1520\u16ef\u1720\u17a6\u1864\u18bb\u1910\u19aa\u1a03\u1a54\u1ab8\u1b52\u1b88\u1be1\u1c26\u1cc0\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2130\u214f\u2177\u2230\u22d0\u23fb\u30b5\u30a4\u30d0\u30fc\u30bb\u30ad\u30e5\u30ea\u30c6\u30a3\u30a4\u30f3\u30b7\u30c7\u30f3\u30c8\u65e5\u672c\u6a19\u6e96\u6642\u26f0\u26f1\u26f2\u26f3\u26f5\u2714\ufe0f\u2764\ufe0f\ufb17\u256c\u238b\u231a\u214d\u214e\u20ac \u20ad\u2042\u1fa7\u0488\u20ae\u20af\u214f\u231b\u238e\u2606\u1e02\u5e73\u4eee\u540d, \u3072\u3089\u304c\u306a~!@#$%^&*()_+<>?:\"}|{,./;'[]\\/`\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00e8 \u00eb \u00ef \u00f6 \u00fc \u0133 \u00eb, \u00ef, \u00fc"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.priority.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/priority/10002"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.status.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "\u6f22\u5b57\u00a9\u00ac\u0278\u0460\u058d\u06de\u0a0a\u0bf5\u0d6c\u0f03\u1024\u1128\u11d7\u1296\u13cc\u1520\u16ef\u1720\u17a6\u1864\u18bb\u1910\u19aa\u1a03\u1a54\u1ab8\u1b52\u1b88\u1be1\u1c26\u1cc0\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2130\u214f\u2177\u2230\u22d0\u23fb\u30b5\u30a4\u30d0\u30fc\u30bb\u30ad\u30e5\u30ea\u30c6 \u30a3\u30a4\u30f3\u30b7\u30c7\u30f3\u30c8\u65e5\u672c\u6a19\u6e96\u6642\u26f0\u26f1\u26f2\u26f3\u26f5\u2714\ufe0f\u2764\ufe0f\ufb17\u256c\u238b\u231a\u214d\u214e\u20ac \u20ad\u2042\u1fa7\u0488\u20ae\u20af\u214f\u231b\u238e\u2606\u1e02\u5e73\u4eee\u540d, \u3072\u3089\u304c\u306a~!@# $%^&*()_+<>?:\"}|{,./;'[]\\/`\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00eb \u00ef \u00f6 \u00fc\u0627\u0631\u062f\u0648 \u062a\u06c1\u062c\u06cc\u0a97\u0ac1\u0a9c\u0ab0\u0abe\u0aa4\u0ac0\u0939\u093f\u0928\u094d\u0926\u0940\u0433\u0443\u0434\u0436\u0430\u0440\u0430\u0442\u0438\u10d2\u10e3\u10ef\u10d0\u10e0\u10d0\u10d7\u10d8\u0997\u09c1\u099c\u09b0\u09be\u099f\u09bf"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.status.iconUrl",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/images/icons/statuses/generic.png"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.status.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "10500"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.status.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "\u6f22\u00ac\u1024\u1296\u13cc\u16ef\u1720\u17a6\u1864\u19aa\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2230\u22d0\u30b5\u30fc\u30bb\u231a\u214d\u214e\u1e02\u5e73\u4eee\u540d\u3072%^&*()_+</;'[]\\/`\u00e1\u062f\u062a\u06c1\u062c\u06cc\u0a97\u0ac1\u0928\u094d\u0436\u0430"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.status.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/status/10500"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.status.statusCategory.colorName",
+                    "data_type": "string",
+                    "example_values": [
+                        "yellow"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.status.statusCategory.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        4
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.status.statusCategory.key",
+                    "data_type": "string",
+                    "example_values": [
+                        "indeterminate"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.status.statusCategory.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "In Progress"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.status.statusCategory.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/statuscategory/4"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.fields.summary",
+                    "data_type": "string",
+                    "example_values": [
+                        "DO NOT DELETE TICKET:    \u6f22\u5b57\u00a9\u00ac\u0278\u0460\u058d\u06de\u0a0a\u0bf5\u0d6c\u0f03\u1024\u1128\u11d7\u1296\u13cc\u1520\u16ef\u1720\u17a6\u1864\u18bb\u1910\u19aa\u1a03\u1a54\u1ab8\u1b52\u1b88\u1be1\u1c26\u1cc0\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2130\u214f\u2177\u2230\u22d0\u23fb\u30b5\u30a4\u30d0\u30fc\u30bb\u30ad\u30e5\u30ea\u30c6\u30a3\u30a4\u30f3\u30b7\u30c7\u30f3\u30c8\u65e5\u672c\u6a19\u6e96\u6642\u26f0\u26f1\u26f2\u26f3\u26f5\u2714\ufe0f\u2764\ufe0f\ufb17\u256c\u238b\u231a\u214d\u214e\u20ac \u20ad\u2042\u1fa7\u0488\u20ae\u20af\u214f\u231b\u238e\u2606\u1e02\u5e73\u4eee\u540d, \u3072\u3089\u304c\u306a~!@#$%^&*()_+<>?:\"}|{,./;'[]\\/`\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00e8 \u00eb \u00ef \u00f6 \u00fc \u0133 \u00eb, \u00ef, \u00fc"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "21133"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.key",
+                    "data_type": "string",
+                    "example_values": [
+                        "SPOL-44"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.outwardIssue.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/issue/21133"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/issueLink/10727"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.type.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "10000"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.type.inward",
+                    "data_type": "string",
+                    "example_values": [
+                        "is blocked by"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.type.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "Blocks"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.type.outward",
+                    "data_type": "string",
+                    "example_values": [
+                        "blocks"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.issuelinks.*.type.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/issueLinkType/10000"
                     ]
                 },
                 {
@@ -8936,6 +10951,13 @@
                     ],
                     "example_values": [
                         "http://10.10.123.124:8080/rest/api/2/priority/3"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.progress.percent",
+                    "data_type": "numeric",
+                    "example_values": [
+                        100
                     ]
                 },
                 {
@@ -9129,6 +11151,10 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.fields.resolution",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.data.*.fields.resolution.description",
                     "data_type": "string",
                     "example_values": [
@@ -9257,7 +11283,7 @@
                 },
                 {
                     "data_path": "action_result.data.*.fields.timeestimate",
-                    "data_type": "string"
+                    "data_type": "numeric"
                 },
                 {
                     "data_path": "action_result.data.*.fields.timeoriginalestimate",
@@ -9265,7 +11291,35 @@
                 },
                 {
                     "data_path": "action_result.data.*.fields.timespent",
-                    "data_type": "string"
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.timetracking.remainingEstimate",
+                    "data_type": "string",
+                    "example_values": [
+                        "0m"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.timetracking.remainingEstimateSeconds",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.timetracking.timeSpent",
+                    "data_type": "string",
+                    "example_values": [
+                        "2d 4h"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.timetracking.timeSpentSeconds",
+                    "data_type": "numeric",
+                    "example_values": [
+                        72000
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.fields.updated",
@@ -9386,11 +11440,233 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.author.active",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.author.avatarUrls.16x16",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/secure/useravatar?size=xsmall&ownerId=admin&avatarId=10500"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.author.avatarUrls.24x24",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/secure/useravatar?size=small&ownerId=admin&avatarId=10500"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.author.avatarUrls.32x32",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/secure/useravatar?size=medium&ownerId=admin&avatarId=10500"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.author.avatarUrls.48x48",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/secure/useravatar?ownerId=admin&avatarId=10500"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.author.displayName",
+                    "data_type": "string",
+                    "example_values": [
+                        "Phantom Admin"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.author.emailAddress",
+                    "data_type": "string",
+                    "example_values": [
+                        "notifications@phantom.us"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.author.key",
+                    "data_type": "string",
+                    "example_values": [
+                        "admin"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.author.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "admin"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.author.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/user?username=admin"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.author.timeZone",
+                    "data_type": "string",
+                    "example_values": [
+                        "Etc/GMT"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.comment",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.created",
+                    "data_type": "string",
+                    "example_values": [
+                        "2021-12-06T06:35:45.703+0000"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "10200"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.issueId",
+                    "data_type": "string",
+                    "example_values": [
+                        "27216"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/issue/27216/worklog/10200"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.started",
+                    "data_type": "string",
+                    "example_values": [
+                        "2021-12-06T06:35:00.000+0000"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.timeSpent",
+                    "data_type": "string",
+                    "example_values": [
+                        "4h"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.timeSpentSeconds",
+                    "data_type": "numeric",
+                    "example_values": [
+                        14400
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.updateAuthor.active",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.updateAuthor.avatarUrls.16x16",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/secure/useravatar?size=xsmall&ownerId=admin&avatarId=10500"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.updateAuthor.avatarUrls.24x24",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/secure/useravatar?size=small&ownerId=admin&avatarId=10500"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.updateAuthor.avatarUrls.32x32",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/secure/useravatar?size=medium&ownerId=admin&avatarId=10500"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.updateAuthor.avatarUrls.48x48",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/secure/useravatar?ownerId=admin&avatarId=10500"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.updateAuthor.displayName",
+                    "data_type": "string",
+                    "example_values": [
+                        "Phantom Admin"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.updateAuthor.emailAddress",
+                    "data_type": "string",
+                    "example_values": [
+                        "notifications@phantom.us"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.updateAuthor.key",
+                    "data_type": "string",
+                    "example_values": [
+                        "admin"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.updateAuthor.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "admin"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.updateAuthor.self",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://10.1.16.180:8080/rest/api/2/user?username=admin"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.updateAuthor.timeZone",
+                    "data_type": "string",
+                    "example_values": [
+                        "Etc/GMT"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.worklog.worklogs.*.updated",
+                    "data_type": "string",
+                    "example_values": [
+                        "2021-12-06T06:35:45.703+0000"
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.fields.workratio",
                     "data_type": "numeric",
                     "example_values": [
                         -1
                     ]
+                },
+                {
+                    "data_path": "action_result.data.*.fields.\u3053\u058d\u6f22<\u0a0a\u1e08\u17a6\u1864\u11d7\u2230\u1cc0\u5b57\u8fc7\u4ebf\uff0c\u65e5\u6d3b\u767e\u4e07+\u7684\u6f22\u5b57\u00a9\u00ac\u0278\u0460\u058d\u06de\u0a0a\u0bf5\u0d6c\u0f03\u1024\u1128\u11d7\u1296\u13cc\u1520\u16ef\u1720\u17a6\u1864\u18bb\u1910\u19aa\u1a03\u1a54\u1ab8\u1b52\u1b88\u1be1\u1c26\u1cc0\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2130\u214f\u2177\u2230\u22d0\u23fb\u30b5\u30a4\u30d0\u30fc\u30bb\u30ad\u30e5\u30ea\u30c6\u30a3\u30a4\u30f3\u30b7\u30c7\u30f3\u30c8\u65e5\u672c\u6a19\u6e96\u6642\u26f0\u26f1\u26f2\u26f3\u26f5\u2714\ufe0f\u2764\ufe0f\ufb17\u256c\u238b\u231a\u214d\u214e\u20ac\t\u20ad\u2042\u1fa7\u0488\u20ae\u20af\u214f\u231b\u238e\u2606\u1e02\u5e73\u4eee\u540d, \u3072\u3089\u304c\u306a~!@#$%^&*()_+<>?:\"}|{,./;'[]\\/`\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00e8 \u00eb \u00ef \u00f6 \u00fc \u0133 \u00eb, \u00ef, \u00fc\u0627\u0631\u062f\u0648 \u062a\u06c1\u062c\u06cc",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.fields.\u6f22\u5b57\u00a9\u00ac\u0278\u0460\u058d\u06de\u0a0a\u0bf5\u0d6c\u0f03\u1024\u1128\u11d7\u1296\u13cc\u1520\u16ef\u1720\u17a6\u1864\u18bb\u1910\u19aa\u1a03\u1a54\u1ab8\u1b52\u1b88\u1be1\u1c26\u1cc0\u1d1e\u1d46\u1d5d\u1e08\u1f52\u2047\u2130\u214f\u2177\u2230\u22d0\u23fb\u30b5\u30a4\u30d0\u30fc\u30bb\u30ad\u30e5\u30ea\u30c6 \u30a3\u30a4\u30f3\u30b7\u30c7\u30f3\u30c8\u65e5\u672c\u6a19\u6e96\u6642\u26f0\u26f1\u26f2\u26f3\u26f5\u2714\ufe0f\u2764\ufe0f\ufb17\u256c\u238b\u231a\u214d\u214e\u20ac \u20ad\u2042\u1fa7\u0488\u20ae\u20af\u214f\u231b\u238e\u2606\u1e02\u5e73\u4eee\u540d, \u3072\u3089\u304c\u306a~!@# $%^&*()_+<>?:\"}|{,./;'[]\\/`\u00e1 \u00e9 \u00ed \u00f3 \u00fa \u00e0 \u00eb \u00ef \u00f6 \u00fc\u0627\u0631\u062f\u0648 \u062a\u06c1\u062c\u06cc\u0a97\u0ac1\u0a9c\u0ab0\u0abe\u0aa4\u0ac0\u0939\u093f\u0928\u094d\u0926\u0940\u0433\u0443\u0434\u0436\u0430\u0440\u0430\u0442\u0438\u10d2\u10e3\u10ef\u10d0\u10e0\u10d0\u10d7\u10d8\u0997\u09c1\u099c\u09b0\u09be\u099f\u09bf",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.id",
@@ -9474,19 +11750,11 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ]
-                },
-                {
-                    "data_path": "action_result.message",
+                    "data_path": "action_result.summary",
                     "data_type": "string"
                 },
                 {
-                    "data_path": "action_result.summary",
+                    "data_path": "action_result.message",
                     "data_type": "string"
                 },
                 {
@@ -9569,6 +11837,14 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.comment",
                     "data_type": "string",
                     "example_values": [
@@ -9633,19 +11909,11 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ]
-                },
-                {
-                    "data_path": "action_result.message",
+                    "data_path": "action_result.summary",
                     "data_type": "string"
                 },
                 {
-                    "data_path": "action_result.summary",
+                    "data_path": "action_result.message",
                     "data_type": "string"
                 },
                 {
@@ -9705,6 +11973,16 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ],
+                    "column_name": "Status",
+                    "column_order": 3
+                },
+                {
                     "data_path": "action_result.parameter.id",
                     "data_type": "string",
                     "example_values": [
@@ -9745,14 +12023,8 @@
                     "data_type": "string"
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ],
-                    "column_name": "Status",
-                    "column_order": 3
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -9760,10 +12032,6 @@
                     "example_values": [
                         "Successfully added the user to the watchers list of the issue ID: CJ-3"
                     ]
-                },
-                {
-                    "data_path": "action_result.summary",
-                    "data_type": "string"
                 },
                 {
                     "data_path": "summary.total_objects",
@@ -9828,6 +12096,16 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ],
+                    "column_name": "Status",
+                    "column_order": 3
+                },
+                {
                     "data_path": "action_result.parameter.id",
                     "data_type": "string",
                     "example_values": [
@@ -9868,14 +12146,8 @@
                     "data_type": "string"
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ],
-                    "column_name": "Status",
-                    "column_order": 3
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -9883,10 +12155,6 @@
                     "example_values": [
                         "Successfully removed the user from the watchers list of the issue ID: CJ-3"
                     ]
-                },
-                {
-                    "data_path": "action_result.summary",
-                    "data_type": "string"
                 },
                 {
                     "data_path": "summary.total_objects",
