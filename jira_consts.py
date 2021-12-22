@@ -1,10 +1,17 @@
 # File: jira_consts.py
+#
 # Copyright (c) 2016-2021 Splunk Inc.
 #
-# Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)
-# --
-
-
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under
+# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+# either express or implied. See the License for the specific language governing permissions
+# and limitations under the License.
 JIRA_JSON_DEVICE_URL = "device_url"
 JIRA_JSON_DESCRIPTION = "description"
 JIRA_JSON_ISSUE_ASSIGNEE = "assignee"
@@ -54,6 +61,7 @@ JIRA_JSON_CUSTOM_FIELDS = 'custom_fields'
 JIRA_JSON_USERNAME = 'username'
 JIRA_JSON_DISPLAY_NAME = 'display_name'
 JIRA_JSON_USER_ACCOUNT_ID = 'user_account_id'
+JIRA_JSON_TIMESPENT = 'time_spent'
 
 JIRA_WATCHERS_ERROR = "Please provide either 'user_account_id' or 'username' action parameter. " \
     "For JIRA on-prem, use 'username' action parameter, and, for JIRA cloud, use 'user_account_id' action parameter"
@@ -74,7 +82,8 @@ JIRA_SUCC_CONNECTIVITY_TEST = "Connectivity test passed"
 JIRA_ERR_TICKET_ASSIGNMENT_FAILED = "Ticket assignment to user '{0}' failed. {1}"
 JIRA_ERR_CREATE_TICKET_FAILED = "Ticket creation failed"
 JIRA_SUCC_TICKET_CREATED = "Created ticket with id: {id}, key: {key}"
-JIRA_ERR_ARTIFACT_NOT_FOUND_IN_CONTAINER = "Either the ticket artifact with issue key: {issue_key} got deleted from the container: {container_id} " \
+JIRA_ERR_ARTIFACT_NOT_FOUND_IN_CONTAINER = "Either the ticket artifact with issue key: {issue_key} got deleted from the container"\
+    ": {container_id} " \
     "or the type of the issue has changed on the JIRA instance. Please delete the container and re-run the ingestion."
 JIRA_ERR_FILE_NOT_IN_VAULT = "Could not find specified vault ID in vault"
 JIRA_ERR_ATTACH_FAILED = "Adding attachment failed. {0}"
