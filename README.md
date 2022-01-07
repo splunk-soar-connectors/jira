@@ -2,7 +2,7 @@
 # Jira
 
 Publisher: Splunk  
-Connector Version: 3\.2\.2  
+Connector Version: 3\.2\.4  
 Product Vendor: Atlassian  
 Product Name: Jira  
 Product Version Supported (regex): "\.\*"  
