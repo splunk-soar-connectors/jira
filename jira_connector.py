@@ -1,6 +1,6 @@
 # File: jira_connector.py
 #
-# Copyright (c) 2016-2021 Splunk Inc.
+# Copyright (c) 2016-2022 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -79,7 +79,7 @@ class JiraConnector(phantom.BaseConnector):
         try:
             self._python_version = int(sys.version_info[0])
         except:
-            return self.set_status(phantom.APP_ERROR, "Error occurred while getting the Phantom server's Python major version.")
+            return self.set_status(phantom.APP_ERROR, "Error occurred while getting the Phantom server's Python major version")
 
         # Base URL
         self._base_url = self._handle_py_ver_compat_for_input_str(config[JIRA_JSON_DEVICE_URL])
@@ -175,7 +175,7 @@ class JiraConnector(phantom.BaseConnector):
         # You should process the error returned in the json if none of the above handling happens for error scenario
         if not message:
             resp_text = self._handle_py_ver_compat_for_input_str(
-                r.text.replace(u'{', '{{').replace(u'}', '}}') if r.text else "Response error text not found")
+                r.text.replace('{', '{{').replace('}', '}}') if r.text else "Response error text not found")
             message = "Error from server. Status Code: {0} Data from server: {1}".format(r.status_code, resp_text)
 
         return action_result.set_status(phantom.APP_ERROR, message), None
@@ -216,7 +216,7 @@ class JiraConnector(phantom.BaseConnector):
         message = "Can't process response from server. Status Code: {0} Data from server: {1}".format(
                 r.status_code,
                 self._handle_py_ver_compat_for_input_str(
-                    r.text.replace(u'{', '{{').replace(u'}', '}}') if r.text else "Response error text not found"))
+                    r.text.replace('{', '{{').replace('}', '}}') if r.text else "Response error text not found"))
 
         return action_result.set_status(phantom.APP_ERROR, message), None
 

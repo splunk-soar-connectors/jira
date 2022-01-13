@@ -1,5 +1,5 @@
 name: Semgrep
-on: 
+on:
   pull_request_target:
     branches:
       - next
@@ -21,8 +21,8 @@ jobs:
         echo "REPOSITORY=${{ github.event.pull_request.head.repo.full_name }}" >> $GITHUB_ENV
         echo "REF=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
      - uses: 'phantomcyber/dev-cicd-tools/github-actions/semgrep@main'
-       with: 
+       with:
         SEMGREP_DEPLOYMENT_ID: ${{ secrets.SEMGREP_DEPLOYMENT_ID }}
         SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
-        REPOSITORY: ${{ github.repository }} 
+        REPOSITORY: ${{ github.repository }}
         REF: ${{ github.ref }}
