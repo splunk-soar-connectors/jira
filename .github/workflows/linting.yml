@@ -1,7 +1,7 @@
 name: Linting
 on: [push, pull_request]
 jobs:
-  lint: 
+  lint:
     # Run per push for internal contributers. This isn't possible for forked pull requests,
     # so we'll need to run on PR events for external contributers.
     # String comparison below is case insensitive.

@@ -10,8 +10,8 @@
     ],
     "type": "ticketing",
     "main_module": "jira_connector.py",
-    "app_version": "3.2.4",
-    "utctime_updated": "2021-12-23T18:25:38.000000Z",
+    "app_version": "3.2.6",
+    "utctime_updated": "2022-01-12T17:41:50.000000Z",
     "package_name": "phantom_jira",
     "product_vendor": "Atlassian",
     "product_name": "Jira",
@@ -25,7 +25,7 @@
     "fips_compliant": true,
     "logo": "logo_atlassian.svg",
     "logo_dark": "logo_atlassian_dark.svg",
-    "license": "Copyright (c) 2016-2021 Splunk Inc.",
+    "license": "Copyright (c) 2016-2022 Splunk Inc.",
     "pip_dependencies": {
         "wheel": [
             {
@@ -50,7 +50,7 @@
             },
             {
                 "module": "cryptography",
-                "input_file": "wheels/cryptography-35.0.0-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+                "input_file": "wheels/cryptography-36.0.1-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
             },
             {
                 "module": "defusedxml",
@@ -98,7 +98,7 @@
             },
             {
                 "module": "setuptools",
-                "input_file": "wheels/setuptools-58.5.3-py3-none-any.whl"
+                "input_file": "wheels/setuptools-59.6.0-py3-none-any.whl"
             },
             {
                 "module": "six",
@@ -106,11 +106,11 @@
             },
             {
                 "module": "soupsieve",
-                "input_file": "wheels/soupsieve-2.3-py3-none-any.whl"
+                "input_file": "wheels/soupsieve-2.3.1-py3-none-any.whl"
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/urllib3-1.26.7-py2.py3-none-any.whl"
+                "input_file": "wheels/urllib3-1.26.8-py2.py3-none-any.whl"
             }
         ]
     },
