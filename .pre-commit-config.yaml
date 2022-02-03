@@ -1,6 +1,6 @@
 repos:
 -   repo: https://github.com/phantomcyber/dev-cicd-tools
-    rev: v1.6
+    rev: v1.9
     hooks:
     -   id: org-hook
     -   id: package-app-dependencies
