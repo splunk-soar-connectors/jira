@@ -16,7 +16,7 @@
     "product_vendor": "Atlassian",
     "product_name": "Jira",
     "product_version_regex": ".*",
-    "min_phantom_version": "5.0.0",
+    "min_phantom_version": "5.1.0",
     "latest_tested_versions": [
         "On prem v7.1.9",
         "Cloud Copyright (c) 2002 - 2021 Atlassian Corporation Pty Ltd."
@@ -12290,7 +12290,7 @@
             },
             {
                 "module": "setuptools",
-                "input_file": "wheels/py3/setuptools-60.6.0-py3-none-any.whl"
+                "input_file": "wheels/py3/setuptools-60.7.0-py3-none-any.whl"
             },
             {
                 "module": "six",
