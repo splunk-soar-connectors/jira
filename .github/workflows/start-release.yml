@@ -1,5 +1,9 @@
 name: Start Release
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - '*-beta*'
 jobs:
   start-release:
     runs-on: ubuntu-latest
