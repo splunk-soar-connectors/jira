@@ -10,13 +10,13 @@
     ],
     "type": "ticketing",
     "main_module": "jira_connector.py",
-    "app_version": "3.2.6",
-    "utctime_updated": "2022-01-12T17:41:50.000000Z",
+    "app_version": "3.2.7",
+    "utctime_updated": "2022-02-04T03:00:20.000000Z",
     "package_name": "phantom_jira",
     "product_vendor": "Atlassian",
     "product_name": "Jira",
     "product_version_regex": ".*",
-    "min_phantom_version": "5.0.0",
+    "min_phantom_version": "5.1.0",
     "latest_tested_versions": [
         "On prem v7.1.9",
         "Cloud Copyright (c) 2002 - 2021 Atlassian Corporation Pty Ltd."
@@ -30,87 +30,87 @@
         "wheel": [
             {
                 "module": "PyJWT",
-                "input_file": "wheels/PyJWT-2.0.1-py3-none-any.whl"
+                "input_file": "wheels/py3/PyJWT-2.0.1-py3-none-any.whl"
             },
             {
                 "module": "beautifulsoup4",
-                "input_file": "wheels/beautifulsoup4-4.9.1-py3-none-any.whl"
+                "input_file": "wheels/py3/beautifulsoup4-4.9.1-py3-none-any.whl"
             },
             {
                 "module": "certifi",
-                "input_file": "wheels/certifi-2021.10.8-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/certifi-2021.10.8-py2.py3-none-any.whl"
             },
             {
                 "module": "cffi",
-                "input_file": "wheels/cffi-1.15.0-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+                "input_file": "wheels/py36/cffi-1.15.0-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
             },
             {
                 "module": "chardet",
-                "input_file": "wheels/chardet-3.0.4-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/chardet-3.0.4-py2.py3-none-any.whl"
             },
             {
                 "module": "cryptography",
-                "input_file": "wheels/cryptography-36.0.1-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+                "input_file": "wheels/py36/cryptography-36.0.1-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
             },
             {
                 "module": "defusedxml",
-                "input_file": "wheels/defusedxml-0.7.1-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/defusedxml-0.7.1-py2.py3-none-any.whl"
             },
             {
                 "module": "idna",
-                "input_file": "wheels/idna-2.10-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/idna-2.10-py2.py3-none-any.whl"
             },
             {
                 "module": "jira",
-                "input_file": "wheels/jira-2.0.0-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/jira-2.0.0-py2.py3-none-any.whl"
             },
             {
                 "module": "oauthlib",
-                "input_file": "wheels/oauthlib-3.1.0-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/oauthlib-3.1.0-py2.py3-none-any.whl"
             },
             {
                 "module": "pbr",
-                "input_file": "wheels/pbr-5.4.4-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/pbr-5.4.4-py2.py3-none-any.whl"
             },
             {
                 "module": "pycparser",
-                "input_file": "wheels/pycparser-2.21-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/pycparser-2.21-py2.py3-none-any.whl"
             },
             {
                 "module": "python_dateutil",
-                "input_file": "wheels/python_dateutil-2.8.1-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/python_dateutil-2.8.1-py2.py3-none-any.whl"
             },
             {
                 "module": "pytz",
-                "input_file": "wheels/pytz-2021.1-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/pytz-2021.1-py2.py3-none-any.whl"
             },
             {
                 "module": "requests",
-                "input_file": "wheels/requests-2.25.0-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/requests-2.25.0-py2.py3-none-any.whl"
             },
             {
                 "module": "requests_oauthlib",
-                "input_file": "wheels/requests_oauthlib-1.3.0-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/requests_oauthlib-1.3.0-py2.py3-none-any.whl"
             },
             {
                 "module": "requests_toolbelt",
-                "input_file": "wheels/requests_toolbelt-0.9.1-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/requests_toolbelt-0.9.1-py2.py3-none-any.whl"
             },
             {
                 "module": "setuptools",
-                "input_file": "wheels/setuptools-59.6.0-py3-none-any.whl"
+                "input_file": "wheels/py3/setuptools-59.6.0-py3-none-any.whl"
             },
             {
                 "module": "six",
-                "input_file": "wheels/six-1.16.0-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/six-1.16.0-py2.py3-none-any.whl"
             },
             {
                 "module": "soupsieve",
-                "input_file": "wheels/soupsieve-2.3.1-py3-none-any.whl"
+                "input_file": "wheels/py3/soupsieve-2.3.1-py3-none-any.whl"
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/urllib3-1.26.8-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/urllib3-1.26.8-py2.py3-none-any.whl"
             }
         ]
     },
@@ -12217,5 +12217,93 @@
             "output": [],
             "versions": "EQ(*)"
         }
-    ]
+    ],
+    "pip39_dependencies": {
+        "wheel": [
+            {
+                "module": "PyJWT",
+                "input_file": "wheels/py3/PyJWT-2.0.1-py3-none-any.whl"
+            },
+            {
+                "module": "beautifulsoup4",
+                "input_file": "wheels/py3/beautifulsoup4-4.9.1-py3-none-any.whl"
+            },
+            {
+                "module": "certifi",
+                "input_file": "wheels/shared/certifi-2021.10.8-py2.py3-none-any.whl"
+            },
+            {
+                "module": "cffi",
+                "input_file": "wheels/py39/cffi-1.15.0-cp39-cp39-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+            },
+            {
+                "module": "chardet",
+                "input_file": "wheels/shared/chardet-3.0.4-py2.py3-none-any.whl"
+            },
+            {
+                "module": "cryptography",
+                "input_file": "wheels/py36/cryptography-36.0.1-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+            },
+            {
+                "module": "defusedxml",
+                "input_file": "wheels/shared/defusedxml-0.7.1-py2.py3-none-any.whl"
+            },
+            {
+                "module": "idna",
+                "input_file": "wheels/shared/idna-2.10-py2.py3-none-any.whl"
+            },
+            {
+                "module": "jira",
+                "input_file": "wheels/shared/jira-2.0.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "oauthlib",
+                "input_file": "wheels/shared/oauthlib-3.1.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "pbr",
+                "input_file": "wheels/shared/pbr-5.4.4-py2.py3-none-any.whl"
+            },
+            {
+                "module": "pycparser",
+                "input_file": "wheels/shared/pycparser-2.21-py2.py3-none-any.whl"
+            },
+            {
+                "module": "python_dateutil",
+                "input_file": "wheels/shared/python_dateutil-2.8.1-py2.py3-none-any.whl"
+            },
+            {
+                "module": "pytz",
+                "input_file": "wheels/shared/pytz-2021.1-py2.py3-none-any.whl"
+            },
+            {
+                "module": "requests",
+                "input_file": "wheels/shared/requests-2.25.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "requests_oauthlib",
+                "input_file": "wheels/shared/requests_oauthlib-1.3.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "requests_toolbelt",
+                "input_file": "wheels/shared/requests_toolbelt-0.9.1-py2.py3-none-any.whl"
+            },
+            {
+                "module": "setuptools",
+                "input_file": "wheels/py3/setuptools-60.7.0-py3-none-any.whl"
+            },
+            {
+                "module": "six",
+                "input_file": "wheels/shared/six-1.16.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "soupsieve",
+                "input_file": "wheels/py3/soupsieve-2.3.1-py3-none-any.whl"
+            },
+            {
+                "module": "urllib3",
+                "input_file": "wheels/shared/urllib3-1.26.8-py2.py3-none-any.whl"
+            }
+        ]
+    }
 }
