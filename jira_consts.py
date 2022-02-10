@@ -72,7 +72,8 @@ JIRA_CUSTOM_FIELD_NON_EMPTY_ERROR = "Please provide 'custom_fields' asset config
 JIRA_ASSIGNEE_ERROR = "Please provide either 'assignee' or 'assignee_account_id' action parameter. " \
     "For JIRA on-prem, use 'assignee' action parameter, and, for JIRA cloud, use 'assignee_account_id' action parameter"
 JIRA_INVALID_LIMIT = "Please provide non-zero positive integer in limit"
-JIRA_ERR_STATE_FILE_LOAD_ERROR = "Could not load the state file"
+JIRA_ERR_STATE_FILE_CORRUPT_ERR = "Error occurred while loading the state file due to its unexpected format.\
+     Resetting the state file with the default format. Please try again."
 JIRA_ERR_FETCH_CUSTOM_FIELDS = "Error occurred while fetching the custom fields metadata"
 JIRA_ERR_API_INITIALIZATION = "API Initialization failed"
 JIRA_ERR_API_TIMEOUT = "Timed out waiting for API to initialize. Please verify the asset configuration parameters, username, and password"

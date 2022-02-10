@@ -298,7 +298,7 @@ information to assist in debugging.
 
 ## Port Information
 
-The app uses HTTP/ HTTPS protocol for communicating with the Mattermost server. Below are the
+The app uses HTTP/ HTTPS protocol for communicating with the Jira server. Below are the
 default ports used by Splunk SOAR.
 
 |         Service Name | Transport Protocol | Port |

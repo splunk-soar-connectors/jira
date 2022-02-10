@@ -87,7 +87,7 @@ class JiraConnector(phantom.BaseConnector):
         self._timezone = self._handle_py_ver_compat_for_input_str(config.get(JIRA_JSON_TIMEZONE, JIRA_JSON_DEFAULT_TIMEZONE))
 
         self._verify_cert = config.get(phantom.APP_JSON_VERIFY, False)
-        self._username = self._handle_py_ver_compat_for_input_str(config.get(phantom.APP_JSON_USERNAME, ""))
+        self._username = self._handle_py_ver_compat_for_input_str(config.get(phantom.APP_JSON_USERNAME))
         self._password = config[phantom.APP_JSON_PASSWORD]
         self._custom_fields_list = None
         self._custom_fields = self._handle_py_ver_compat_for_input_str(config.get(JIRA_JSON_CUSTOM_FIELDS))
@@ -2331,9 +2331,16 @@ class JiraConnector(phantom.BaseConnector):
         config = self.get_config()
 
         if not state:
-            self.debug_print(JIRA_ERR_STATE_FILE_LOAD_ERROR)
-            self.save_progress(JIRA_ERR_STATE_FILE_LOAD_ERROR)
-            return action_result.set_status(phantom.APP_ERROR, JIRA_ERR_STATE_FILE_LOAD_ERROR)
+            self.debug_print(JIRA_ERR_STATE_FILE_CORRUPT_ERR)
+            self.save_progress(JIRA_ERR_STATE_FILE_CORRUPT_ERR)
+            state = {
+                "app_version": self.get_app_json().get('app_version')
+            }
+            if (hasattr(self, 'save_state')):
+                self.save_state(state)
+            else:
+                self._save_state(state)
+            return action_result.set_status(phantom.APP_ERROR, JIRA_ERR_STATE_FILE_CORRUPT_ERR)
 
         # Get time from last poll, save now as time for this poll
         last_time = state.get('last_time', 0)

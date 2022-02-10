@@ -18,7 +18,7 @@
     "product_version_regex": ".*",
     "min_phantom_version": "5.1.0",
     "latest_tested_versions": [
-        "On prem v7.1.9",
+        "On prem v8.21.0",
         "Cloud Copyright (c) 2002 - 2021 Atlassian Corporation Pty Ltd."
     ],
     "python_version": "3",
@@ -34,7 +34,7 @@
             },
             {
                 "module": "SecretStorage",
-                "input_file": "wheels/SecretStorage-3.3.1-py3-none-any.whl"
+                "input_file": "wheels/py3/SecretStorage-3.3.1-py3-none-any.whl"
             },
             {
                 "module": "beautifulsoup4",
@@ -66,19 +66,19 @@
             },
             {
                 "module": "importlib_metadata",
-                "input_file": "wheels/importlib_metadata-4.8.3-py3-none-any.whl"
+                "input_file": "wheels/py3/importlib_metadata-4.8.3-py3-none-any.whl"
             },
             {
                 "module": "jeepney",
-                "input_file": "wheels/jeepney-0.7.1-py3-none-any.whl"
+                "input_file": "wheels/py3/jeepney-0.7.1-py3-none-any.whl"
             },
             {
                 "module": "jira",
-                "input_file": "wheels/jira-3.1.1-py3-none-any.whl"
+                "input_file": "wheels/py3/jira-3.1.1-py3-none-any.whl"
             },
             {
                 "module": "keyring",
-                "input_file": "wheels/keyring-23.4.1-py3-none-any.whl"
+                "input_file": "wheels/py3/keyring-23.4.1-py3-none-any.whl"
             },
             {
                 "module": "oauthlib",
@@ -126,7 +126,7 @@
             },
             {
                 "module": "typing_extensions",
-                "input_file": "wheels/typing_extensions-4.0.1-py3-none-any.whl"
+                "input_file": "wheels/py3/typing_extensions-4.0.1-py3-none-any.whl"
             },
             {
                 "module": "urllib3",
@@ -134,7 +134,7 @@
             },
             {
                 "module": "zipp",
-                "input_file": "wheels/zipp-3.6.0-py3-none-any.whl"
+                "input_file": "wheels/py3/zipp-3.6.0-py3-none-any.whl"
             }
         ]
     },
@@ -193,6 +193,7 @@
             "data_type": "timezone",
             "order": 9,
             "description": "Jira instance timezone (used for timezone conversions for querying in ingestion). Refer to README",
+            "default": "GMT",
             "required": true
         }
     },
@@ -12247,6 +12248,10 @@
                 "input_file": "wheels/py3/PyJWT-2.0.1-py3-none-any.whl"
             },
             {
+                "module": "SecretStorage",
+                "input_file": "wheels/py3/SecretStorage-3.3.1-py3-none-any.whl"
+            },
+            {
                 "module": "beautifulsoup4",
                 "input_file": "wheels/py3/beautifulsoup4-4.9.1-py3-none-any.whl"
             },
@@ -12275,8 +12280,20 @@
                 "input_file": "wheels/shared/idna-2.10-py2.py3-none-any.whl"
             },
             {
+                "module": "importlib_metadata",
+                "input_file": "wheels/py3/importlib_metadata-4.10.1-py3-none-any.whl"
+            },
+            {
+                "module": "jeepney",
+                "input_file": "wheels/py3/jeepney-0.7.1-py3-none-any.whl"
+            },
+            {
                 "module": "jira",
-                "input_file": "wheels/shared/jira-2.0.0-py2.py3-none-any.whl"
+                "input_file": "wheels/py3/jira-3.1.1-py3-none-any.whl"
+            },
+            {
+                "module": "keyring",
+                "input_file": "wheels/py3/keyring-23.5.0-py3-none-any.whl"
             },
             {
                 "module": "oauthlib",
@@ -12312,7 +12329,7 @@
             },
             {
                 "module": "setuptools",
-                "input_file": "wheels/py3/setuptools-60.7.0-py3-none-any.whl"
+                "input_file": "wheels/py3/setuptools-60.8.1-py3-none-any.whl"
             },
             {
                 "module": "six",
@@ -12325,6 +12342,10 @@
             {
                 "module": "urllib3",
                 "input_file": "wheels/shared/urllib3-1.26.8-py2.py3-none-any.whl"
+            },
+            {
+                "module": "zipp",
+                "input_file": "wheels/py3/zipp-3.7.0-py3-none-any.whl"
             }
         ]
     }
