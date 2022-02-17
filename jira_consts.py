@@ -76,7 +76,7 @@ JIRA_ERR_STATE_FILE_CORRUPT_ERR = "Error occurred while loading the state file d
      Resetting the state file with the default format. Please try again."
 JIRA_ERR_FETCH_CUSTOM_FIELDS = "Error occurred while fetching the custom fields metadata"
 JIRA_ERR_API_INITIALIZATION = "API Initialization failed"
-JIRA_ERR_API_TIMEOUT = "Timed out waiting for API to initialize. Please verify the asset configuration parameters, username, and password"
+JIRA_ERR_API_TIMEOUT = "Timed out waiting for API to initialize. Please verify the asset configuration parameters"
 JIRA_ERR_CONNECTIVITY_TEST = "Connectivity test failed"
 JIRA_ERR_PROJECTS_INFO = "Error getting projects info"
 JIRA_SUCC_CONNECTIVITY_TEST = "Connectivity test passed"

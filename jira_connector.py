@@ -22,7 +22,7 @@ import sys
 import tempfile
 import time
 from builtins import str
-from datetime import *
+from datetime import datetime
 
 import dateutil
 import phantom.app as phantom
