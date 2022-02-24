@@ -104,7 +104,8 @@ One helpful debugging tool: simplify your action, instead of filling out all the
 	</ul>
 	<li>Note:</li>
 	<ul>
-		<li>For any invalid PAT value, the test_connectivity and on_poll would pass with no data as per the API behaviour and all the other action execution would fail.</li>
+		<li>For security reasons it isn't possible to view the token after closing the creation dialog; if necessary, create a new token.</li>
+		<li>For any invalid PAT value, the test_connectivity will pass as per the API behaviour.</li>
 	</ul>
 	<br>
 </ul>
@@ -171,7 +172,7 @@ One helpful debugging tool: simplify your action, instead of filling out all the
 					<ul>
 						<li>Follows the same steps as manual polling with the below-mentioned points getting considered</li>
 						<li>The application will fetch the number of tickets governed by the <b>Maximum tickets (issues) for scheduled polling</b> parameter (default: 100) in the On Poll action, whose <b>updated</b> time is greater than or equal to one minute less than the time stored in the <b>last_time</b> variable in the state file. The reason for reducing one minute from the <b>last_time</b> is to ensure that no tickets created or updated on the same minute are not getting skipped due to the granularity of Jira being 1 minute for the time-based filtering of the tickets.</li>
-						<li>If the <b>last_time</b> variable is not present in the state file i.e. the On Poll is executing for the first time, the application will fetch the last <b>M</b> tickets (<b>M:</b> Value provided in the <b>Maximum tickets (issues) to poll first time</b> app configuration parameter (default: 100)) and then, from the next consecutive runs, it will fetch <b>N</b> tickets (<b>N:</b> Value provided in the <b>Maximum tickets (issues) for scheduled polling</b> app configuration parameter (default: 100)).</li>
+						<li>If the <b>last_time</b> variable is not present in the state file i.e. the On Poll is executing for the first time, the application will fetch the last <b>M</b> tickets (<b>M:</b> Value provided in the <b>Maximum tickets (issues) to poll first time</b> app configuration parameter (default: 1000)) and then, from the next consecutive runs, it will fetch <b>N</b> tickets (<b>N:</b> Value provided in the <b>Maximum tickets (issues) for scheduled polling</b> app configuration parameter (default: 100)).</li>
 						<li>The last_time will be updated by the <b>updated</b> time of the last ticket which was ingested</li>
 					</ul>
 				</ul>
