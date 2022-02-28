@@ -15,6 +15,22 @@ Copyright 2004-2017 Leonard Richardson
 Copyright 2004-2019 Leonard Richardson
 Copyright 2018 Isaac Muse
 
+Library: defusedxml
+Version: 0.7.1
+License: Python 2.0
+Copyright 2002-2008 ,
+Copyright 2013-2017 by Christian Heimes <christian@python.org>
+
+Library: importlib-metadata
+Version: 4.11.2
+License: Apache 2.0
+Copyright 2017-2019 Jason R. Coombs
+
+Library: jeepney
+Version: 0.7.1
+License: MIT
+Copyright 2017 Thomas Kluyver
+
 Library: oauthlib
 Version: 3.1.0
 License: BSD
@@ -71,3 +87,8 @@ Library: requests-toolbelt
 Version: 0.9.1
 License: Apache 2.0
 Copyright 2014 Ian Cordasco, Cory Benfield
+
+Library: setuptools
+Version: 60.9.3
+License: MIT
+Copyright Jason R. Coombs
