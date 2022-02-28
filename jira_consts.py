@@ -72,19 +72,20 @@ JIRA_CUSTOM_FIELD_NON_EMPTY_ERROR = "Please provide 'custom_fields' asset config
 JIRA_ASSIGNEE_ERROR = "Please provide either 'assignee' or 'assignee_account_id' action parameter. " \
     "For JIRA on-prem, use 'assignee' action parameter, and, for JIRA cloud, use 'assignee_account_id' action parameter"
 JIRA_INVALID_LIMIT = "Please provide non-zero positive integer in limit"
-JIRA_ERR_STATE_FILE_LOAD_ERROR = "Could not load the state file"
+JIRA_ERR_STATE_FILE_CORRUPT_ERR = "Error occurred while loading the state file due to its unexpected format.\
+     Resetting the state file with the default format. Please try again."
 JIRA_ERR_FETCH_CUSTOM_FIELDS = "Error occurred while fetching the custom fields metadata"
 JIRA_ERR_API_INITIALIZATION = "API Initialization failed"
-JIRA_ERR_API_TIMEOUT = "Timed out waiting for API to initialize. Please verify the asset configuration parameters, username, and password"
+JIRA_ERR_API_TIMEOUT = "Timed out waiting for API to initialize. Please verify the asset configuration parameters"
 JIRA_ERR_CONNECTIVITY_TEST = "Connectivity test failed"
 JIRA_ERR_PROJECTS_INFO = "Error getting projects info"
 JIRA_SUCC_CONNECTIVITY_TEST = "Connectivity test passed"
 JIRA_ERR_TICKET_ASSIGNMENT_FAILED = "Ticket assignment to user '{0}' failed. {1}"
 JIRA_ERR_CREATE_TICKET_FAILED = "Ticket creation failed"
 JIRA_SUCC_TICKET_CREATED = "Created ticket with id: {id}, key: {key}"
-JIRA_ERR_ARTIFACT_NOT_FOUND_IN_CONTAINER = "Either the ticket artifact with issue key: {issue_key} got deleted from the container"\
-    ": {container_id} " \
-    "or the type of the issue has changed on the JIRA instance. Please delete the container and re-run the ingestion."
+JIRA_ERR_ARTIFACT_NOT_FOUND_IN_CONTAINER = "Either the ticket artifact with issue key: {issue_key} got deleted " \
+    "from the container: {container_id} or the type of the issue has changed on the JIRA instance." \
+    "Please delete the container and re-run the ingestion."
 JIRA_ERR_FILE_NOT_IN_VAULT = "Could not find specified vault ID in vault"
 JIRA_ERR_ATTACH_FAILED = "Adding attachment failed. {0}"
 JIRA_ERR_LIST_TICKETS_FAILED = "Failed to get ticket listing"

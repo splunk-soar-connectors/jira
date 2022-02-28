@@ -2,7 +2,7 @@
 # Jira
 
 Publisher: Splunk  
-Connector Version: 3\.2\.7  
+Connector Version: 3\.3\.0  
 Product Vendor: Atlassian  
 Product Name: Jira  
 Product Version Supported (regex): "\.\*"  
@@ -11,9 +11,19 @@ Minimum Product Version: 5\.1\.0
 This app integrates with JIRA to perform several ticket management actions
 
 [comment]: # " File: README.md"
+[comment]: # ""
 [comment]: # "  Copyright (c) 2016-2022 Splunk Inc."
 [comment]: # ""
-[comment]: # "  Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)"
+[comment]: # "  Licensed under the Apache License, Version 2.0 (the \"License\");"
+[comment]: # "  you may not use this file except in compliance with the License."
+[comment]: # "  You may obtain a copy of the License at"
+[comment]: # ""
+[comment]: # "      http://www.apache.org/licenses/LICENSE-2.0"
+[comment]: # ""
+[comment]: # "  Unless required by applicable law or agreed to in writing, software distributed under"
+[comment]: # "  the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,"
+[comment]: # "  either express or implied. See the License for the specific language governing permissions"
+[comment]: # "  and limitations under the License."
 [comment]: # ""
 ## JIRA
 
@@ -288,7 +298,7 @@ information to assist in debugging.
 
 ## Port Information
 
-The app uses HTTP/ HTTPS protocol for communicating with the Mattermost server. Below are the
+The app uses HTTP/ HTTPS protocol for communicating with the Jira server. Below are the
 default ports used by Splunk SOAR.
 
 |         Service Name | Transport Protocol | Port |
@@ -304,7 +314,7 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
 **device\_url** |  required  | string | Device URL including the port, e\.g\. https\://myjira\.enterprise\.com\:8080
 **verify\_server\_cert** |  optional  | boolean | Verify server certificate
-**username** |  required  | string | Username
+**username** |  optional  | string | Username
 **password** |  required  | password | Password \(or API token if using Jira Cloud\)
 **project\_key** |  optional  | string | Project key to ingest tickets \(issues\) from
 **query** |  optional  | string | Additional parameters to query for during ingestion in JQL

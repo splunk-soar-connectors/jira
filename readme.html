@@ -1,7 +1,14 @@
 <!-- File: readme.html
   Copyright (c) 2016-2022 Splunk Inc.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-  Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)
+      http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software distributed under
+  the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+  either express or implied. See the License for the specific language governing permissions
+  and limitations under the License.
 -->
 
 <p>
@@ -77,6 +84,34 @@ One helpful debugging tool: simplify your action, instead of filling out all the
 </p>
 
 <p>
+	<b>Authentication via Personal Access Token (PAT)</b>
+<ul>
+	<li><a href="https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html#UsingPersonalAccessTokens-CreatingPATsinapplication" target="_blank">Click here</a> for instructions to create PATs</li>
+	<p>Personal Access Tokens are a safe alternative to using username and password for authentication with various services
+	in <b>Data Center and server editions</b> of the following applications:</p>
+	<ul>
+		<li>Jira Core 8.14 and later</li>
+		<li>Jira Software 8.14 and later</li>
+		<li>Jira Service Management 4.15 and later</li>
+		<li>Confluence 7.9 and later</li>
+	</ul>
+	<br>
+	<li>Use a PAT</li>
+	<ul>
+		<li>A primary use case for PATs is to use scripts and integrate external apps with your Atlassian application by
+		leveraging REST APIs upon Bearer Token Authorization.</li>
+		<li>To use Bearer Token Authorization, configure your asset with PAT in the "Password" field and leave "Username" blank.</li>
+	</ul>
+	<li>Note:</li>
+	<ul>
+		<li>For security reasons it isn't possible to view the token after closing the creation dialog; if necessary, create a new token.</li>
+		<li>For any invalid PAT value, the test_connectivity will pass as per the API behaviour.</li>
+	</ul>
+	<br>
+</ul>
+</p>
+
+<p>
 	<b>The functioning of On Poll</b>
 		<ul>
 			<li><b>NOTE (Consider below points due to a minute's granularity (instead of a second or lesser) for querying tickets in the JIRA)</b></li>
@@ -137,7 +172,7 @@ One helpful debugging tool: simplify your action, instead of filling out all the
 					<ul>
 						<li>Follows the same steps as manual polling with the below-mentioned points getting considered</li>
 						<li>The application will fetch the number of tickets governed by the <b>Maximum tickets (issues) for scheduled polling</b> parameter (default: 100) in the On Poll action, whose <b>updated</b> time is greater than or equal to one minute less than the time stored in the <b>last_time</b> variable in the state file. The reason for reducing one minute from the <b>last_time</b> is to ensure that no tickets created or updated on the same minute are not getting skipped due to the granularity of Jira being 1 minute for the time-based filtering of the tickets.</li>
-						<li>If the <b>last_time</b> variable is not present in the state file i.e. the On Poll is executing for the first time, the application will fetch the last <b>M</b> tickets (<b>M:</b> Value provided in the <b>Maximum tickets (issues) to poll first time</b> app configuration parameter (default: 100)) and then, from the next consecutive runs, it will fetch <b>N</b> tickets (<b>N:</b> Value provided in the <b>Maximum tickets (issues) for scheduled polling</b> app configuration parameter (default: 100)).</li>
+						<li>If the <b>last_time</b> variable is not present in the state file i.e. the On Poll is executing for the first time, the application will fetch the last <b>M</b> tickets (<b>M:</b> Value provided in the <b>Maximum tickets (issues) to poll first time</b> app configuration parameter (default: 1000)) and then, from the next consecutive runs, it will fetch <b>N</b> tickets (<b>N:</b> Value provided in the <b>Maximum tickets (issues) for scheduled polling</b> app configuration parameter (default: 100)).</li>
 						<li>The last_time will be updated by the <b>updated</b> time of the last ticket which was ingested</li>
 					</ul>
 				</ul>
@@ -175,23 +210,23 @@ One helpful debugging tool: simplify your action, instead of filling out all the
 	</ul>
 
 <h2>Port Information</h2>
-	<p>
-		The app uses HTTP/ HTTPS protocol for communicating with the Mattermost server. Below are the default ports used by Splunk SOAR.
-		<table>
-			<tr class=plain>
-				<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Name</th>
-				<th>Transport Protocol</th>
-				<th>Port</th>
-			</tr>
-			<tr>
-				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http</td>
-				<td>tcp</td>
-				<td>80</td>
-			</tr>
-			<tr>
-				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;https</td>
-				<td>tcp</td>
-				<td>443</td>
-			</tr>
-		</table>
-	</p>
+<p>
+	The app uses HTTP/ HTTPS protocol for communicating with the Jira server. Below are the default ports used by the Splunk SOAR Connector.
+	<table>
+		<tr class=plain>
+			<th>SERVICE NAME</th>
+			<th>TRANSPORT PROTOCOL</th>
+			<th>PORT</th>
+		</tr>
+		<tr>
+			<td>http</td>
+			<td>tcp</td>
+			<td>80</td>
+		</tr>
+		<tr>
+			<td>https</td>
+			<td>tcp</td>
+			<td>443</td>
+		</tr>
+	</table>
+</p>
