@@ -2,7 +2,7 @@
 # Jira
 
 Publisher: Splunk  
-Connector Version: 3\.2\.7  
+Connector Version: 3\.3\.0  
 Product Vendor: Atlassian  
 Product Name: Jira  
 Product Version Supported (regex): "\.\*"  
@@ -12,8 +12,15 @@ This app integrates with JIRA to perform several ticket management actions
 
 [comment]: # " File: README.md"
 [comment]: # "  Copyright (c) 2016-2022 Splunk Inc."
+[comment]: # "  Licensed under the Apache License, Version 2.0 (the 'License');"
+[comment]: # "  you may not use this file except in compliance with the License."
+[comment]: # "  You may obtain a copy of the License at"
 [comment]: # ""
-[comment]: # "  Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)"
+[comment]: # "      http://www.apache.org/licenses/LICENSE-2.0"
+[comment]: # "  Unless required by applicable law or agreed to in writing, software distributed under"
+[comment]: # "  the License is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,"
+[comment]: # "  either express or implied. See the License for the specific language governing permissions"
+[comment]: # "  and limitations under the License."
 [comment]: # ""
 ## JIRA
 
@@ -115,6 +122,43 @@ information to assist in debugging.
         Cloud applications using HTTP basic authentication.
     -   HTTP basic authentication would require a username and API token to access REST APIs for
         Atlassian Cloud applications.
+
+      
+
+**Authentication via Personal Access Token (PAT)**
+
+-   [Click
+    here](https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html#UsingPersonalAccessTokens-CreatingPATsinapplication)
+    for instructions to create PATs
+
+      
+
+    Personal Access Tokens are a safe alternative to using username and password for authentication
+    with various services in **Data Center and server editions** of the following applications:
+
+    -   Jira Core 8.14 and later
+    -   Jira Software 8.14 and later
+    -   Jira Service Management 4.15 and later
+    -   Confluence 7.9 and later
+
+      
+
+-   Use a PAT
+
+      
+
+    -   A primary use case for PATs is to use scripts and integrate external apps with your
+        Atlassian application by leveraging REST APIs upon Bearer Token Authorization.
+    -   To use Bearer Token Authorization, configure your asset with PAT in the "Password" field and
+        leave "Username" blank.
+
+-   Note:
+
+      
+
+    -   For security reasons it isn't possible to view the token after closing the creation dialog;
+        if necessary, create a new token.
+    -   For any invalid PAT value, the test_connectivity will pass as per the API behaviour.
 
       
 
@@ -250,7 +294,7 @@ information to assist in debugging.
         -   If the **last_time** variable is not present in the state file i.e. the On Poll is
             executing for the first time, the application will fetch the last **M** tickets ( **M:**
             Value provided in the **Maximum tickets (issues) to poll first time** app configuration
-            parameter (default: 100)) and then, from the next consecutive runs, it will fetch **N**
+            parameter (default: 1000)) and then, from the next consecutive runs, it will fetch **N**
             tickets ( **N:** Value provided in the **Maximum tickets (issues) for scheduled
             polling** app configuration parameter (default: 100)).
         -   The last_time will be updated by the **updated** time of the last ticket which was
@@ -288,13 +332,13 @@ information to assist in debugging.
 
 ## Port Information
 
-The app uses HTTP/ HTTPS protocol for communicating with the Mattermost server. Below are the
-default ports used by Splunk SOAR.
+The app uses HTTP/ HTTPS protocol for communicating with the Jira server. Below are the default
+ports used by the Splunk SOAR Connector.
 
-|         Service Name | Transport Protocol | Port |
-|----------------------|--------------------|------|
-|         http         | tcp                | 80   |
-|         https        | tcp                | 443  |
+| SERVICE NAME | TRANSPORT PROTOCOL | PORT |
+|--------------|--------------------|------|
+| http         | tcp                | 80   |
+| https        | tcp                | 443  |
 
 
 ### Configuration Variables
@@ -304,8 +348,8 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
 **device\_url** |  required  | string | Device URL including the port, e\.g\. https\://myjira\.enterprise\.com\:8080
 **verify\_server\_cert** |  optional  | boolean | Verify server certificate
-**username** |  required  | string | Username
-**password** |  required  | password | Password \(or API token if using Jira Cloud\)
+**username** |  optional  | string | Username
+**password** |  required  | password | Password / API token \(Jira Cloud\) / PAT
 **project\_key** |  optional  | string | Project key to ingest tickets \(issues\) from
 **query** |  optional  | string | Additional parameters to query for during ingestion in JQL
 **first\_run\_max\_tickets** |  optional  | numeric | Maximum tickets \(issues\) to poll first time
