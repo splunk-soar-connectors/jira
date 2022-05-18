@@ -278,6 +278,18 @@ class JiraConnector(phantom.BaseConnector):
 
         return input_str
 
+    def _is_safe_path(basedir, path, follow_symlinks=True):
+        """
+        This function checks the given file path against the actual app directory
+        path to combat path traversal attacks
+        """
+        if follow_symlinks:
+            matchpath = os.path.realpath(path)
+        else:
+            matchpath = os.path.abspath(path)
+
+        return basedir == os.path.commonpath((basedir, matchpath))
+
     def _get_error_message_from_exception(self, e):
         """ This method is used to get appropriate error message from the exception.
         :param e: Exception object
@@ -2088,6 +2100,9 @@ class JiraConnector(phantom.BaseConnector):
 
                         full_path = '{}/{}'.format(temp_vault_path, jira_filename)
 
+                        if not self._is_safe_path(temp_vault_path, full_path):
+                            return action_result.set_status(phantom.APP_ERROR, JIRA_ERR_INVALID_FILE_PATH)
+
                         ret_val = self._write_in_file(action_result, attachment, full_path, container_id)
                         if phantom.is_fail(ret_val):
                             return action_result.get_status()
@@ -2102,6 +2117,10 @@ class JiraConnector(phantom.BaseConnector):
                         jira_filename = "".join(self._handle_py_ver_compat_for_input_str(attachment.filename).split())
 
                         full_path = '{}/{}'.format(temp_vault_path, jira_filename)
+
+                        if not self._is_safe_path(temp_vault_path, full_path):
+                            return action_result.set_status(phantom.APP_ERROR, JIRA_ERR_INVALID_FILE_PATH)
+
                         file_extension = ".{}".format(jira_filename.rsplit('.')[-1])
 
                         if file_extension in extension_list:

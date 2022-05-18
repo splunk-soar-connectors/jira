@@ -10,7 +10,7 @@
     ],
     "type": "ticketing",
     "main_module": "jira_connector.py",
-    "app_version": "3.3.0",
+    "app_version": "3.4.0",
     "utctime_updated": "2022-02-04T03:00:20.000000Z",
     "package_name": "phantom_jira",
     "product_vendor": "Atlassian",
