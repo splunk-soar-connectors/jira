@@ -278,7 +278,7 @@ class JiraConnector(phantom.BaseConnector):
 
         return input_str
 
-    def _is_safe_path(basedir, path, follow_symlinks=True):
+    def _is_safe_path(self, basedir, path, follow_symlinks=True):
         """
         This function checks the given file path against the actual app directory
         path to combat path traversal attacks
@@ -2080,7 +2080,7 @@ class JiraConnector(phantom.BaseConnector):
         extension_filter = self._handle_py_ver_compat_for_input_str(param.get('extension_filter', ''))
         get_all_attachments = param.get('retrieve_all', False)
 
-        # removing extra comma from a extentsion filter string
+        # removing extra comma from an extension filter string
         types = [x.strip() for x in extension_filter.split(",")]
         types = list(filter(None, types))
         extension_filter = ",".join(types)
@@ -2096,7 +2096,6 @@ class JiraConnector(phantom.BaseConnector):
                 temp_vault_path = Vault.get_vault_tmp_dir().rstrip('/')
 
                 extension_list = None
-                ingest_file_count = 0
 
                 if extension_filter:
                     extension_list = extension_filter.split(',')
