@@ -278,6 +278,18 @@ class JiraConnector(phantom.BaseConnector):
 
         return input_str
 
+    def _is_safe_path(self, basedir, path, follow_symlinks=True):
+        """
+        This function checks the given file path against the actual app directory
+        path to combat path traversal attacks
+        """
+        if follow_symlinks:
+            matchpath = os.path.realpath(path)
+        else:
+            matchpath = os.path.abspath(path)
+
+        return basedir == os.path.commonpath((basedir, matchpath))
+
     def _get_error_message_from_exception(self, e):
         """ This method is used to get appropriate error message from the exception.
         :param e: Exception object
@@ -2068,7 +2080,7 @@ class JiraConnector(phantom.BaseConnector):
         extension_filter = self._handle_py_ver_compat_for_input_str(param.get('extension_filter', ''))
         get_all_attachments = param.get('retrieve_all', False)
 
-        # removing extra comma from a extentsion filter string
+        # removing extra comma from an extension filter string
         types = [x.strip() for x in extension_filter.split(",")]
         types = list(filter(None, types))
         extension_filter = ",".join(types)
@@ -2082,37 +2094,34 @@ class JiraConnector(phantom.BaseConnector):
             if len(jira_issue.fields.attachment) > 0:
                 ingest_file_count = 0
                 temp_vault_path = Vault.get_vault_tmp_dir().rstrip('/')
-                if get_all_attachments:
-                    for attachment in jira_issue.fields.attachment:
-                        jira_filename = "".join(self._handle_py_ver_compat_for_input_str(attachment.filename).split())
 
-                        full_path = '{}/{}'.format(temp_vault_path, jira_filename)
+                extension_list = None
 
-                        ret_val = self._write_in_file(action_result, attachment, full_path, container_id)
-                        if phantom.is_fail(ret_val):
-                            return action_result.get_status()
-
-                    ingest_file_count = len(jira_issue.fields.attachment)
-
-                elif extension_filter:
+                if extension_filter:
                     extension_list = extension_filter.split(',')
                     extension_list = [".{}".format(extension.lstrip('.')) for extension in extension_list]
 
-                    for attachment in jira_issue.fields.attachment:
-                        jira_filename = "".join(self._handle_py_ver_compat_for_input_str(attachment.filename).split())
-
-                        full_path = '{}/{}'.format(temp_vault_path, jira_filename)
-                        file_extension = ".{}".format(jira_filename.rsplit('.')[-1])
-
-                        if file_extension in extension_list:
-                            ret_val = self._write_in_file(action_result, attachment, full_path, container_id)
-                            if phantom.is_fail(ret_val):
-                                return action_result.get_status()
-                            ingest_file_count += 1
-
-                else:
+                elif not get_all_attachments:
                     err = "Please select retrieve all or pass in a list of extensions to look for. Please check the provided parameters"
                     return action_result.set_status(phantom.APP_ERROR, err)
+
+                for attachment in jira_issue.fields.attachment:
+                    jira_filename = "".join(self._handle_py_ver_compat_for_input_str(attachment.filename).split())
+
+                    full_path = '{}/{}'.format(temp_vault_path, jira_filename)
+
+                    if not self._is_safe_path(temp_vault_path, full_path):
+                        return action_result.set_status(phantom.APP_ERROR, JIRA_ERR_INVALID_FILE_PATH)
+
+                    if extension_filter:
+                        file_extension = ".{}".format(jira_filename.rsplit('.')[-1])
+                        if file_extension not in extension_list:
+                            continue
+
+                    ret_val = self._write_in_file(action_result, attachment, full_path, container_id)
+                    if phantom.is_fail(ret_val):
+                        return action_result.get_status()
+                    ingest_file_count += 1
 
                 msg = "Successfully retrieved {0} attachments of {1} total attachments from Jira ticket- {2}".format(
                     ingest_file_count, len(jira_issue.fields.attachment), ticket_key)
