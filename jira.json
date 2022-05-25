@@ -10,13 +10,13 @@
     ],
     "type": "ticketing",
     "main_module": "jira_connector.py",
-    "app_version": "3.3.0",
+    "app_version": "3.4.0",
     "utctime_updated": "2022-02-04T03:00:20.000000Z",
     "package_name": "phantom_jira",
     "product_vendor": "Atlassian",
     "product_name": "Jira",
     "product_version_regex": ".*",
-    "min_phantom_version": "5.1.0",
+    "min_phantom_version": "5.2.0",
     "latest_tested_versions": [
         "On prem v8.21.0",
         "Cloud Copyright (c) 2002 - 2022 Atlassian Corporation Pty Ltd."
