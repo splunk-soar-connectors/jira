@@ -1,0 +1,22 @@
+name: Review Release
+concurrency:
+  group: app-release
+  cancel-in-progress: true
+permissions:
+  contents: read
+  id-token: write
+  statuses: write
+on:
+  workflow_dispatch:
+    inputs:
+      task_token:
+        description: 'StepFunction task token'
+        required: true
+
+jobs:
+  review:
+    uses: 'phantomcyber/dev-cicd-tools/.github/workflows/review-release.yml@main'
+    with:
+      task_token: ${{ inputs.task_token }}
+    secrets:
+      resume_release_role_arn: ${{ secrets.RESUME_RELEASE_ROLE_ARN }}
