@@ -116,7 +116,7 @@ One helpful debugging tool: simplify your action, instead of filling out all the
 		<ul>
 			<li><b>NOTE (Consider below points due to a minute's granularity (instead of a second or lesser) for querying tickets in the JIRA)</b></li>
 				<ul>
-					<li>It is highly recommended for configuring a significantly large value (larger than the number of existing tickets on the user's instance) in the <b></b> asset configuration parameter to bring the ingested tickets in the Phantom in sync entirely with the JIRA instance in the first run</li>
+					<li>It is highly recommended for configuring a significantly large value (larger than the number of existing tickets on the user's instance) in the <b></b> asset configuration parameter to bring the ingested tickets in the Splunk SOAR in sync entirely with the JIRA instance in the first run</li>
 					<li>It is highly recommended for configuring a significantly large value (larger than the possible number of tickets that can be updated in 1 minute or any value larger than the average number of tickets getting created every unit of time (based on the frequency of scheduled or interval polling)) in the <b></b> asset configuration parameter to avoid the duplicate tickets ingestion</li>
 				</ul>
 			<br>
@@ -128,12 +128,12 @@ One helpful debugging tool: simplify your action, instead of filling out all the
 				<li>On-premise JIRA</li>
 					<ul>
 						<li>The timezone parameter here is the profile timezone of the JIRA instance</li>
-						<li>For checking the profile timezone, navigate to the JIRA instance; navigate to the profile settings; the value of the <b>Time Zone</b> parameter is the timezone that has to be provided in the Phantom asset configuration</li>
+						<li>For checking the profile timezone, navigate to the JIRA instance; navigate to the profile settings; the value of the <b>Time Zone</b> parameter is the timezone that has to be provided in the app asset configuration</li>
 					</ul>
 				<li>Cloud JIRA</li>
 					<ul>
 						<li>The timezone parameter here is the system settings timezone of the JIRA instance</li>
-						<li>For checking the system settings timezone, navigate to the JIRA instance; navigate to the option <b>Jira Settings --> System</b> in the settings page; the value of the <b>Default user time zone</b> parameter is the timezone that has to be provided in the Phantom asset configuration</li>
+						<li>For checking the system settings timezone, navigate to the JIRA instance; navigate to the option <b>Jira Settings --> System</b> in the settings page; the value of the <b>Default user time zone</b> parameter is the timezone that has to be provided in the app asset configuration</li>
 					</ul>
 			</ol>
 			<li>Users can provide the JSON formatted list of names of the custom fields (to be considered for the ingestion) in the asset configuration parameter <b>custom_fields</b> e.g. ["Test \"CF\" 1", "test_cf_2"]. It's a valid JSON formatted list of strings, so the user should use escape sequences whenever needed. Please find the below points for getting exact names for the custom fields.</li>
@@ -145,7 +145,7 @@ One helpful debugging tool: simplify your action, instead of filling out all the
 				<li>Cloud JIRA</li>
 					<ul>
 						<li>The timezone parameter here is the system settings timezone of the JIRA instance</li>
-						<li>For checking the system settings timezone, navigate to the JIRA instance; navigate to the option <b>Jira Settings --> System</b> in the settings page; the value of the <b>Default user time zone</b> parameter is the timezone that has to be provided in the Phantom asset configuration</li>
+						<li>For checking the system settings timezone, navigate to the JIRA instance; navigate to the option <b>Jira Settings --> System</b> in the settings page; the value of the <b>Default user time zone</b> parameter is the timezone that has to be provided in the app asset configuration</li>
 					</ul>
 			</ol>
 			<li>If there is any error while fetching the custom fields metadata due to project configuration or lack of permissions, then, the custom fields will be ignored and the ingestion based on the system fields of the tickets (issues) will be executed successfully</li>
@@ -191,7 +191,7 @@ One helpful debugging tool: simplify your action, instead of filling out all the
 
 		<li>Test connectivity may fail due to invalid credentials, such as accidentally using the user's email address as the authentication login instead of the user's login name.</li>
 
-		<li>While adding an attachment to the Jira ticket using 'Update ticket' action, if the filename contains Unicode characters, the action is getting failed with the 500 Internal Server Error because of the Jira SDK issue. Due to this, action behaves differently with the various Phantom platforms. As a result, we have deployed the below-mentioned workflow which will ensure a minimal change in the filename and minimal/no data loss.
+		<li>While adding an attachment to the Jira ticket using 'Update ticket' action, if the filename contains Unicode characters, the action is getting failed with the 500 Internal Server Error because of the Jira SDK issue. Due to this, action behaves differently with the various Splunk SOAR platforms. As a result, we have deployed the below-mentioned workflow which will ensure a minimal change in the filename and minimal/no data loss.
 			<ol>
 				<li>
 					For the first time we try to add an attachment to the Jira ticket with the same name as the filename, if it may get successful, then it will add an attachment with the same name
