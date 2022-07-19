@@ -1186,7 +1186,6 @@
                     "data_path": "action_result.data.*.fields.description",
                     "data_type": "string",
                     "example_values": [
-                        "testing",
                         "Jira QA automation ticket description"
                     ]
                 },
@@ -1219,8 +1218,7 @@
                         "url"
                     ],
                     "example_values": [
-                        "http://jira.instance.ip/images/icons/issuetypes/story.svg",
-                        "http://jira.instance.ip/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype"
+                        "http://jira.instance.ip/images/icons/issuetypes/story.svg"
                     ]
                 },
                 {
@@ -1249,8 +1247,7 @@
                         "url"
                     ],
                     "example_values": [
-                        "http://jira.instance.ip/rest/api/2/issuetype/10101",
-                        "http://jira.instance.ip/rest/api/2/issuetype/3"
+                        "http://jira.instance.ip/rest/api/2/issuetype/10101"
                     ]
                 },
                 {
@@ -1667,8 +1664,7 @@
                     "data_path": "action_result.data.*.fields.updated",
                     "data_type": "string",
                     "example_values": [
-                        "2018-09-25T06:31:58.854-0700",
-                        "2018-10-03T03:42:10.913-0700"
+                        "2018-09-25T06:31:58.854-0700"
                     ]
                 },
                 {
@@ -1686,8 +1682,7 @@
                         "url"
                     ],
                     "example_values": [
-                        "http://jira.instance.ip/rest/api/2/issue/MAN-240/votes",
-                        "http://jira.instance.ip/rest/api/2/issue/PHANINCIDE-370/votes"
+                        "http://jira.instance.ip/rest/api/2/issue/MAN-240/votes"
                     ]
                 },
                 {
@@ -1712,8 +1707,7 @@
                         "url"
                     ],
                     "example_values": [
-                        "http://jira.instance.ip/rest/api/2/issue/MAN-240/watchers",
-                        "http://jira.instance.ip/rest/api/2/issue/PHANINCIDE-370/watchers"
+                        "http://jira.instance.ip/rest/api/2/issue/MAN-240/watchers"
                     ]
                 },
                 {
@@ -1787,8 +1781,7 @@
                     ],
                     "column_order": 4,
                     "example_values": [
-                        "MAN-240",
-                        "PHANINCIDE-370"
+                        "MAN-240"
                     ]
                 },
                 {
@@ -1807,8 +1800,7 @@
                     "data_path": "action_result.data.*.project_key",
                     "data_type": "string",
                     "example_values": [
-                        "MAN",
-                        "PRJ"
+                        "MAN"
                     ],
                     "contains": [
                         "jira project key"
@@ -1853,7 +1845,6 @@
                     "column_name": "Summary",
                     "column_order": 0,
                     "example_values": [
-                        "test",
                         "Jira QA ticket"
                     ]
                 },
@@ -1865,8 +1856,7 @@
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "example_values": [
-                        "Created ticket with id: 11850, key: MAN-240",
-                        "Created ticket with id: 11911, key: PHANINCIDE-370"
+                        "Created ticket with id: 11850, key: MAN-240"
                     ]
                 },
                 {
@@ -2760,8 +2750,7 @@
                     "data_path": "action_result.data.*.fields.comment.comments.*.visibility.value",
                     "data_type": "string",
                     "example_values": [
-                        "jira-software-users",
-                        "Users"
+                        "jira-software-users"
                     ]
                 },
                 {
@@ -4377,8 +4366,7 @@
                     "data_path": "action_result.data.*.project_key",
                     "data_type": "string",
                     "example_values": [
-                        "MAN",
-                        "TES"
+                        "MAN"
                     ],
                     "contains": [
                         "jira project key"
@@ -4998,8 +4986,7 @@
                     "data_path": "action_result.data.*.fields.comment.comments.*.visibility.value",
                     "data_type": "string",
                     "example_values": [
-                        "jira-software-users",
-                        "Users"
+                        "jira-software-users"
                     ]
                 },
                 {
@@ -6786,7 +6773,6 @@
                     "data_path": "action_result.summary.total_users",
                     "data_type": "numeric",
                     "example_values": [
-                        1,
                         4
                     ]
                 },
@@ -7476,8 +7462,7 @@
                     "data_path": "action_result.data.*.fields.comment.comments.*.visibility.value",
                     "data_type": "string",
                     "example_values": [
-                        "jira-software-users",
-                        "Users"
+                        "jira-software-users"
                     ]
                 },
                 {
@@ -11810,8 +11795,7 @@
                     "data_path": "action_result.parameter.comment_visibility_name",
                     "data_type": "string",
                     "example_values": [
-                        "jira-users",
-                        "Users"
+                        "jira-users"
                     ]
                 },
                 {
