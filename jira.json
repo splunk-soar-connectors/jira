@@ -367,8 +367,7 @@
                         "jira project key"
                     ],
                     "example_values": [
-                        "MAN",
-                        "PRJ"
+                        "MAN"
                     ]
                 },
                 {
@@ -406,26 +405,6 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.fields.Custom Checkbox Field Three",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Custom Label Field Two",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Custom Text Field One",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.CustomerSanText",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Domain Test",
-                    "data_type": "string"
-                },
-                {
                     "data_path": "action_result.data.*.fields.Epic Link",
                     "data_type": "string"
                 },
@@ -435,10 +414,6 @@
                     "example_values": [
                         "Test epic"
                     ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Phantom Test",
-                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.Severity",
@@ -624,14 +599,14 @@
                     "data_path": "action_result.data.*.fields.attachment.*.author.displayName",
                     "data_type": "string",
                     "example_values": [
-                        "Phantom Admin"
+                        "Admin"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.fields.attachment.*.author.emailAddress",
                     "data_type": "string",
                     "example_values": [
-                        "notifications@phantom.us"
+                        "notifications@test.us"
                     ]
                 },
                 {
@@ -864,323 +839,6 @@
                     "example_values": [
                         "UTC"
                     ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10000.errorMessage",
-                    "data_type": "string",
-                    "example_values": [
-                        "The Service Desk you are trying to view does not exist"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10000.i18nErrorMessage.i18nKey",
-                    "data_type": "string",
-                    "example_values": [
-                        "sd.agent.servicedesk.error.servicedesk.missing"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10002.errorMessage",
-                    "data_type": "string",
-                    "example_values": [
-                        "The Service Desk you are trying to view does not exist"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10002.i18nErrorMessage.i18nKey",
-                    "data_type": "string",
-                    "example_values": [
-                        "sd.agent.servicedesk.error.servicedesk.missing"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10100",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10101",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10102",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10103",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10104",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10106",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10107.id",
-                    "data_type": "string",
-                    "example_values": [
-                        "10103"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10107.self",
-                    "data_type": "string",
-                    "example_values": [
-                        "http://jira.instance.ip/rest/api/2/customFieldOption/10103"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10107.value",
-                    "data_type": "string",
-                    "example_values": [
-                        "To Do"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10108",
-                    "data_type": "string",
-                    "example_values": [
-                        "ghx-label-8"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10109",
-                    "data_type": "string",
-                    "example_values": [
-                        "0|i01kvz:"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10200",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10201",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10202",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10300",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10301",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10400.errorMessage",
-                    "data_type": "string",
-                    "example_values": [
-                        "The Service Desk you are trying to view does not exist"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10400.i18nErrorMessage.i18nKey",
-                    "data_type": "string",
-                    "example_values": [
-                        "sd.agent.servicedesk.error.servicedesk.missing"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10401",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10402",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10500",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10501",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10600",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10601",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10602",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10603",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10605",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10606",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10701",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10702",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10703",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10704",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10801",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10802",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10900",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10901",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10902",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10903",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10904",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10905",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10906",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10907",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10908",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10909",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10910",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10911",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10912",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10915",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10916",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10917",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10918",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10919",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10920",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10921",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10922",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10923",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10924",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10925",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10926",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10927",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11002",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11003",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11100",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11101",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11102",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11103",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customtextfield1",
-                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.description",
@@ -1644,7 +1302,6 @@
                     "data_path": "action_result.data.*.fields.summary",
                     "data_type": "string",
                     "example_values": [
-                        "test",
                         "Jira QA ticket"
                     ]
                 },
@@ -2052,7 +1709,7 @@
         {
             "action": "update ticket",
             "description": "Update ticket (issue)",
-            "verbose": "Update an existing issue with the values specified in the <b>update_fields</b> parameter.<br>The results of the <b>get ticket</b> action may be used to obtain the <b>update_fields</b> parameters, including any custom fields present in the JIRA.</br>The JSON specified in the <b>update_fields</b> parameter requires the keys and the values specified in case-sensitive and double-quotes string format, except in the case of boolean values, which should be either <i>true</i> or <i>false</i> for example:</br>{\"summary\": \"Zeus, multiple action need to be taken\", \"description\": \"A new summary was added\"}</br></br>The App supports multiple methods for specifying the input dictionary. Please see <a href=\"https://developer.atlassian.com/server/jira/platform/jira-rest-api-examples/#editing-an-issue-examples\"><b>the Atlassian documentation for the JIRA REST <i>update issue</i> API</b></a> for more information.<br>The following formats can be passed as input: <ul><li>Simple format; Create a dictionary with all the fields that need to be set:<br>{\"summary\": \"Zeus detected on endpoint\", \"description\": \"Investigate further\"}</li><li>Using the <i>update</i> key; Some issue fields support operations like <i>remove</i> and <i>add</i>, these operations can be combined to update a ticket: <br>{\"<b>update</b>\": {\"components\" : [{\"remove\" : {\"name\" : \"secondcomponent\"}}, {\"add\" : {\"name\" : \"firstcomponent\"}}]}}<br>{\"<b>update</b>\": {\"comment\": [{\"add\": {\"body\": \"test comment update\"}}]}} </li><li>Using the <i>fields</i> key;</br>{\"<b>fields</b>\":{\"labels\" : [\"FIRSTLABEL\"]}}</li></ul></br>The app supports updating custom fields; depending on the custom field type, some operations might not be available. Review the <b>jira_app</b> playbook for examples.<br><br>The <b>vault_id</b> parameter takes the vault ID of a file in the vault and attaches the file to the JIRA ticket.<br><br>This action requires that either the <b>update_fields</b> parameter or the <b>vault_id</b> parameter is filled out. The action will fail if it either unsuccessfully attempts to add the attachment to the ticket or update the fields on the ticket.<h3>Caveats</h3>Jira Cloud is removing the username field from user profiles in Atlassian Cloud sites. They are also removing username support from their product APIs for Jira Cloud. Since it is not possible to update fields related to user resources in the Jira ticket using username for Jira cloud, we will use the user's account_id to update fields related to user resources. Use 'lookup users' action to find out user's account_id. Use 'get ticket' action results to obtain the [update_fields] parameters. Please find out below-mentioned examples for the [update_fields] parameter which is related to user resources.<ul><li>Add assignee to the Jira ticket for Jira on-prem:<br>{\"fields\":{\"assignee\" : {\"name\": \"username\"}}}</li><li>Add assignee to the Jira ticket for Jira cloud:<br>{\"fields\":{\"assignee\" : {\"accountId\": \"6d1ef6xy52z7360c267f27bb\"}}}</li></ul>.",
+            "verbose": "Update an existing issue with the values specified in the <b>update_fields</b> parameter.<br>The results of the <b>get ticket</b> action may be used to obtain the <b>update_fields</b> parameters, including any custom fields present in the JIRA.</br>The JSON specified in the <b>update_fields</b> parameter requires the keys and the values specified in case-sensitive and double-quotes string format, except in the case of boolean values, which should be either <i>true</i> or <i>false</i> for example:</br>{\"summary\": \"Zeus, multiple action need to be taken\", \"description\": \"A new summary was added\"}</br></br>The App supports multiple methods for specifying the input dictionary. Please see <a href=\"https://developer.atlassian.com/server/jira/platform/jira-rest-api-examples/#editing-an-issue-examples\" target='_blank'><b>the Atlassian documentation for the JIRA REST <i>update issue</i> API</b></a> for more information.<br>The following formats can be passed as input: <ul><li>Simple format; Create a dictionary with all the fields that need to be set:<br>{\"summary\": \"Zeus detected on endpoint\", \"description\": \"Investigate further\"}</li><li>Using the <i>update</i> key; Some issue fields support operations like <i>remove</i> and <i>add</i>, these operations can be combined to update a ticket: <br>{\"<b>update</b>\": {\"components\" : [{\"remove\" : {\"name\" : \"secondcomponent\"}}, {\"add\" : {\"name\" : \"firstcomponent\"}}]}}<br>{\"<b>update</b>\": {\"comment\": [{\"add\": {\"body\": \"test comment update\"}}]}} </li><li>Using the <i>fields</i> key;</br>{\"<b>fields</b>\":{\"labels\" : [\"FIRSTLABEL\"]}}</li></ul></br>The app supports updating custom fields; depending on the custom field type, some operations might not be available. Review the <b>jira_app</b> playbook for examples.<br><br>The <b>vault_id</b> parameter takes the vault ID of a file in the vault and attaches the file to the JIRA ticket.<br><br>This action requires that either the <b>update_fields</b> parameter or the <b>vault_id</b> parameter is filled out. The action will fail if it either unsuccessfully attempts to add the attachment to the ticket or update the fields on the ticket.<h3>Caveats</h3>Jira Cloud is removing the username field from user profiles in Atlassian Cloud sites. They are also removing username support from their product APIs for Jira Cloud. Since it is not possible to update fields related to user resources in the Jira ticket using username for Jira cloud, we will use the user's account_id to update fields related to user resources. Use 'lookup users' action to find out user's account_id. Use 'get ticket' action results to obtain the [update_fields] parameters. Please find out below-mentioned examples for the [update_fields] parameter which is related to user resources.<ul><li>Add assignee to the Jira ticket for Jira on-prem:<br>{\"fields\":{\"assignee\" : {\"name\": \"username\"}}}</li><li>Add assignee to the Jira ticket for Jira cloud:<br>{\"fields\":{\"assignee\" : {\"accountId\": \"6d1ef6xy52z7360c267f27bb\"}}}</li></ul>.",
             "type": "generic",
             "identifier": "update_ticket",
             "read_only": false,
@@ -2132,31 +1789,7 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.fields.Custom Checkbox Field Three",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Custom Label Field Two",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Custom Text Field One",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.CustomerSanText",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Domain Test",
-                    "data_type": "string"
-                },
-                {
                     "data_path": "action_result.data.*.fields.Epic Link",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Phantom Test",
                     "data_type": "string"
                 },
                 {
@@ -2922,290 +2555,6 @@
                     "data_type": "string",
                     "example_values": [
                         "UTC"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10000.errorMessage",
-                    "data_type": "string",
-                    "example_values": [
-                        "The Service Desk you are trying to view does not exist"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10000.i18nErrorMessage.i18nKey",
-                    "data_type": "string",
-                    "example_values": [
-                        "sd.agent.servicedesk.error.servicedesk.missing"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10002.errorMessage",
-                    "data_type": "string",
-                    "example_values": [
-                        "The Service Desk you are trying to view does not exist"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10002.i18nErrorMessage.i18nKey",
-                    "data_type": "string",
-                    "example_values": [
-                        "sd.agent.servicedesk.error.servicedesk.missing"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10100",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10101",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10104",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10106",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10109",
-                    "data_type": "string",
-                    "example_values": [
-                        "0|i00j5j:"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10200",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10201",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10202",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10300",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10301",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10400.errorMessage",
-                    "data_type": "string",
-                    "example_values": [
-                        "The Service Desk you are trying to view does not exist"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10400.i18nErrorMessage.i18nKey",
-                    "data_type": "string",
-                    "example_values": [
-                        "sd.agent.servicedesk.error.servicedesk.missing"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10401",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10402",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10500",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10501",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10600",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10601",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10602",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10603",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10605",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10606",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10701",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10702",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10703",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10704",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10801",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10802",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10900",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10901",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10902",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10903",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10904",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10905",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10906",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10907",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10908",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10909",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10910",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10911",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10912",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10915",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10916",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10917",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10918",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10919",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10920",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10921",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10922",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10923",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10924",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10925",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10926",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10927",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11002",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11003",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11100",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11101",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11102",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11103",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customtextfield1",
-                    "data_type": "string",
-                    "example_values": [
-                        "test"
                     ]
                 },
                 {
@@ -4789,26 +4138,6 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.fields.Custom Checkbox Field Three",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Custom Label Field Two",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Custom Text Field One",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.CustomerSanText",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Domain Test",
-                    "data_type": "string"
-                },
-                {
                     "data_path": "action_result.data.*.fields.aggregateprogress.progress",
                     "data_type": "numeric",
                     "example_values": [
@@ -5125,72 +4454,6 @@
                     "data_type": "string",
                     "example_values": [
                         "UTC"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10000.errorMessage",
-                    "data_type": "string",
-                    "example_values": [
-                        "The Service Desk you are trying to view does not exist"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10000.i18nErrorMessage.i18nKey",
-                    "data_type": "string",
-                    "example_values": [
-                        "sd.agent.servicedesk.error.servicedesk.missing"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10002.errorMessage",
-                    "data_type": "string",
-                    "example_values": [
-                        "The Service Desk you are trying to view does not exist"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10002.i18nErrorMessage.i18nKey",
-                    "data_type": "string",
-                    "example_values": [
-                        "sd.agent.servicedesk.error.servicedesk.missing"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10400.errorMessage",
-                    "data_type": "string",
-                    "example_values": [
-                        "The Service Desk you are trying to view does not exist"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10400.i18nErrorMessage.i18nKey",
-                    "data_type": "string",
-                    "example_values": [
-                        "sd.agent.servicedesk.error.servicedesk.missing"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10704.id",
-                    "data_type": "string",
-                    "example_values": [
-                        "10604"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10704.self",
-                    "data_type": "string",
-                    "example_values": [
-                        "http://jira.instance.ip/rest/api/2/customFieldOption/10604"
-                    ],
-                    "contains": [
-                        "url"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10704.value",
-                    "data_type": "string",
-                    "example_values": [
-                        "prod"
                     ]
                 },
                 {
@@ -6711,8 +5974,7 @@
                     "data_path": "action_result.data.*.displayName",
                     "data_type": "string",
                     "example_values": [
-                        "Test Name",
-                        "test3.test"
+                        "Test Name"
                     ],
                     "contains": [
                         "jira user display name"
@@ -6850,31 +6112,7 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.fields.Custom Checkbox Field Three",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Custom Label Field Two",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Custom Text Field One",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.CustomerSanText",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Domain Test",
-                    "data_type": "string"
-                },
-                {
                     "data_path": "action_result.data.*.fields.Epic Link",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Phantom Test",
                     "data_type": "string"
                 },
                 {
@@ -7634,290 +6872,6 @@
                     "data_type": "string",
                     "example_values": [
                         "UTC"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10000.errorMessage",
-                    "data_type": "string",
-                    "example_values": [
-                        "The Service Desk you are trying to view does not exist"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10000.i18nErrorMessage.i18nKey",
-                    "data_type": "string",
-                    "example_values": [
-                        "sd.agent.servicedesk.error.servicedesk.missing"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10002.errorMessage",
-                    "data_type": "string",
-                    "example_values": [
-                        "The Service Desk you are trying to view does not exist"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10002.i18nErrorMessage.i18nKey",
-                    "data_type": "string",
-                    "example_values": [
-                        "sd.agent.servicedesk.error.servicedesk.missing"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10100",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10101",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10104",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10106",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10109",
-                    "data_type": "string",
-                    "example_values": [
-                        "0|i00j5j:"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10200",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10201",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10202",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10300",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10301",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10400.errorMessage",
-                    "data_type": "string",
-                    "example_values": [
-                        "The Service Desk you are trying to view does not exist"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10400.i18nErrorMessage.i18nKey",
-                    "data_type": "string",
-                    "example_values": [
-                        "sd.agent.servicedesk.error.servicedesk.missing"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10401",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10402",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10500",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10501",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10600",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10601",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10602",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10603",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10605",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10606",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10701",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10702",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10703",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10704",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10801",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10802",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10900",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10901",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10902",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10903",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10904",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10905",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10906",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10907",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10908",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10909",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10910",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10911",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10912",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10915",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10916",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10917",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10918",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10919",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10920",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10921",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10922",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10923",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10924",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10925",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10926",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10927",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11002",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11003",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11100",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11101",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11102",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11103",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customtextfield1",
-                    "data_type": "string",
-                    "example_values": [
-                        "test"
                     ]
                 },
                 {
@@ -9277,31 +8231,7 @@
                     "data_type": "string"
                 },
                 {
-                    "data_path": "action_result.data.*.fields.Custom Checkbox Field Three",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Custom Label Field Two",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Custom Text Field One",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.CustomerSanText",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Domain Test",
-                    "data_type": "string"
-                },
-                {
                     "data_path": "action_result.data.*.fields.Epic Link",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Phantom Test",
                     "data_type": "string"
                 },
                 {
@@ -9314,18 +8244,6 @@
                     "example_values": [
                         "com.atlassian.greenhopper.service.sprint.Sprint@6bb9ab97[id=1,rapidViewId=1,state=ACTIVE,name=MAN Sprint 1,startDate=2017-10-30T16:22:44.954-07:00,endDate=2017-11-13T16:22:00.000-08:00,completeDate=<null>,sequence=1]"
                     ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Test1",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Test_label1",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.Test_user_field_cf",
-                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.aggregateprogress.percent",
@@ -10036,303 +8954,6 @@
                     "example_values": [
                         "UTC"
                     ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10000.errorMessage",
-                    "data_type": "string",
-                    "example_values": [
-                        "The Service Desk you are trying to view does not exist"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10000.i18nErrorMessage.i18nKey",
-                    "data_type": "string",
-                    "example_values": [
-                        "sd.agent.servicedesk.error.servicedesk.missing"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10002.errorMessage",
-                    "data_type": "string",
-                    "example_values": [
-                        "The Service Desk you are trying to view does not exist"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10002.i18nErrorMessage.i18nKey",
-                    "data_type": "string",
-                    "example_values": [
-                        "sd.agent.servicedesk.error.servicedesk.missing"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10100",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10101",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10104",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10106",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10109",
-                    "data_type": "string",
-                    "example_values": [
-                        "0|i00hyn:"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10200",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10201",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10202",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10300",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10301",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10400.errorMessage",
-                    "data_type": "string",
-                    "example_values": [
-                        "The Service Desk you are trying to view does not exist"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10400.i18nErrorMessage.i18nKey",
-                    "data_type": "string",
-                    "example_values": [
-                        "sd.agent.servicedesk.error.servicedesk.missing"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10401",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10402",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10500",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10501",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10600",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10601",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10602",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10603",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10605",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10606",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10701",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10702",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10703",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10704",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10801",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10802",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10900",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10901",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10902",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10903",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10904",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10905",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10906",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10907",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10908",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10909",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10910",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10911",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10912",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10913",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10914",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10915",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10916",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10917",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10918",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10919",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10920",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10921",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10922",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10923",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10924",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10925",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10926",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_10927",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11000",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11001",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11002",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11003",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11100",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11101",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11102",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customfield_11103",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.fields.customtextfield1",
-                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.fields.description",
@@ -11426,14 +10047,14 @@
                     "data_path": "action_result.data.*.fields.worklog.worklogs.*.author.displayName",
                     "data_type": "string",
                     "example_values": [
-                        "Phantom Admin"
+                        "Admin"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.fields.worklog.worklogs.*.author.emailAddress",
                     "data_type": "string",
                     "example_values": [
-                        "notifications@phantom.us"
+                        "notifications@test.us"
                     ]
                 },
                 {
@@ -11556,14 +10177,14 @@
                     "data_path": "action_result.data.*.fields.worklog.worklogs.*.updateAuthor.displayName",
                     "data_type": "string",
                     "example_values": [
-                        "Phantom Admin"
+                        "Admin"
                     ]
                 },
                 {
                     "data_path": "action_result.data.*.fields.worklog.worklogs.*.updateAuthor.emailAddress",
                     "data_type": "string",
                     "example_values": [
-                        "notifications@phantom.us"
+                        "notifications@test.us"
                     ]
                 },
                 {
