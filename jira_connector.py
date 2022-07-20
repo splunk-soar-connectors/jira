@@ -14,7 +14,6 @@
 # and limitations under the License.
 #
 #
-# Phantom imports
 import json
 import os
 import signal
@@ -305,7 +304,6 @@ class JiraConnector(phantom.BaseConnector):
         except Exception as e:
             error_text = self._get_error_message_from_exception(e)
             self.debug_print("In _load_state: Exception: {0}".format(error_text))
-            pass
 
         self.debug_print("Loaded state: ", state)
 
@@ -339,7 +337,6 @@ class JiraConnector(phantom.BaseConnector):
             error_text = e.text
         except Exception:
             error_text = self._get_error_message_from_exception(e)
-            pass
 
         # Try to parse the HTML content of the error in majority situations and if it fails to parse
         # the error response as HTML, then, return the raw error text to ensure that the error text
@@ -466,7 +463,7 @@ class JiraConnector(phantom.BaseConnector):
         fields_meta = edit_meta.get('fields')
         if (not fields_meta):
             return (action_result.set_status(phantom.APP_ERROR,
-                "Got empty response to the 'editmeta' REST endpoint. This may be caused by a jira permission problem"), None, None)
+                "Got an empty response to the 'editmeta' REST endpoint. This may be caused by a jira permission problem"), None, None)
 
         # create an array of custom fields
         try:
@@ -1329,7 +1326,6 @@ class JiraConnector(phantom.BaseConnector):
                 except Exception:
                     self.debug_print("Failed to remove non-ASCII Unicode chars from the filename")
                     modified_filename = filename
-                    pass
 
                 # this condition will check that whether filename has Unicode chars or not, and if not it will re-thorw the same exception
                 if len(modified_filename) < len(filename):
@@ -2358,7 +2354,6 @@ class JiraConnector(phantom.BaseConnector):
         except Exception:
             self.debug_print("Error occurred while logging the value of JQL query, continuing the on poll execution")
             self.save_progress("Error occurred while logging the value of JQL query, continuing the on poll execution")
-            pass
 
         # Query for issues
         issues = self._paginator(query, action_result, limit=max_tickets, fields=True)
@@ -2372,7 +2367,6 @@ class JiraConnector(phantom.BaseConnector):
         except Exception:
             self.debug_print("Error occurred while logging the value of total issues fetched, continuing the on poll execution")
             self.save_progress("Error occurred while logging the value of total issues fetched, continuing the on poll execution")
-            pass
 
         # Ingest the issues
         failed = 0
@@ -2392,7 +2386,6 @@ class JiraConnector(phantom.BaseConnector):
             except Exception:
                 self.debug_print("Error occurred while logging the value of state file and last fetched Jira ticket, \
                     continuing the on poll execution")
-                pass
 
         # Mark the first_run as False once the scheduled or ingestion polling
         # first run or every run has been successfully completed
