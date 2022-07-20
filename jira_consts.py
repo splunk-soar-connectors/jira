@@ -63,13 +63,13 @@ JIRA_JSON_DISPLAY_NAME = 'display_name'
 JIRA_JSON_USER_ACCOUNT_ID = 'user_account_id'
 JIRA_JSON_TIMESPENT = 'time_spent'
 
-JIRA_WATCHERS_ERROR = "Please provide either 'user_account_id' or 'username' action parameter. " \
+JIRA_WATCHERS_ERR = "Please provide either 'user_account_id' or 'username' action parameter. " \
     "For JIRA on-prem, use 'username' action parameter, and, for JIRA cloud, use 'user_account_id' action parameter"
-JIRA_SEARCH_USERS_ERROR = "Please provide either 'display_name' or 'username' action parameter. " \
+JIRA_SEARCH_USERS_ERR = "Please provide either 'display_name' or 'username' action parameter. " \
     "For JIRA on-prem, use 'username' action parameter, and, for JIRA cloud, use 'display_name' action parameter"
-JIRA_CUSTOM_FIELD_FORMAT_ERROR = "Could not load JSON formatted list from the custom_fields asset configuration parameter. {0}"
-JIRA_CUSTOM_FIELD_NON_EMPTY_ERROR = "Please provide 'custom_fields' asset configuration parameter as a non-empty JSON formatted list"
-JIRA_ASSIGNEE_ERROR = "Please provide either 'assignee' or 'assignee_account_id' action parameter. " \
+JIRA_CUSTOM_FIELD_FORMAT_ERR = "Could not load JSON formatted list from the custom_fields asset configuration parameter. {0}"
+JIRA_CUSTOM_FIELD_NON_EMPTY_ERR = "Please provide 'custom_fields' asset configuration parameter as a non-empty JSON formatted list"
+JIRA_ASSIGNEE_ERR = "Please provide either 'assignee' or 'assignee_account_id' action parameter. " \
     "For JIRA on-prem, use 'assignee' action parameter, and, for JIRA cloud, use 'assignee_account_id' action parameter"
 JIRA_INVALID_LIMIT = "Please provide non-zero positive integer in limit"
 JIRA_ERR_STATE_FILE_CORRUPT_ERR = "Error occurred while loading the state file due to its unexpected format.\
@@ -118,3 +118,4 @@ JIRA_START_TIMEOUT = 30
 JIRA_DEFAULT_TIMEOUT = 60
 JIRA_TIME_FORMAT = "%Y/%m/%d %H:%M"
 ERR_MSG_UNAVAILABLE = "Error message unavailable. Please check the asset configuration and|or action parameters"
+JIRA_ERR_INVALID_FILE_PATH = "The file path is invalid"

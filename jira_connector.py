@@ -91,10 +91,10 @@ class JiraConnector(phantom.BaseConnector):
             try:
                 self._custom_fields_list = json.loads(self._custom_fields)
                 if not isinstance(self._custom_fields_list, list):
-                    return self.set_status(phantom.APP_ERROR, JIRA_CUSTOM_FIELD_NON_EMPTY_ERROR)
+                    return self.set_status(phantom.APP_ERROR, JIRA_CUSTOM_FIELD_NON_EMPTY_ERR)
             except Exception as e:
                 error_text = self._get_error_message_from_exception(e)
-                return self.set_status(phantom.APP_ERROR, JIRA_CUSTOM_FIELD_FORMAT_ERROR.format(error_text))
+                return self.set_status(phantom.APP_ERROR, JIRA_CUSTOM_FIELD_FORMAT_ERR.format(error_text))
 
         return phantom.APP_SUCCESS
 
@@ -894,7 +894,7 @@ class JiraConnector(phantom.BaseConnector):
 
         assignee_account_id = param.get(JIRA_JSON_ISSUE_ASSIGNEE_ACCOUNT_ID)
         if assignee_username and assignee_account_id:
-            return action_result.set_status(phantom.APP_ERROR, JIRA_ASSIGNEE_ERROR)
+            return action_result.set_status(phantom.APP_ERROR, JIRA_ASSIGNEE_ERR)
 
         param_fields = param.get(JIRA_JSON_FIELDS)
         fields = {}
@@ -1145,7 +1145,7 @@ class JiraConnector(phantom.BaseConnector):
         display_name = param.get(JIRA_JSON_DISPLAY_NAME)
 
         if (display_name and username) or (not display_name and not username):
-            return action_result.set_status(phantom.APP_ERROR, JIRA_SEARCH_USERS_ERROR)
+            return action_result.set_status(phantom.APP_ERROR, JIRA_SEARCH_USERS_ERR)
 
         start_index = 0
 
@@ -1870,7 +1870,7 @@ class JiraConnector(phantom.BaseConnector):
         account_id = param.get(JIRA_JSON_USER_ACCOUNT_ID)
 
         if (account_id and username) or (not account_id and not username):
-            return action_result.set_status(phantom.APP_ERROR, JIRA_WATCHERS_ERROR)
+            return action_result.set_status(phantom.APP_ERROR, JIRA_WATCHERS_ERR)
 
         ret_val, watchers = self.get_watchers_list(action_result, issue_id, True if username else False)
 
@@ -1915,7 +1915,7 @@ class JiraConnector(phantom.BaseConnector):
                 else:
                     watcher_list.append(watcher['accountId'])
         except KeyError:
-            return action_result.set_status(phantom.APP_ERROR, JIRA_WATCHERS_ERROR), None
+            return action_result.set_status(phantom.APP_ERROR, JIRA_WATCHERS_ERR), None
         except Exception as e:
             error_msg = self._get_error_message_from_exception(e)
             error_text = "Error occurred while fetching the watchers list. {}".format(error_msg)
@@ -1941,7 +1941,7 @@ class JiraConnector(phantom.BaseConnector):
         account_id = param.get(JIRA_JSON_USER_ACCOUNT_ID)
 
         if (account_id and username) or (not account_id and not username):
-            return action_result.set_status(phantom.APP_ERROR, JIRA_WATCHERS_ERROR)
+            return action_result.set_status(phantom.APP_ERROR, JIRA_WATCHERS_ERR)
 
         ret_val, watchers = self.get_watchers_list(action_result, issue_id, True if username else False)
 
