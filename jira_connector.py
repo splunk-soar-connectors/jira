@@ -247,7 +247,7 @@ class JiraConnector(phantom.BaseConnector):
         except Exception as e:
             error_text = self._get_error_message_from_exception(e)
             return action_result.set_status(phantom.APP_ERROR,
-                "Error connecting to server.{}".format(error_text)), resp_json
+                "Error connecting to server. {}".format(error_text)), resp_json
 
         return self._process_response(r, action_result)
 
