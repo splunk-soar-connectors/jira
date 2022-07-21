@@ -1,11 +1,11 @@
 repos:
 -   repo: https://github.com/phantomcyber/dev-cicd-tools
-    rev: v1.11
+    rev: v1.13
     hooks:
     -   id: org-hook
     -   id: package-app-dependencies
 -   repo: https://github.com/Yelp/detect-secrets
-    rev: v1.1.0
+    rev: v1.2.0
     hooks:
     -   id: detect-secrets
         args: ['--no-verify', '--exclude-files', '^jira.json$']
