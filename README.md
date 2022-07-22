@@ -2,7 +2,7 @@
 # Jira
 
 Publisher: Splunk  
-Connector Version: 3\.4\.0  
+Connector Version: 3\.5\.0  
 Product Vendor: Atlassian  
 Product Name: Jira  
 Product Version Supported (regex): "\.\*"  
@@ -25,32 +25,32 @@ This app integrates with JIRA to perform several ticket management actions
 ## JIRA
 
 This app uses the python JIRA module, which is licensed under the BSD License (BSD), Copyright (c)
-2001-2021. Python Software Foundation
+2001-2022. Python Software Foundation
 
 ## oauthlib
 
 This app uses the python oauthlib module, which is licensed under the OSI Approved, BSD License
-(BSD), Copyright (c) 2001-2021. Python Software Foundation
+(BSD), Copyright (c) 2001-2022. Python Software Foundation
 
 ## pbr
 
 This app uses the python pbr module, which is licensed under the Apache Software License, Copyright
-(c) 2001-2021. Python Software Foundation
+(c) 2001-2022. Python Software Foundation
 
 ## PyJWT
 
 This app uses the python PyJWT module, which is licensed under the MIT License (MIT), Copyright (c)
-2001-2021. Python Software Foundation
+2001-2022. Python Software Foundation
 
 ## requests-oauthlib
 
 This app uses the python requests-oauthlib module, which is licensed under the BSD License (ISC),
-Copyright (c) 2001-2021. Python Software Foundation
+Copyright (c) 2001-2022. Python Software Foundation
 
 ## requests-toolbelt
 
 This app uses the python requests-toolbelt module, which is licensed under the Apache Software
-License (Apache 2.0), Copyright (c) 2001-2021. Python Software Foundation
+License (Apache 2.0), Copyright (c) 2001-2022. Python Software Foundation
 
 ## JIRA
 
@@ -171,7 +171,8 @@ information to assist in debugging.
 
     -   It is highly recommended for configuring a significantly large value (larger than the number
         of existing tickets on the user's instance) in the asset configuration parameter to bring
-        the ingested tickets in the Phantom in sync entirely with the JIRA instance in the first run
+        the ingested tickets in the Splunk SOAR in sync entirely with the JIRA instance in the first
+        run
     -   It is highly recommended for configuring a significantly large value (larger than the
         possible number of tickets that can be updated in 1 minute or any value larger than the
         average number of tickets getting created every unit of time (based on the frequency of
@@ -204,12 +205,12 @@ information to assist in debugging.
         -   The timezone parameter here is the profile timezone of the JIRA instance
         -   For checking the profile timezone, navigate to the JIRA instance; navigate to the
             profile settings; the value of the **Time Zone** parameter is the timezone that has to
-            be provided in the Phantom asset configuration
+            be provided in the app asset configuration
     2.  Cloud JIRA
         -   The timezone parameter here is the system settings timezone of the JIRA instance
         -   For checking the system settings timezone, navigate to the JIRA instance; navigate to
             the option **Jira Settings --> System** in the settings page; the value of the **Default
-            user time zone** parameter is the timezone that has to be provided in the Phantom asset
+            user time zone** parameter is the timezone that has to be provided in the app asset
             configuration
 
 -   Users can provide the JSON formatted list of names of the custom fields (to be considered for
@@ -229,7 +230,7 @@ information to assist in debugging.
         -   The timezone parameter here is the system settings timezone of the JIRA instance
         -   For checking the system settings timezone, navigate to the JIRA instance; navigate to
             the option **Jira Settings --> System** in the settings page; the value of the **Default
-            user time zone** parameter is the timezone that has to be provided in the Phantom asset
+            user time zone** parameter is the timezone that has to be provided in the app asset
             configuration
 
 -   If there is any error while fetching the custom fields metadata due to project configuration or
@@ -239,7 +240,7 @@ information to assist in debugging.
       
       
 
--   Two approaches for fetching offenses
+-   Two approaches for fetching tickets
 
       
       
@@ -316,8 +317,8 @@ information to assist in debugging.
     email address as the authentication login instead of the user's login name.
 -   While adding an attachment to the Jira ticket using 'Update ticket' action, if the filename
     contains Unicode characters, the action is getting failed with the 500 Internal Server Error
-    because of the Jira SDK issue. Due to this, action behaves differently with the various Phantom
-    platforms. As a result, we have deployed the below-mentioned workflow which will ensure a
+    because of the Jira SDK issue. Due to this, action behaves differently with the various Splunk
+    SOAR platforms. As a result, we have deployed the below-mentioned workflow which will ensure a
     minimal change in the filename and minimal/no data loss.
     1.  For the first time we try to add an attachment to the Jira ticket with the same name as the
         filename, if it may get successful, then it will add an attachment with the same name
@@ -423,18 +424,10 @@ action\_result\.parameter\.vault\_id | string |  `vault id`
 action\_result\.data\.\*\.assign\_error | string | 
 action\_result\.data\.\*\.attach\_error | string | 
 action\_result\.data\.\*\.description | string | 
-action\_result\.data\.\*\.fields\.Custom Checkbox Field Three | string | 
-action\_result\.data\.\*\.fields\.Custom Label Field Two | string | 
-action\_result\.data\.\*\.fields\.Custom Text Field One | string | 
-action\_result\.data\.\*\.fields\.CustomerSanText | string | 
-action\_result\.data\.\*\.fields\.Domain Test | string | 
 action\_result\.data\.\*\.fields\.Epic Link | string | 
 action\_result\.data\.\*\.fields\.Epic Name | string | 
-action\_result\.data\.\*\.fields\.Phantom Test | string | 
 action\_result\.data\.\*\.fields\.Severity | string | 
 action\_result\.data\.\*\.fields\.Sprint | string | 
-action\_result\.data\.\*\.fields\.\["á é í ó ú à è ë ï ö ü ĳ ë, ï, ü"\] | string | 
-action\_result\.data\.\*\.fields\.\["こ֍漢<ਊḈឦᡤᇗ∰᳀字过亿，"\] | string | 
 action\_result\.data\.\*\.fields\.aggregateprogress\.progress | numeric | 
 action\_result\.data\.\*\.fields\.aggregateprogress\.total | numeric | 
 action\_result\.data\.\*\.fields\.aggregatetimeestimate | string | 
@@ -490,77 +483,6 @@ action\_result\.data\.\*\.fields\.creator\.key | string |
 action\_result\.data\.\*\.fields\.creator\.name | string |  `user name` 
 action\_result\.data\.\*\.fields\.creator\.self | string |  `url` 
 action\_result\.data\.\*\.fields\.creator\.timeZone | string | 
-action\_result\.data\.\*\.fields\.customfield\_10000\.errorMessage | string | 
-action\_result\.data\.\*\.fields\.customfield\_10000\.i18nErrorMessage\.i18nKey | string | 
-action\_result\.data\.\*\.fields\.customfield\_10002\.errorMessage | string | 
-action\_result\.data\.\*\.fields\.customfield\_10002\.i18nErrorMessage\.i18nKey | string | 
-action\_result\.data\.\*\.fields\.customfield\_10100 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10101 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10102 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10103 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10104 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10106 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10107\.id | string | 
-action\_result\.data\.\*\.fields\.customfield\_10107\.self | string | 
-action\_result\.data\.\*\.fields\.customfield\_10107\.value | string | 
-action\_result\.data\.\*\.fields\.customfield\_10108 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10109 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10200 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10201 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10202 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10300 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10301 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10400\.errorMessage | string | 
-action\_result\.data\.\*\.fields\.customfield\_10400\.i18nErrorMessage\.i18nKey | string | 
-action\_result\.data\.\*\.fields\.customfield\_10401 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10402 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10500 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10501 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10600 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10601 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10602 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10603 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10605 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10606 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10701 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10702 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10703 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10704 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10801 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10802 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10900 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10901 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10902 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10903 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10904 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10905 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10906 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10907 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10908 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10909 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10910 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10911 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10912 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10915 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10916 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10917 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10918 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10919 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10920 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10921 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10922 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10923 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10924 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10925 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10926 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10927 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11002 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11003 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11100 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11101 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11102 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11103 | string | 
-action\_result\.data\.\*\.fields\.customtextfield1 | string | 
 action\_result\.data\.\*\.fields\.description | string | 
 action\_result\.data\.\*\.fields\.duedate | string | 
 action\_result\.data\.\*\.fields\.environment | string | 
@@ -633,8 +555,6 @@ action\_result\.data\.\*\.fields\.worklog\.maxResults | numeric |
 action\_result\.data\.\*\.fields\.worklog\.startAt | numeric | 
 action\_result\.data\.\*\.fields\.worklog\.total | numeric | 
 action\_result\.data\.\*\.fields\.workratio | numeric | 
-action\_result\.data\.\*\.fields\.こ֍漢<ਊḈឦᡤᇗ∰᳀字过亿，日活百万\+的漢字©¬ɸѠ֍۞ਊ௵൬༃ဤᄨᇗኖᏌᔠᛯᜠឦᡤᢻᤐᦪᨃᩔ᪸᭒ᮈᯡᰦ᳀ᴞᵆᵝḈὒ⁇ℰ⅏ⅷ∰⋐⏻サイバーセキュリティインシデント日本標準時⛰⛱⛲⛳⛵✔️❤️ﬗ╬⎋⌚⅍ⅎ€	₭⁂ᾧ҈₮₯⅏⌛⎎☆Ḃ平仮名, ひらがな~\!\@\#$%^&\*\(\)\_\+<>?\:"\}\|\{,\./;'\[\]\\/\`á é í ó ú à è ë ï ö ü ĳ ë, ï, üاردو تہجی | string | 
-action\_result\.data\.\*\.fields\.漢字©¬ɸѠ֍۞ਊ௵൬༃ဤᄨᇗኖᏌᔠᛯᜠឦᡤᢻᤐᦪᨃᩔ᪸᭒ᮈᯡᰦ᳀ᴞᵆᵝḈὒ⁇ℰ⅏ⅷ∰⋐⏻サイバーセキュリテ ィインシデント日本標準時⛰⛱⛲⛳⛵✔️❤️ﬗ╬⎋⌚⅍ⅎ€ ₭⁂ᾧ҈₮₯⅏⌛⎎☆Ḃ平仮名, ひらがな~\!\@\# $%^&\*\(\)\_\+<>?\:"\}\|\{,\./;'\[\]\\/\`á é í ó ú à ë ï ö üاردو تہجیગુજરાતીहिन्दीгуджаратиგუჯარათიগুজরাটি | string | 
 action\_result\.data\.\*\.id | string | 
 action\_result\.data\.\*\.issue\_type | string |  `jira issue type` 
 action\_result\.data\.\*\.json\_fields\_error | string | 
@@ -692,7 +612,7 @@ Update ticket \(issue\)
 Type: **generic**  
 Read only: **False**
 
-Update an existing issue with the values specified in the <b>update\_fields</b> parameter\.<br>The results of the <b>get ticket</b> action may be used to obtain the <b>update\_fields</b> parameters, including any custom fields present in the JIRA\.</br>The JSON specified in the <b>update\_fields</b> parameter requires the keys and the values specified in case\-sensitive and double\-quotes string format, except in the case of boolean values, which should be either <i>true</i> or <i>false</i> for example\:</br>\{"summary"\: "Zeus, multiple action need to be taken", "description"\: "A new summary was added"\}</br></br>The App supports multiple methods for specifying the input dictionary\. Please see <a href="https\://developer\.atlassian\.com/server/jira/platform/jira\-rest\-api\-examples/\#editing\-an\-issue\-examples"><b>the Atlassian documentation for the JIRA REST <i>update issue</i> API</b></a> for more information\.<br>The following formats can be passed as input\: <ul><li>Simple format; Create a dictionary with all the fields that need to be set\:<br>\{"summary"\: "Zeus detected on endpoint", "description"\: "Investigate further"\}</li><li>Using the <i>update</i> key; Some issue fields support operations like <i>remove</i> and <i>add</i>, these operations can be combined to update a ticket\: <br>\{"<b>update</b>"\: \{"components" \: \[\{"remove" \: \{"name" \: "secondcomponent"\}\}, \{"add" \: \{"name" \: "firstcomponent"\}\}\]\}\}<br>\{"<b>update</b>"\: \{"comment"\: \[\{"add"\: \{"body"\: "test comment update"\}\}\]\}\} </li><li>Using the <i>fields</i> key;</br>\{"<b>fields</b>"\:\{"labels" \: \["FIRSTLABEL"\]\}\}</li></ul></br>The app supports updating custom fields; depending on the custom field type, some operations might not be available\. Review the <b>jira\_app</b> playbook for examples\.<br><br>The <b>vault\_id</b> parameter takes the vault ID of a file in the vault and attaches the file to the JIRA ticket\.<br><br>This action requires that either the <b>update\_fields</b> parameter or the <b>vault\_id</b> parameter is filled out\. The action will fail if it either unsuccessfully attempts to add the attachment to the ticket or update the fields on the ticket\.<h3>Caveats</h3>Jira Cloud is removing the username field from user profiles in Atlassian Cloud sites\. They are also removing username support from their product APIs for Jira Cloud\. Since it is not possible to update fields related to user resources in the Jira ticket using username for Jira cloud, we will use the user's account\_id to update fields related to user resources\. Use 'lookup users' action to find out user's account\_id\. Use 'get ticket' action results to obtain the \[update\_fields\] parameters\. Please find out below\-mentioned examples for the \[update\_fields\] parameter which is related to user resources\.<ul><li>Add assignee to the Jira ticket for Jira on\-prem\:<br>\{"fields"\:\{"assignee" \: \{"name"\: "username"\}\}\}</li><li>Add assignee to the Jira ticket for Jira cloud\:<br>\{"fields"\:\{"assignee" \: \{"accountId"\: "6d1ef6xy52z7360c267f27bb"\}\}\}</li></ul>\.
+Update an existing issue with the values specified in the <b>update\_fields</b> parameter\.<br>The results of the <b>get ticket</b> action may be used to obtain the <b>update\_fields</b> parameters, including any custom fields present in the JIRA\.</br>The JSON specified in the <b>update\_fields</b> parameter requires the keys and the values specified in case\-sensitive and double\-quotes string format, except in the case of boolean values, which should be either <i>true</i> or <i>false</i> for example\:</br>\{"summary"\: "Zeus, multiple action need to be taken", "description"\: "A new summary was added"\}</br></br>The App supports multiple methods for specifying the input dictionary\. Please see <a href="https\://developer\.atlassian\.com/server/jira/platform/jira\-rest\-api\-examples/\#editing\-an\-issue\-examples" target='\_blank'><b>the Atlassian documentation for the JIRA REST <i>update issue</i> API</b></a> for more information\.<br>The following formats can be passed as input\: <ul><li>Simple format; Create a dictionary with all the fields that need to be set\:<br>\{"summary"\: "Zeus detected on endpoint", "description"\: "Investigate further"\}</li><li>Using the <i>update</i> key; Some issue fields support operations like <i>remove</i> and <i>add</i>, these operations can be combined to update a ticket\: <br>\{"<b>update</b>"\: \{"components" \: \[\{"remove" \: \{"name" \: "secondcomponent"\}\}, \{"add" \: \{"name" \: "firstcomponent"\}\}\]\}\}<br>\{"<b>update</b>"\: \{"comment"\: \[\{"add"\: \{"body"\: "test comment update"\}\}\]\}\} </li><li>Using the <i>fields</i> key;</br>\{"<b>fields</b>"\:\{"labels" \: \["FIRSTLABEL"\]\}\}</li></ul></br>The app supports updating custom fields; depending on the custom field type, some operations might not be available\. Review the <b>jira\_app</b> playbook for examples\.<br><br>The <b>vault\_id</b> parameter takes the vault ID of a file in the vault and attaches the file to the JIRA ticket\.<br><br>This action requires that either the <b>update\_fields</b> parameter or the <b>vault\_id</b> parameter is filled out\. The action will fail if it either unsuccessfully attempts to add the attachment to the ticket or update the fields on the ticket\.<h3>Caveats</h3>Jira Cloud is removing the username field from user profiles in Atlassian Cloud sites\. They are also removing username support from their product APIs for Jira Cloud\. Since it is not possible to update fields related to user resources in the Jira ticket using username for Jira cloud, we will use the user's account\_id to update fields related to user resources\. Use 'lookup users' action to find out user's account\_id\. Use 'get ticket' action results to obtain the \[update\_fields\] parameters\. Please find out below\-mentioned examples for the \[update\_fields\] parameter which is related to user resources\.<ul><li>Add assignee to the Jira ticket for Jira on\-prem\:<br>\{"fields"\:\{"assignee" \: \{"name"\: "username"\}\}\}</li><li>Add assignee to the Jira ticket for Jira cloud\:<br>\{"fields"\:\{"assignee" \: \{"accountId"\: "6d1ef6xy52z7360c267f27bb"\}\}\}</li></ul>\.
 
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
@@ -709,16 +629,8 @@ action\_result\.parameter\.id | string |  `jira ticket key`
 action\_result\.parameter\.update\_fields | string | 
 action\_result\.parameter\.vault\_id | string |  `vault id` 
 action\_result\.data\.\*\.description | string | 
-action\_result\.data\.\*\.fields\.Custom Checkbox Field Three | string | 
-action\_result\.data\.\*\.fields\.Custom Label Field Two | string | 
-action\_result\.data\.\*\.fields\.Custom Text Field One | string | 
-action\_result\.data\.\*\.fields\.CustomerSanText | string | 
-action\_result\.data\.\*\.fields\.Domain Test | string | 
 action\_result\.data\.\*\.fields\.Epic Link | string | 
-action\_result\.data\.\*\.fields\.Phantom Test | string | 
 action\_result\.data\.\*\.fields\.Sprint | string | 
-action\_result\.data\.\*\.fields\.\["á é í ó ú à è ë ï ö ü ĳ ë, ï, ü"\] | string | 
-action\_result\.data\.\*\.fields\.\["こ֍漢<ਊḈឦᡤᇗ∰᳀字过亿，"\] | string | 
 action\_result\.data\.\*\.fields\.aggregateprogress\.progress | numeric | 
 action\_result\.data\.\*\.fields\.aggregateprogress\.total | numeric | 
 action\_result\.data\.\*\.fields\.aggregatetimeestimate | string | 
@@ -808,71 +720,6 @@ action\_result\.data\.\*\.fields\.creator\.key | string |
 action\_result\.data\.\*\.fields\.creator\.name | string |  `user name` 
 action\_result\.data\.\*\.fields\.creator\.self | string |  `url` 
 action\_result\.data\.\*\.fields\.creator\.timeZone | string | 
-action\_result\.data\.\*\.fields\.customfield\_10000\.errorMessage | string | 
-action\_result\.data\.\*\.fields\.customfield\_10000\.i18nErrorMessage\.i18nKey | string | 
-action\_result\.data\.\*\.fields\.customfield\_10002\.errorMessage | string | 
-action\_result\.data\.\*\.fields\.customfield\_10002\.i18nErrorMessage\.i18nKey | string | 
-action\_result\.data\.\*\.fields\.customfield\_10100 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10101 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10104 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10106 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10109 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10200 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10201 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10202 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10300 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10301 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10400\.errorMessage | string | 
-action\_result\.data\.\*\.fields\.customfield\_10400\.i18nErrorMessage\.i18nKey | string | 
-action\_result\.data\.\*\.fields\.customfield\_10401 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10402 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10500 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10501 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10600 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10601 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10602 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10603 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10605 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10606 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10701 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10702 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10703 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10704 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10801 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10802 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10900 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10901 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10902 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10903 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10904 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10905 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10906 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10907 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10908 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10909 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10910 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10911 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10912 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10915 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10916 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10917 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10918 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10919 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10920 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10921 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10922 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10923 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10924 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10925 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10926 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10927 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11002 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11003 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11100 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11101 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11102 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11103 | string | 
-action\_result\.data\.\*\.fields\.customtextfield1 | string | 
 action\_result\.data\.\*\.fields\.description | string | 
 action\_result\.data\.\*\.fields\.duedate | string | 
 action\_result\.data\.\*\.fields\.environment | string | 
@@ -1017,8 +864,6 @@ action\_result\.data\.\*\.fields\.worklog\.maxResults | numeric |
 action\_result\.data\.\*\.fields\.worklog\.startAt | numeric | 
 action\_result\.data\.\*\.fields\.worklog\.total | numeric | 
 action\_result\.data\.\*\.fields\.workratio | numeric | 
-action\_result\.data\.\*\.fields\.こ֍漢<ਊḈឦᡤᇗ∰᳀字过亿，日活百万\+的漢字©¬ɸѠ֍۞ਊ௵൬༃ဤᄨᇗኖᏌᔠᛯᜠឦᡤᢻᤐᦪᨃᩔ᪸᭒ᮈᯡᰦ᳀ᴞᵆᵝḈὒ⁇ℰ⅏ⅷ∰⋐⏻サイバーセキュリティインシデント日本標準時⛰⛱⛲⛳⛵✔️❤️ﬗ╬⎋⌚⅍ⅎ€	₭⁂ᾧ҈₮₯⅏⌛⎎☆Ḃ平仮名, ひらがな~\!\@\#$%^&\*\(\)\_\+<>?\:"\}\|\{,\./;'\[\]\\/\`á é í ó ú à è ë ï ö ü ĳ ë, ï, üاردو تہجی | string | 
-action\_result\.data\.\*\.fields\.漢字©¬ɸѠ֍۞ਊ௵൬༃ဤᄨᇗኖᏌᔠᛯᜠឦᡤᢻᤐᦪᨃᩔ᪸᭒ᮈᯡᰦ᳀ᴞᵆᵝḈὒ⁇ℰ⅏ⅷ∰⋐⏻サイバーセキュリテ ィインシデント日本標準時⛰⛱⛲⛳⛵✔️❤️ﬗ╬⎋⌚⅍ⅎ€ ₭⁂ᾧ҈₮₯⅏⌛⎎☆Ḃ平仮名, ひらがな~\!\@\# $%^&\*\(\)\_\+<>?\:"\}\|\{,\./;'\[\]\\/\`á é í ó ú à ë ï ö üاردو تہجیગુજરાતીहिन्दीгуджаратиგუჯარათიগুজরাটি | string | 
 action\_result\.data\.\*\.id | string | 
 action\_result\.data\.\*\.issue\_type | string |  `jira issue type` 
 action\_result\.data\.\*\.name | string |  `jira ticket key` 
@@ -1127,11 +972,6 @@ action\_result\.parameter\.project\_key | string |  `jira project key`
 action\_result\.parameter\.query | string | 
 action\_result\.parameter\.start\_index | numeric | 
 action\_result\.data\.\*\.description | string |  `url` 
-action\_result\.data\.\*\.fields\.Custom Checkbox Field Three | string | 
-action\_result\.data\.\*\.fields\.Custom Label Field Two | string | 
-action\_result\.data\.\*\.fields\.Custom Text Field One | string | 
-action\_result\.data\.\*\.fields\.CustomerSanText | string | 
-action\_result\.data\.\*\.fields\.Domain Test | string | 
 action\_result\.data\.\*\.fields\.aggregateprogress\.progress | numeric | 
 action\_result\.data\.\*\.fields\.aggregateprogress\.total | numeric | 
 action\_result\.data\.\*\.fields\.aggregatetimeestimate | string | 
@@ -1172,15 +1012,6 @@ action\_result\.data\.\*\.fields\.creator\.key | string |
 action\_result\.data\.\*\.fields\.creator\.name | string |  `user name` 
 action\_result\.data\.\*\.fields\.creator\.self | string |  `url` 
 action\_result\.data\.\*\.fields\.creator\.timeZone | string | 
-action\_result\.data\.\*\.fields\.customfield\_10000\.errorMessage | string | 
-action\_result\.data\.\*\.fields\.customfield\_10000\.i18nErrorMessage\.i18nKey | string | 
-action\_result\.data\.\*\.fields\.customfield\_10002\.errorMessage | string | 
-action\_result\.data\.\*\.fields\.customfield\_10002\.i18nErrorMessage\.i18nKey | string | 
-action\_result\.data\.\*\.fields\.customfield\_10400\.errorMessage | string | 
-action\_result\.data\.\*\.fields\.customfield\_10400\.i18nErrorMessage\.i18nKey | string | 
-action\_result\.data\.\*\.fields\.customfield\_10704\.id | string | 
-action\_result\.data\.\*\.fields\.customfield\_10704\.self | string |  `url` 
-action\_result\.data\.\*\.fields\.customfield\_10704\.value | string | 
 action\_result\.data\.\*\.fields\.description | string |  `url` 
 action\_result\.data\.\*\.fields\.duedate | string | 
 action\_result\.data\.\*\.fields\.environment | string | 
@@ -1413,16 +1244,8 @@ DATA PATH | TYPE | CONTAINS
 action\_result\.status | string | 
 action\_result\.parameter\.id | string |  `jira ticket key` 
 action\_result\.data\.\*\.description | string | 
-action\_result\.data\.\*\.fields\.Custom Checkbox Field Three | string | 
-action\_result\.data\.\*\.fields\.Custom Label Field Two | string | 
-action\_result\.data\.\*\.fields\.Custom Text Field One | string | 
-action\_result\.data\.\*\.fields\.CustomerSanText | string | 
-action\_result\.data\.\*\.fields\.Domain Test | string | 
 action\_result\.data\.\*\.fields\.Epic Link | string | 
-action\_result\.data\.\*\.fields\.Phantom Test | string | 
 action\_result\.data\.\*\.fields\.Sprint | string | 
-action\_result\.data\.\*\.fields\.\["á é í ó ú à è ë ï ö ü ĳ ë, ï, ü"\] | string | 
-action\_result\.data\.\*\.fields\.\["こ֍漢<ਊḈឦᡤᇗ∰᳀字过亿，"\] | string | 
 action\_result\.data\.\*\.fields\.aggregateprogress\.progress | numeric | 
 action\_result\.data\.\*\.fields\.aggregateprogress\.total | numeric | 
 action\_result\.data\.\*\.fields\.aggregatetimeestimate | string | 
@@ -1512,71 +1335,6 @@ action\_result\.data\.\*\.fields\.creator\.key | string |
 action\_result\.data\.\*\.fields\.creator\.name | string |  `user name` 
 action\_result\.data\.\*\.fields\.creator\.self | string |  `url` 
 action\_result\.data\.\*\.fields\.creator\.timeZone | string | 
-action\_result\.data\.\*\.fields\.customfield\_10000\.errorMessage | string | 
-action\_result\.data\.\*\.fields\.customfield\_10000\.i18nErrorMessage\.i18nKey | string | 
-action\_result\.data\.\*\.fields\.customfield\_10002\.errorMessage | string | 
-action\_result\.data\.\*\.fields\.customfield\_10002\.i18nErrorMessage\.i18nKey | string | 
-action\_result\.data\.\*\.fields\.customfield\_10100 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10101 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10104 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10106 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10109 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10200 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10201 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10202 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10300 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10301 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10400\.errorMessage | string | 
-action\_result\.data\.\*\.fields\.customfield\_10400\.i18nErrorMessage\.i18nKey | string | 
-action\_result\.data\.\*\.fields\.customfield\_10401 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10402 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10500 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10501 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10600 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10601 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10602 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10603 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10605 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10606 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10701 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10702 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10703 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10704 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10801 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10802 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10900 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10901 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10902 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10903 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10904 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10905 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10906 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10907 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10908 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10909 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10910 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10911 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10912 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10915 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10916 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10917 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10918 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10919 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10920 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10921 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10922 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10923 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10924 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10925 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10926 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10927 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11002 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11003 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11100 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11101 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11102 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11103 | string | 
-action\_result\.data\.\*\.fields\.customtextfield1 | string | 
 action\_result\.data\.\*\.fields\.description | string | 
 action\_result\.data\.\*\.fields\.duedate | string | 
 action\_result\.data\.\*\.fields\.environment | string | 
@@ -1721,8 +1479,6 @@ action\_result\.data\.\*\.fields\.worklog\.maxResults | numeric |
 action\_result\.data\.\*\.fields\.worklog\.startAt | numeric | 
 action\_result\.data\.\*\.fields\.worklog\.total | numeric | 
 action\_result\.data\.\*\.fields\.workratio | numeric | 
-action\_result\.data\.\*\.fields\.こ֍漢<ਊḈឦᡤᇗ∰᳀字过亿，日活百万\+的漢字©¬ɸѠ֍۞ਊ௵൬༃ဤᄨᇗኖᏌᔠᛯᜠឦᡤᢻᤐᦪᨃᩔ᪸᭒ᮈᯡᰦ᳀ᴞᵆᵝḈὒ⁇ℰ⅏ⅷ∰⋐⏻サイバーセキュリティインシデント日本標準時⛰⛱⛲⛳⛵✔️❤️ﬗ╬⎋⌚⅍ⅎ€	₭⁂ᾧ҈₮₯⅏⌛⎎☆Ḃ平仮名, ひらがな~\!\@\#$%^&\*\(\)\_\+<>?\:"\}\|\{,\./;'\[\]\\/\`á é í ó ú à è ë ï ö ü ĳ ë, ï, üاردو تہجی | string | 
-action\_result\.data\.\*\.fields\.漢字©¬ɸѠ֍۞ਊ௵൬༃ဤᄨᇗኖᏌᔠᛯᜠឦᡤᢻᤐᦪᨃᩔ᪸᭒ᮈᯡᰦ᳀ᴞᵆᵝḈὒ⁇ℰ⅏ⅷ∰⋐⏻サイバーセキュリテ ィインシデント日本標準時⛰⛱⛲⛳⛵✔️❤️ﬗ╬⎋⌚⅍ⅎ€ ₭⁂ᾧ҈₮₯⅏⌛⎎☆Ḃ平仮名, ひらがな~\!\@\# $%^&\*\(\)\_\+<>?\:"\}\|\{,\./;'\[\]\\/\`á é í ó ú à ë ï ö üاردو تہجیગુજરાતીहिन्दीгуджаратиგუჯარათიগুজরাটি | string | 
 action\_result\.data\.\*\.id | string | 
 action\_result\.data\.\*\.issue\_type | string |  `jira issue type` 
 action\_result\.data\.\*\.name | string |  `jira ticket key` 
@@ -1767,21 +1523,9 @@ action\_result\.parameter\.time\_spent | string |
 action\_result\.parameter\.update\_fields | string | 
 action\_result\.data\.\*\.description | string | 
 action\_result\.data\.\*\.fields\. | string | 
-action\_result\.data\.\*\.fields\.Chinese 文字\- Kanji 漢字\- Hanja 漢字\(UTF\-8\) | string | 
-action\_result\.data\.\*\.fields\.Custom Checkbox Field Three | string | 
-action\_result\.data\.\*\.fields\.Custom Label Field Two | string | 
-action\_result\.data\.\*\.fields\.Custom Text Field One | string | 
-action\_result\.data\.\*\.fields\.CustomerSanText | string | 
-action\_result\.data\.\*\.fields\.Domain Test | string | 
 action\_result\.data\.\*\.fields\.Epic Link | string | 
-action\_result\.data\.\*\.fields\.Phantom Test | string | 
 action\_result\.data\.\*\.fields\.Severity | string | 
 action\_result\.data\.\*\.fields\.Sprint | string | 
-action\_result\.data\.\*\.fields\.Test1 | string | 
-action\_result\.data\.\*\.fields\.Test\_label1 | string | 
-action\_result\.data\.\*\.fields\.Test\_user\_field\_cf | string | 
-action\_result\.data\.\*\.fields\.\["á é í ó ú à è ë ï ö ü ĳ ë, ï, ü"\] | string | 
-action\_result\.data\.\*\.fields\.\["こ֍漢<ਊḈឦᡤᇗ∰᳀字过亿，"\] | string | 
 action\_result\.data\.\*\.fields\.aggregateprogress\.percent | numeric | 
 action\_result\.data\.\*\.fields\.aggregateprogress\.progress | numeric | 
 action\_result\.data\.\*\.fields\.aggregateprogress\.total | numeric | 
@@ -1866,75 +1610,6 @@ action\_result\.data\.\*\.fields\.creator\.key | string |
 action\_result\.data\.\*\.fields\.creator\.name | string | 
 action\_result\.data\.\*\.fields\.creator\.self | string |  `url` 
 action\_result\.data\.\*\.fields\.creator\.timeZone | string | 
-action\_result\.data\.\*\.fields\.customfield\_10000\.errorMessage | string | 
-action\_result\.data\.\*\.fields\.customfield\_10000\.i18nErrorMessage\.i18nKey | string | 
-action\_result\.data\.\*\.fields\.customfield\_10002\.errorMessage | string | 
-action\_result\.data\.\*\.fields\.customfield\_10002\.i18nErrorMessage\.i18nKey | string | 
-action\_result\.data\.\*\.fields\.customfield\_10100 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10101 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10104 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10106 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10109 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10200 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10201 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10202 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10300 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10301 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10400\.errorMessage | string | 
-action\_result\.data\.\*\.fields\.customfield\_10400\.i18nErrorMessage\.i18nKey | string | 
-action\_result\.data\.\*\.fields\.customfield\_10401 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10402 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10500 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10501 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10600 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10601 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10602 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10603 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10605 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10606 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10701 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10702 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10703 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10704 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10801 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10802 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10900 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10901 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10902 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10903 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10904 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10905 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10906 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10907 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10908 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10909 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10910 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10911 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10912 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10913 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10914 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10915 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10916 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10917 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10918 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10919 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10920 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10921 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10922 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10923 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10924 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10925 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10926 | string | 
-action\_result\.data\.\*\.fields\.customfield\_10927 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11000 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11001 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11002 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11003 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11100 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11101 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11102 | string | 
-action\_result\.data\.\*\.fields\.customfield\_11103 | string | 
-action\_result\.data\.\*\.fields\.customtextfield1 | string | 
 action\_result\.data\.\*\.fields\.description | string | 
 action\_result\.data\.\*\.fields\.duedate | string | 
 action\_result\.data\.\*\.fields\.environment | string | 
@@ -2106,8 +1781,6 @@ action\_result\.data\.\*\.fields\.worklog\.worklogs\.\*\.updateAuthor\.self | st
 action\_result\.data\.\*\.fields\.worklog\.worklogs\.\*\.updateAuthor\.timeZone | string | 
 action\_result\.data\.\*\.fields\.worklog\.worklogs\.\*\.updated | string | 
 action\_result\.data\.\*\.fields\.workratio | numeric | 
-action\_result\.data\.\*\.fields\.こ֍漢<ਊḈឦᡤᇗ∰᳀字过亿，日活百万\+的漢字©¬ɸѠ֍۞ਊ௵൬༃ဤᄨᇗኖᏌᔠᛯᜠឦᡤᢻᤐᦪᨃᩔ᪸᭒ᮈᯡᰦ᳀ᴞᵆᵝḈὒ⁇ℰ⅏ⅷ∰⋐⏻サイバーセキュリティインシデント日本標準時⛰⛱⛲⛳⛵✔️❤️ﬗ╬⎋⌚⅍ⅎ€	₭⁂ᾧ҈₮₯⅏⌛⎎☆Ḃ平仮名, ひらがな~\!\@\#$%^&\*\(\)\_\+<>?\:"\}\|\{,\./;'\[\]\\/\`á é í ó ú à è ë ï ö ü ĳ ë, ï, üاردو تہجی | string | 
-action\_result\.data\.\*\.fields\.漢字©¬ɸѠ֍۞ਊ௵൬༃ဤᄨᇗኖᏌᔠᛯᜠឦᡤᢻᤐᦪᨃᩔ᪸᭒ᮈᯡᰦ᳀ᴞᵆᵝḈὒ⁇ℰ⅏ⅷ∰⋐⏻サイバーセキュリテ ィインシデント日本標準時⛰⛱⛲⛳⛵✔️❤️ﬗ╬⎋⌚⅍ⅎ€ ₭⁂ᾧ҈₮₯⅏⌛⎎☆Ḃ平仮名, ひらがな~\!\@\# $%^&\*\(\)\_\+<>?\:"\}\|\{,\./;'\[\]\\/\`á é í ó ú à ë ï ö üاردو تہجیગુજરાતીहिन्दीгуджаратиგუჯარათიগুজরাটি | string | 
 action\_result\.data\.\*\.id | string | 
 action\_result\.data\.\*\.issue\_type | string |  `jira issue type` 
 action\_result\.data\.\*\.name | string |  `jira ticket key` 
