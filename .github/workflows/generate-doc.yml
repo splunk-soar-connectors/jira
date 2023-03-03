@@ -1,0 +1,14 @@
+name: Generate Readme Doc
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '*.json'
+      - 'readme.html'
+jobs:
+  generate-doc:
+    runs-on: ubuntu-latest
+    steps:
+     - uses: 'phantomcyber/dev-cicd-tools/github-actions/generate-doc@main'
+       with:
+         GITHUB_TOKEN: ${{ secrets.SOAR_APPS_TOKEN }}
