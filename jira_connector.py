@@ -90,10 +90,10 @@ class JiraConnector(phantom.BaseConnector):
             try:
                 self._custom_fields_list = json.loads(self._custom_fields)
                 if not isinstance(self._custom_fields_list, list):
-                    return self.set_status(phantom.APP_ERROR, JIRA_CUSTOM_FIELD_NON_EMPTY_ERR)
+                    return self.set_status(phantom.APP_ERROR, JIRA_CUSTOM_FIELD_NON_EMPTY_ERROR)
             except Exception as e:
                 error_text = self._get_error_message_from_exception(e)
-                return self.set_status(phantom.APP_ERROR, JIRA_CUSTOM_FIELD_FORMAT_ERR.format(error_text))
+                return self.set_status(phantom.APP_ERROR, JIRA_CUSTOM_FIELD_FORMAT_ERROR.format(error_text))
 
         return phantom.APP_SUCCESS
 
@@ -270,7 +270,7 @@ class JiraConnector(phantom.BaseConnector):
         """
 
         error_code = None
-        error_msg = ERR_MSG_UNAVAILABLE
+        error_msg = ERROR_MESSAGE_UNAVAILABLE
 
         try:
             if hasattr(e, "args"):
@@ -379,9 +379,9 @@ class JiraConnector(phantom.BaseConnector):
                 self.save_progress("Creating JIRA client with Bearer Token Authentication")
                 self._jira = JIRA(options=options, token_auth=self._password)
         except Timeout:
-            return action_result.set_status(phantom.APP_ERROR, JIRA_ERR_API_TIMEOUT)
+            return action_result.set_status(phantom.APP_ERROR, JIRA_ERROR_API_TIMEOUT)
         except Exception as e:
-            return self._set_jira_error(action_result, JIRA_ERR_API_INITIALIZATION, e)
+            return self._set_jira_error(action_result, JIRA_ERROR_API_INITIALIZATION, e)
         finally:
             signal.alarm(0)
 
@@ -398,14 +398,14 @@ class JiraConnector(phantom.BaseConnector):
 
         # Create the jira object
         if (phantom.is_fail(self._create_jira_object(action_result))):
-            self.save_progress(JIRA_ERR_CONNECTIVITY_TEST)
+            self.save_progress(JIRA_ERROR_CONNECTIVITY_TEST)
             return action_result.get_status()
 
         try:
             self._jira.projects()
         except Exception as e:
-            self._set_jira_error(action_result, JIRA_ERR_PROJECTS_INFO, e)
-            self.save_progress(JIRA_ERR_CONNECTIVITY_TEST)
+            self._set_jira_error(action_result, JIRA_ERROR_PROJECTS_INFO, e)
+            self.save_progress(JIRA_ERROR_CONNECTIVITY_TEST)
             return action_result.get_status()
 
         self.save_progress(JIRA_SUCC_CONNECTIVITY_TEST)
@@ -431,7 +431,7 @@ class JiraConnector(phantom.BaseConnector):
         try:
             projects = self._jira.projects()
         except Exception as e:
-            return self._set_jira_error(action_result, JIRA_ERR_PROJECTS_INFO, e)
+            return self._set_jira_error(action_result, JIRA_ERROR_PROJECTS_INFO, e)
 
         action_result.set_summary({JIRA_TOTAL_PROJECTS: 0})
 
@@ -521,7 +521,7 @@ class JiraConnector(phantom.BaseConnector):
             update_fields = json.loads(update_fields)
         except Exception as e:
             error_msg = self._get_error_message_from_exception(e)
-            err_fields_json_parse = JIRA_ERR_FIELDS_JSON_PARSE.format(field_name=JIRA_JSON_UPDATE_FIELDS)
+            err_fields_json_parse = JIRA_ERROR_FIELDS_JSON_PARSE.format(field_name=JIRA_JSON_UPDATE_FIELDS)
             error_text = "{0} {1}".format(err_fields_json_parse, error_msg)
 
             return (action_result.set_status(phantom.APP_ERROR, error_text.replace('{', '(').replace('}', ')')), None)
@@ -620,7 +620,7 @@ class JiraConnector(phantom.BaseConnector):
                 action_result_msg = action_result.get_message()
                 error_message = action_result_msg if action_result_msg else ""
 
-                if JIRA_ERR_FETCH_CUSTOM_FIELDS not in error_message:
+                if JIRA_ERROR_FETCH_CUSTOM_FIELDS not in error_message:
                     return action_result.get_status()
 
             if update_fields:
@@ -644,7 +644,7 @@ class JiraConnector(phantom.BaseConnector):
                 "Unable to parse response from server while trying to get information about status values")
 
         if not transition_info:
-            message = JIRA_ERR_ISSUE_VALID_TRANSITIONS
+            message = JIRA_ERROR_ISSUE_VALID_TRANSITIONS
             valid_transitions = self._get_list_string(transitions)
             if valid_transitions:
                 valid_transitions = ', '.join(valid_transitions)
@@ -673,7 +673,7 @@ class JiraConnector(phantom.BaseConnector):
                     "Unable to parse response from server while trying to get resolution about status values")
 
             if not resolution_info:
-                message = JIRA_ERR_ISSUE_VALID_RESOLUTION
+                message = JIRA_ERROR_ISSUE_VALID_RESOLUTION
                 valid_resolutions = self._get_list_string(resolutions)
                 if valid_resolutions:
                     valid_resolutions = ', '.join(valid_resolutions)
@@ -713,7 +713,7 @@ class JiraConnector(phantom.BaseConnector):
             # Hence, not failing it but adding the message to the action_result
             if phantom.is_fail(ret_val):
                 self.debug_print("Error occurred while adding the comment. Error message: {0}".format(action_result.get_message()))
-                comment_failure_msg = JIRA_ERR_COMMENT_SET_STATUS_FAIL
+                comment_failure_msg = JIRA_ERROR_COMMENT_SET_STATUS_FAILED
 
         self.save_progress("Re-querying the ticket")
         ret_val = self._set_issue_data(issue_id, action_result)
@@ -722,7 +722,7 @@ class JiraConnector(phantom.BaseConnector):
             action_result_msg = action_result.get_message()
             error_message = action_result_msg if action_result_msg else ""
 
-            if JIRA_ERR_FETCH_CUSTOM_FIELDS not in error_message:
+            if JIRA_ERROR_FETCH_CUSTOM_FIELDS not in error_message:
                 return action_result.get_status()
 
         return action_result.set_status(phantom.APP_SUCCESS,
@@ -772,7 +772,7 @@ class JiraConnector(phantom.BaseConnector):
         param_update_fields = param.get(JIRA_JSON_UPDATE_FIELDS, '')
 
         if ((not attachment) and (not param_update_fields)):
-            return action_result.set_status(phantom.APP_ERROR, JIRA_ERR_UPDATE_NO_PARAM)
+            return action_result.set_status(phantom.APP_ERROR, JIRA_ERROR_UPDATE_NO_PARAM)
 
         try:
             issue = self._jira.issue(issue_id)
@@ -793,7 +793,7 @@ class JiraConnector(phantom.BaseConnector):
                 if not error_message:
                     error_message = ""
 
-                if JIRA_ERR_FETCH_CUSTOM_FIELDS not in error_message:
+                if JIRA_ERROR_FETCH_CUSTOM_FIELDS not in error_message:
                     return action_result.get_status()
 
             if (update_fields):
@@ -822,7 +822,7 @@ class JiraConnector(phantom.BaseConnector):
         if not error_message:
             error_message = ""
 
-        if (not ret_val and JIRA_ERR_FETCH_CUSTOM_FIELDS not in error_message) or not attach_result or not update_result:
+        if (not ret_val and JIRA_ERROR_FETCH_CUSTOM_FIELDS not in error_message) or not attach_result or not update_result:
             error_msg = "Error occurred while updating the ticket. "
             if (attachment):
                 error_msg += "Attachment successfully added. " if (attach_result) else "Failed to add attachment. "
@@ -891,7 +891,7 @@ class JiraConnector(phantom.BaseConnector):
 
         assignee_account_id = param.get(JIRA_JSON_ISSUE_ASSIGNEE_ACCOUNT_ID)
         if assignee_username and assignee_account_id:
-            return action_result.set_status(phantom.APP_ERROR, JIRA_ASSIGNEE_ERR)
+            return action_result.set_status(phantom.APP_ERROR, JIRA_ASSIGNEE_ERROR)
 
         param_fields = param.get(JIRA_JSON_FIELDS)
         fields = {}
@@ -901,14 +901,14 @@ class JiraConnector(phantom.BaseConnector):
                 fields = json.loads(param_fields)
             except Exception as e:
                 error_msg = self._get_error_message_from_exception(e)
-                err_fields_json_parse = JIRA_ERR_FIELDS_JSON_PARSE.format(field_name=JIRA_JSON_FIELDS)
+                err_fields_json_parse = JIRA_ERROR_FIELDS_JSON_PARSE.format(field_name=JIRA_JSON_FIELDS)
                 error_text = "{0} {1}".format(err_fields_json_parse, error_msg)
 
                 return action_result.set_status(phantom.APP_ERROR, error_text.replace('{', '(').replace('}', ')'))
 
             if ('fields' in fields):
                 if (len(list(fields.keys())) > 1):
-                    return action_result.set_status(phantom.APP_ERROR, JIRA_ERR_INPUT_FIELDS_NOT_THE_ONLY_ONE)
+                    return action_result.set_status(phantom.APP_ERROR, JIRA_ERROR_INPUT_FIELDS_NOT_THE_ONLY_ONE)
                 fields = fields['fields']
 
         # update value in fields if not present in the json
@@ -937,11 +937,11 @@ class JiraConnector(phantom.BaseConnector):
         except KeyError as ke:
             error_msg = self._get_error_message_from_exception(ke)
             error_text = "{0}. Missing required key. {1}".format(
-                JIRA_ERR_CREATE_TICKET_FAILED, error_msg)
+                JIRA_ERROR_CREATE_TICKET_FAILED, error_msg)
 
             return action_result.set_status(phantom.APP_ERROR, error_text)
         except Exception as e:
-            return self._set_jira_error(action_result, JIRA_ERR_CREATE_TICKET_FAILED, e)
+            return self._set_jira_error(action_result, JIRA_ERROR_CREATE_TICKET_FAILED, e)
 
         self.debug_print(JIRA_CREATED_TICKET)
 
@@ -959,7 +959,7 @@ class JiraConnector(phantom.BaseConnector):
                     self.debug_print("Exception for assignee")
 
                     error_text = self._get_error_message_from_exception(e)
-                    assignee_status = JIRA_ERR_TICKET_ASSIGNMENT_FAILED.format(assignee_username, error_text)
+                    assignee_status = JIRA_ERROR_TICKET_ASSIGNMENT_FAILED.format(assignee_username, error_text)
             else:
                 self.debug_print("Assigning to user for Jira cloud")
                 endpoint = 'issue/{0}/assignee'.format(str(new_issue))
@@ -970,10 +970,10 @@ class JiraConnector(phantom.BaseConnector):
                     ret_val, _ = self._make_rest_call(endpoint, action_result, data=json.dumps(payload), method="put")
                 except Exception as e:
                     error_text = self._get_error_message_from_exception(e)
-                    assignee_status = JIRA_ERR_TICKET_ASSIGNMENT_FAILED.format(assignee_account_id, error_text)
+                    assignee_status = JIRA_ERROR_TICKET_ASSIGNMENT_FAILED.format(assignee_account_id, error_text)
 
                 if phantom.is_fail(ret_val):
-                    assignee_status = JIRA_ERR_TICKET_ASSIGNMENT_FAILED.format(assignee_account_id, action_result.get_message())
+                    assignee_status = JIRA_ERROR_TICKET_ASSIGNMENT_FAILED.format(assignee_account_id, action_result.get_message())
 
         issue_id = new_issue.key
 
@@ -1142,7 +1142,7 @@ class JiraConnector(phantom.BaseConnector):
         display_name = param.get(JIRA_JSON_DISPLAY_NAME)
 
         if (display_name and username) or (not display_name and not username):
-            return action_result.set_status(phantom.APP_ERROR, JIRA_SEARCH_USERS_ERR)
+            return action_result.set_status(phantom.APP_ERROR, JIRA_SEARCH_USERS_ERROR)
 
         start_index = 0
 
@@ -1198,7 +1198,7 @@ class JiraConnector(phantom.BaseConnector):
         if not error_message:
             error_message = ""
 
-        if (not ret_val and JIRA_ERR_FETCH_CUSTOM_FIELDS not in error_message):
+        if (not ret_val and JIRA_ERROR_FETCH_CUSTOM_FIELDS not in error_message):
             return phantom.APP_ERROR
 
         if (not self._add_update_fields(issue, update_fields, action_result)):
@@ -1247,7 +1247,7 @@ class JiraConnector(phantom.BaseConnector):
                 issue.update(fields=fields['fields'])
                 del fields['fields']
             except Exception as e:
-                return self._set_jira_error(action_result, JIRA_ERR_UPDATE_FAILED, e)
+                return self._set_jira_error(action_result, JIRA_ERROR_UPDATE_FAILED, e)
 
         if ('update' in fields):
             self.save_progress("Modifying the ticket with the 'update' dictionary")
@@ -1255,7 +1255,7 @@ class JiraConnector(phantom.BaseConnector):
                 issue.update(update=fields['update'])
                 del fields['update']
             except Exception as e:
-                return self._set_jira_error(action_result, JIRA_ERR_UPDATE_FAILED, e)
+                return self._set_jira_error(action_result, JIRA_ERROR_UPDATE_FAILED, e)
 
         if (fields):
             # There are still some keys present so update the issue some more
@@ -1263,7 +1263,7 @@ class JiraConnector(phantom.BaseConnector):
             try:
                 issue.update(fields)
             except Exception as e:
-                return self._set_jira_error(action_result, JIRA_ERR_UPDATE_FAILED, e)
+                return self._set_jira_error(action_result, JIRA_ERROR_UPDATE_FAILED, e)
 
         return phantom.APP_SUCCESS
 
@@ -1279,10 +1279,10 @@ class JiraConnector(phantom.BaseConnector):
             _, _, vault_meta = phantom_rules.vault_info(vault_id=vault_id)  # Vault IDs are unique
             if not vault_meta:
                 self.debug_print("Error while fetching meta information for vault ID: {}".format(vault_id))
-                return JIRA_ERR_FILE_NOT_IN_VAULT
+                return JIRA_ERROR_FILE_NOT_IN_VAULT
 
         except Exception:
-            return JIRA_ERR_FILE_NOT_IN_VAULT
+            return JIRA_ERROR_FILE_NOT_IN_VAULT
 
         file_meta = None
         try:
@@ -1341,7 +1341,7 @@ class JiraConnector(phantom.BaseConnector):
             self.debug_print("Error while attaching")
 
             error_text = self._get_error_message_from_exception(e)
-            return JIRA_ERR_ATTACH_FAILED.format(error_text)
+            return JIRA_ERROR_ATTACH_FAILED.format(error_text)
 
         return ""
 
@@ -1418,7 +1418,7 @@ class JiraConnector(phantom.BaseConnector):
         try:
             issue = self._jira.issue(issue_id)
         except Exception as e:
-            return self._set_jira_error(action_result, JIRA_ERR_GET_TICKET, e)
+            return self._set_jira_error(action_result, JIRA_ERROR_GET_TICKET, e)
 
         return self._parse_issue_data(issue, action_result)
 
@@ -1446,7 +1446,7 @@ class JiraConnector(phantom.BaseConnector):
             if not error_message:
                 error_message = ""
 
-            if (JIRA_ERR_FETCH_CUSTOM_FIELDS not in error_message):
+            if (JIRA_ERROR_FETCH_CUSTOM_FIELDS not in error_message):
                 return action_result.get_status()
             else:
                 error_msg = error_message
@@ -1518,7 +1518,7 @@ class JiraConnector(phantom.BaseConnector):
         # Can't replace the custom fields, but the data has been set so the user can continue
         if (phantom.is_fail(ret_val)):
             message = action_result.get_message()
-            action_result.set_status(phantom.APP_ERROR, "{0}. Error message: {1}".format(JIRA_ERR_FETCH_CUSTOM_FIELDS, message))
+            action_result.set_status(phantom.APP_ERROR, "{0}. Error message: {1}".format(JIRA_ERROR_FETCH_CUSTOM_FIELDS, message))
             return None
 
         if not custom_fields_info:
@@ -1866,7 +1866,7 @@ class JiraConnector(phantom.BaseConnector):
         account_id = param.get(JIRA_JSON_USER_ACCOUNT_ID)
 
         if (account_id and username) or (not account_id and not username):
-            return action_result.set_status(phantom.APP_ERROR, JIRA_WATCHERS_ERR)
+            return action_result.set_status(phantom.APP_ERROR, JIRA_WATCHERS_ERROR)
 
         ret_val, watchers = self.get_watchers_list(action_result, issue_id, True if username else False)
 
@@ -1911,7 +1911,7 @@ class JiraConnector(phantom.BaseConnector):
                 else:
                     watcher_list.append(watcher['accountId'])
         except KeyError:
-            return action_result.set_status(phantom.APP_ERROR, JIRA_WATCHERS_ERR), None
+            return action_result.set_status(phantom.APP_ERROR, JIRA_WATCHERS_ERROR), None
         except Exception as e:
             error_msg = self._get_error_message_from_exception(e)
             error_text = "Error occurred while fetching the watchers list. {}".format(error_msg)
@@ -1937,7 +1937,7 @@ class JiraConnector(phantom.BaseConnector):
         account_id = param.get(JIRA_JSON_USER_ACCOUNT_ID)
 
         if (account_id and username) or (not account_id and not username):
-            return action_result.set_status(phantom.APP_ERROR, JIRA_WATCHERS_ERR)
+            return action_result.set_status(phantom.APP_ERROR, JIRA_WATCHERS_ERROR)
 
         ret_val, watchers = self.get_watchers_list(action_result, issue_id, True if username else False)
 
@@ -2038,7 +2038,7 @@ class JiraConnector(phantom.BaseConnector):
                     full_path = '{}/{}'.format(temp_vault_path, jira_filename)
 
                     if not self._is_safe_path(temp_vault_path, full_path):
-                        return action_result.set_status(phantom.APP_ERROR, JIRA_ERR_INVALID_FILE_PATH)
+                        return action_result.set_status(phantom.APP_ERROR, JIRA_ERROR_INVALID_FILE_PATH)
 
                     if extension_filter:
                         file_extension = ".{}".format(jira_filename.rsplit('.')[-1])
@@ -2265,8 +2265,8 @@ class JiraConnector(phantom.BaseConnector):
         config = self.get_config()
 
         if not state:
-            self.debug_print(JIRA_ERR_STATE_FILE_CORRUPT_ERR)
-            self.save_progress(JIRA_ERR_STATE_FILE_CORRUPT_ERR)
+            self.debug_print(JIRA_ERROR_STATE_FILE_CORRUPT_ERROR)
+            self.save_progress(JIRA_ERROR_STATE_FILE_CORRUPT_ERROR)
             state = {
                 "app_version": self.get_app_json().get('app_version')
             }
@@ -2274,7 +2274,7 @@ class JiraConnector(phantom.BaseConnector):
                 self.save_state(state)
             else:
                 self._save_state(state)
-            return action_result.set_status(phantom.APP_ERROR, JIRA_ERR_STATE_FILE_CORRUPT_ERR)
+            return action_result.set_status(phantom.APP_ERROR, JIRA_ERROR_STATE_FILE_CORRUPT_ERROR)
 
         # Get time from last poll, save now as time for this poll
         last_time = state.get('last_time', 0)
@@ -2399,7 +2399,7 @@ class JiraConnector(phantom.BaseConnector):
             self._save_state(state)
 
         if failed:
-            return action_result.set_status(phantom.APP_ERROR, JIRA_ERR_FAILURES)
+            return action_result.set_status(phantom.APP_ERROR, JIRA_ERROR_FAILED)
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
@@ -2417,14 +2417,16 @@ class JiraConnector(phantom.BaseConnector):
             if parameter <= 0:
                 if allow_zero:
                     if parameter < 0:
-                        action_result.set_status(phantom.APP_ERROR, JIRA_LIMIT_VALIDATION_ALLOW_ZERO_MSG.format(parameter=key))
+                        action_result.set_status(phantom.APP_ERROR, JIRA_LIMIT_VALIDATION_ALLOW_ZERO_MESSAGE.format(parameter=key))
                         return None
                 else:
-                    action_result.set_status(phantom.APP_ERROR, JIRA_LIMIT_VALIDATION_MSG.format(parameter=key))
+                    action_result.set_status(phantom.APP_ERROR, JIRA_LIMIT_VALIDATION_MESSAGE.format(parameter=key))
                     return None
         except Exception:
-            error_text = \
-                JIRA_LIMIT_VALIDATION_ALLOW_ZERO_MSG.format(parameter=key) if allow_zero else JIRA_LIMIT_VALIDATION_MSG.format(parameter=key)
+            if allow_zero:
+                error_text = JIRA_LIMIT_VALIDATION_ALLOW_ZERO_MESSAGE.format(parameter=key)
+            else:
+                error_text = JIRA_LIMIT_VALIDATION_MESSAGE.format(parameter=key)
             action_result.set_status(phantom.APP_ERROR, error_text)
             return None
 
