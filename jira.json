@@ -30,11 +30,11 @@
         "wheel": [
             {
                 "module": "PyJWT",
-                "input_file": "wheels/py3/PyJWT-2.0.1-py3-none-any.whl"
+                "input_file": "wheels/py3/PyJWT-2.4.0-py3-none-any.whl"
             },
             {
                 "module": "SecretStorage",
-                "input_file": "wheels/py3/SecretStorage-3.3.2-py3-none-any.whl"
+                "input_file": "wheels/py3/SecretStorage-3.3.3-py3-none-any.whl"
             },
             {
                 "module": "beautifulsoup4",
@@ -42,7 +42,7 @@
             },
             {
                 "module": "certifi",
-                "input_file": "wheels/py3/certifi-2022.6.15-py3-none-any.whl"
+                "input_file": "wheels/py3/certifi-2022.12.7-py3-none-any.whl"
             },
             {
                 "module": "cffi",
@@ -54,7 +54,7 @@
             },
             {
                 "module": "cryptography",
-                "input_file": "wheels/py36/cryptography-37.0.4-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+                "input_file": "wheels/py36/cryptography-40.0.2-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
             },
             {
                 "module": "defusedxml",
@@ -130,7 +130,7 @@
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/shared/urllib3-1.26.10-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/urllib3-1.26.15-py2.py3-none-any.whl"
             },
             {
                 "module": "zipp",
@@ -10780,11 +10780,11 @@
         "wheel": [
             {
                 "module": "PyJWT",
-                "input_file": "wheels/py3/PyJWT-2.0.1-py3-none-any.whl"
+                "input_file": "wheels/py3/PyJWT-2.4.0-py3-none-any.whl"
             },
             {
                 "module": "SecretStorage",
-                "input_file": "wheels/py3/SecretStorage-3.3.2-py3-none-any.whl"
+                "input_file": "wheels/py3/SecretStorage-3.3.3-py3-none-any.whl"
             },
             {
                 "module": "beautifulsoup4",
@@ -10792,7 +10792,7 @@
             },
             {
                 "module": "certifi",
-                "input_file": "wheels/py3/certifi-2022.6.15-py3-none-any.whl"
+                "input_file": "wheels/py3/certifi-2022.12.7-py3-none-any.whl"
             },
             {
                 "module": "cffi",
@@ -10804,7 +10804,7 @@
             },
             {
                 "module": "cryptography",
-                "input_file": "wheels/py36/cryptography-37.0.4-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+                "input_file": "wheels/py36/cryptography-40.0.2-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
             },
             {
                 "module": "defusedxml",
@@ -10816,7 +10816,11 @@
             },
             {
                 "module": "importlib_metadata",
-                "input_file": "wheels/py3/importlib_metadata-4.12.0-py3-none-any.whl"
+                "input_file": "wheels/py3/importlib_metadata-6.6.0-py3-none-any.whl"
+            },
+            {
+                "module": "jaraco.classes",
+                "input_file": "wheels/py3/jaraco.classes-3.2.3-py3-none-any.whl"
             },
             {
                 "module": "jeepney",
@@ -10828,7 +10832,11 @@
             },
             {
                 "module": "keyring",
-                "input_file": "wheels/py3/keyring-23.7.0-py3-none-any.whl"
+                "input_file": "wheels/py3/keyring-23.13.1-py3-none-any.whl"
+            },
+            {
+                "module": "more_itertools",
+                "input_file": "wheels/py3/more_itertools-9.1.0-py3-none-any.whl"
             },
             {
                 "module": "oauthlib",
@@ -10864,7 +10872,7 @@
             },
             {
                 "module": "setuptools",
-                "input_file": "wheels/py3/setuptools-63.2.0-py3-none-any.whl"
+                "input_file": "wheels/py3/setuptools-67.7.2-py3-none-any.whl"
             },
             {
                 "module": "six",
@@ -10872,15 +10880,15 @@
             },
             {
                 "module": "soupsieve",
-                "input_file": "wheels/py3/soupsieve-2.3.2.post1-py3-none-any.whl"
+                "input_file": "wheels/py3/soupsieve-2.4.1-py3-none-any.whl"
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/shared/urllib3-1.26.10-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/urllib3-1.26.15-py2.py3-none-any.whl"
             },
             {
                 "module": "zipp",
-                "input_file": "wheels/py3/zipp-3.8.1-py3-none-any.whl"
+                "input_file": "wheels/py3/zipp-3.15.0-py3-none-any.whl"
             }
         ]
     }
