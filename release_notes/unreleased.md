@@ -1,2 +1,2 @@
 **Unreleased**
-* Bump PyJWT dependency version to CVEs [PAPP-30336]
+* Update dependency versions to capture new security patches [PAPP-30336]
