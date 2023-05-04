@@ -63,49 +63,50 @@ JIRA_JSON_DISPLAY_NAME = 'display_name'
 JIRA_JSON_USER_ACCOUNT_ID = 'user_account_id'
 JIRA_JSON_TIMESPENT = 'time_spent'
 
-JIRA_WATCHERS_ERR = "Please provide either 'user_account_id' or 'username' action parameter. " \
+JIRA_WATCHERS_ERROR = "Please provide either 'user_account_id' or 'username' action parameter. " \
     "For JIRA on-prem, use 'username' action parameter, and, for JIRA cloud, use 'user_account_id' action parameter"
-JIRA_SEARCH_USERS_ERR = "Please provide either 'display_name' or 'username' action parameter. " \
+JIRA_SEARCH_USERS_ERROR = "Please provide either 'display_name' or 'username' action parameter. " \
     "For JIRA on-prem, use 'username' action parameter, and, for JIRA cloud, use 'display_name' action parameter"
-JIRA_CUSTOM_FIELD_FORMAT_ERR = "Could not load JSON formatted list from the custom_fields asset configuration parameter. {0}"
-JIRA_CUSTOM_FIELD_NON_EMPTY_ERR = "Please provide 'custom_fields' asset configuration parameter as a non-empty JSON formatted list"
-JIRA_ASSIGNEE_ERR = "Please provide either 'assignee' or 'assignee_account_id' action parameter. " \
+JIRA_CUSTOM_FIELD_FORMAT_ERROR = "Could not load JSON formatted list from the custom_fields asset configuration parameter. {0}"
+JIRA_CUSTOM_FIELD_NON_EMPTY_ERROR = "Please provide 'custom_fields' asset configuration parameter as a non-empty JSON formatted list"
+JIRA_ASSIGNEE_ERROR = "Please provide either 'assignee' or 'assignee_account_id' action parameter. " \
     "For JIRA on-prem, use 'assignee' action parameter, and, for JIRA cloud, use 'assignee_account_id' action parameter"
 JIRA_INVALID_LIMIT = "Please provide non-zero positive integer in limit"
-JIRA_ERR_STATE_FILE_CORRUPT_ERR = "Error occurred while loading the state file due to its unexpected format.\
+JIRA_ERROR_STATE_FILE_CORRUPT_ERROR = "Error occurred while loading the state file due to its unexpected format.\
      Resetting the state file with the default format. Please try again."
-JIRA_ERR_FETCH_CUSTOM_FIELDS = "Error occurred while fetching the custom fields metadata"
-JIRA_ERR_API_INITIALIZATION = "API Initialization failed"
-JIRA_ERR_API_TIMEOUT = "Timed out waiting for API to initialize. Please verify the asset configuration parameters"
-JIRA_ERR_CONNECTIVITY_TEST = "Connectivity test failed"
-JIRA_ERR_PROJECTS_INFO = "Error getting projects info"
+JIRA_ERROR_FETCH_CUSTOM_FIELDS = "Error occurred while fetching the custom fields metadata"
+JIRA_ERROR_API_INITIALIZATION = "API Initialization failed"
+JIRA_ERROR_API_TIMEOUT = "Timed out waiting for API to initialize. Please verify the asset configuration parameters"
+JIRA_ERROR_CONNECTIVITY_TEST = "Connectivity test failed"
+JIRA_ERROR_PROJECTS_INFO = "Error getting projects info"
 JIRA_SUCC_CONNECTIVITY_TEST = "Connectivity test passed"
-JIRA_ERR_TICKET_ASSIGNMENT_FAILED = "Ticket assignment to user '{0}' failed. {1}"
-JIRA_ERR_CREATE_TICKET_FAILED = "Ticket creation failed"
+JIRA_ERROR_TICKET_ASSIGNMENT_FAILED = "Ticket assignment to user '{0}' failed. {1}"
+JIRA_ERROR_CREATE_TICKET_FAILED = "Ticket creation failed"
 JIRA_SUCC_TICKET_CREATED = "Created ticket with id: {id}, key: {key}"
-JIRA_ERR_ARTIFACT_NOT_FOUND_IN_CONTAINER = "Either the ticket artifact with issue key: {issue_key} got deleted " \
+JIRA_ERROR_AUTH_FAILED = "Authentication to Jira server failed"
+JIRA_ERROR_ARTIFACT_NOT_FOUND_IN_CONTAINER = "Either the ticket artifact with issue key: {issue_key} got deleted " \
     "from the container: {container_id} or the type of the issue has changed on the JIRA instance." \
     "Please delete the container and re-run the ingestion."
-JIRA_ERR_FILE_NOT_IN_VAULT = "Could not find specified vault ID in vault"
-JIRA_ERR_ATTACH_FAILED = "Adding attachment failed. {0}"
-JIRA_ERR_LIST_TICKETS_FAILED = "Failed to get ticket listing"
-JIRA_ERR_GET_TICKET = "Failed to get ticket info"
-JIRA_ERR_FIELDS_JSON_PARSE = "Unable to parse the '{field_name}' parameter into a dictionary"
-JIRA_ERR_ISSUE_VALID_TRANSITIONS = "Input status does not seem to be a valid status that can be set for this issue"
-JIRA_ERR_ISSUE_VALID_RESOLUTION = "Input resolution does not seem to be valid"
-JIRA_ERR_UPDATE_NO_PARAM = "Either the Vault ID or the JSON field must be filled out to perform this action"
-JIRA_ERR_UPDATE_FAILED = "Unable to update the ticket with the given JSON"
-JIRA_ERR_COMMENT_SET_STATUS_FAIL = "Comment could not be added successfully due to either permissions or configuration issue " \
+JIRA_ERROR_FILE_NOT_IN_VAULT = "Could not find specified vault ID in vault"
+JIRA_ERROR_ATTACH_FAILED = "Adding attachment failed. {0}"
+JIRA_ERROR_LIST_TICKETS_FAILED = "Failed to get ticket listing"
+JIRA_ERROR_GET_TICKET = "Failed to get ticket info"
+JIRA_ERROR_FIELDS_JSON_PARSE = "Unable to parse the '{field_name}' parameter into a dictionary"
+JIRA_ERROR_ISSUE_VALID_TRANSITIONS = "Input status does not seem to be a valid status that can be set for this issue"
+JIRA_ERROR_ISSUE_VALID_RESOLUTION = "Input resolution does not seem to be valid"
+JIRA_ERROR_UPDATE_NO_PARAM = "Either the Vault ID or the JSON field must be filled out to perform this action"
+JIRA_ERROR_UPDATE_FAILED = "Unable to update the ticket with the given JSON"
+JIRA_ERROR_COMMENT_SET_STATUS_FAILED = "Comment could not be added successfully due to either permissions or configuration issue " \
     "(changing the status of the ticket to Closed and then, trying to add comment to it is one such scenario)."
 JIRA_SUCC_TICKET_UPDATED = "Successfully updated the ticket"
 JIRA_SUCC_TICKET_DELETED = "Successfully deleted the ticket"
-JIRA_ERR_INPUT_FIELDS_NOT_THE_ONLY_ONE = "Invalid fields value." \
+JIRA_ERROR_INPUT_FIELDS_NOT_THE_ONLY_ONE = "Invalid fields value." \
     " The input json has a 'fields' key in it in addition to other keys." \
     " Either specify a dictionary with only one parent 'fields' key or multiple keys without the 'fields' key"
-JIRA_ERR_FAILURES = "Some tickets had issues during ingestion, see logs for the details"
-JIRA_ERR_NEGATIVE_INPUT = "'start_index' cannot be a negative value"
-JIRA_LIMIT_VALIDATION_ALLOW_ZERO_MSG = "Please provide zero or positive integer value in the {parameter} parameter"
-JIRA_LIMIT_VALIDATION_MSG = "Please provide a valid non-zero positive integer value in the {parameter} parameter"
+JIRA_ERROR_FAILED = "Some tickets had issues during ingestion, see logs for the details"
+JIRA_ERROR_NEGATIVE_INPUT = "'start_index' cannot be a negative value"
+JIRA_LIMIT_VALIDATION_ALLOW_ZERO_MESSAGE = "Please provide zero or positive integer value in the {parameter} parameter"
+JIRA_LIMIT_VALIDATION_MESSAGE = "Please provide a valid non-zero positive integer value in the {parameter} parameter"
 
 JIRA_CREATED_TICKET = "Created ticket"
 JIRA_USING_BASE_URL = "Using URL: {base_url}"
@@ -117,5 +118,5 @@ DEFAULT_START_INDEX = 0
 JIRA_START_TIMEOUT = 30
 JIRA_DEFAULT_TIMEOUT = 60
 JIRA_TIME_FORMAT = "%Y/%m/%d %H:%M"
-ERR_MSG_UNAVAILABLE = "Error message unavailable. Please check the asset configuration and|or action parameters"
-JIRA_ERR_INVALID_FILE_PATH = "The file path is invalid"
+ERROR_MESSAGE_UNAVAILABLE = "Error message unavailable. Please check the asset configuration and|or action parameters"
+JIRA_ERROR_INVALID_FILE_PATH = "The file path is invalid"
