@@ -83,6 +83,7 @@ JIRA_SUCC_CONNECTIVITY_TEST = "Connectivity test passed"
 JIRA_ERROR_TICKET_ASSIGNMENT_FAILED = "Ticket assignment to user '{0}' failed. {1}"
 JIRA_ERROR_CREATE_TICKET_FAILED = "Ticket creation failed"
 JIRA_SUCC_TICKET_CREATED = "Created ticket with id: {id}, key: {key}"
+JIRA_ERROR_AUTH_FAILED = "Authentication to Jira server failed"
 JIRA_ERROR_ARTIFACT_NOT_FOUND_IN_CONTAINER = "Either the ticket artifact with issue key: {issue_key} got deleted " \
     "from the container: {container_id} or the type of the issue has changed on the JIRA instance." \
     "Please delete the container and re-run the ingestion."

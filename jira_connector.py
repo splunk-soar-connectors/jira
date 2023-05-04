@@ -402,9 +402,9 @@ class JiraConnector(phantom.BaseConnector):
             return action_result.get_status()
 
         try:
-            self._jira.projects()
+            self._jira.myself()
         except Exception as e:
-            self._set_jira_error(action_result, JIRA_ERROR_PROJECTS_INFO, e)
+            self._set_jira_error(action_result, JIRA_ERROR_AUTH_FAILED, e)
             self.save_progress(JIRA_ERROR_CONNECTIVITY_TEST)
             return action_result.get_status()
 
