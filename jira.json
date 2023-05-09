@@ -10,22 +10,22 @@
     ],
     "type": "ticketing",
     "main_module": "jira_connector.py",
-    "app_version": "3.5.0",
+    "app_version": "4.0.0",
     "utctime_updated": "2022-02-04T03:00:20.000000Z",
     "package_name": "phantom_jira",
     "product_vendor": "Atlassian",
     "product_name": "Jira",
     "product_version_regex": ".*",
-    "min_phantom_version": "5.2.0",
+    "min_phantom_version": "5.5.0",
     "latest_tested_versions": [
         "On prem v8.21.0",
-        "Cloud Copyright (c) 2002 - 2022 Atlassian Corporation Pty Ltd."
+        "Cloud Copyright (c) 2002 - 2023 Atlassian Corporation Pty Ltd."
     ],
     "python_version": "3",
     "fips_compliant": true,
     "logo": "logo_atlassian.svg",
     "logo_dark": "logo_atlassian_dark.svg",
-    "license": "Copyright (c) 2016-2022 Splunk Inc.",
+    "license": "Copyright (c) 2016-2023 Splunk Inc.",
     "pip_dependencies": {
         "wheel": [
             {
@@ -34,7 +34,7 @@
             },
             {
                 "module": "SecretStorage",
-                "input_file": "wheels/py3/SecretStorage-3.3.2-py3-none-any.whl"
+                "input_file": "wheels/py3/SecretStorage-3.3.3-py3-none-any.whl"
             },
             {
                 "module": "beautifulsoup4",
@@ -42,7 +42,7 @@
             },
             {
                 "module": "certifi",
-                "input_file": "wheels/py3/certifi-2022.6.15-py3-none-any.whl"
+                "input_file": "wheels/py3/certifi-2022.12.7-py3-none-any.whl"
             },
             {
                 "module": "cffi",
@@ -54,7 +54,7 @@
             },
             {
                 "module": "cryptography",
-                "input_file": "wheels/py36/cryptography-37.0.4-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+                "input_file": "wheels/py36/cryptography-39.0.2-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
             },
             {
                 "module": "defusedxml",
@@ -87,6 +87,10 @@
             {
                 "module": "pbr",
                 "input_file": "wheels/shared/pbr-5.4.4-py2.py3-none-any.whl"
+            },
+            {
+                "module": "pyOpenSSL",
+                "input_file": "wheels/py3/pyOpenSSL-23.0.0-py3-none-any.whl"
             },
             {
                 "module": "pycparser",
@@ -130,7 +134,7 @@
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/shared/urllib3-1.26.10-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/urllib3-1.26.15-py2.py3-none-any.whl"
             },
             {
                 "module": "zipp",
@@ -10738,6 +10742,90 @@
             }
         },
         {
+            "action": "run query",
+            "description": "Get a list of tickets (issues)",
+            "verbose": "",
+            "type": "investigate",
+            "identifier": "run_query",
+            "read_only": false,
+            "parameters": {
+                "jql_query": {
+                    "description": "JQL query to fetch tickets",
+                    "data_type": "string",
+                    "order": 0
+                },
+                "start_index": {
+                    "description": "Start index of the list",
+                    "data_type": "numeric",
+                    "order": 1,
+                    "default": 0
+                },
+                "max_results": {
+                    "description": "Maximum number of issues to return",
+                    "data_type": "numeric",
+                    "order": 2,
+                    "default": 1000
+                }
+            },
+            "render": {
+                "width": 12,
+                "title": "Issues",
+                "type": "table",
+                "height": 5
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.max_results",
+                    "data_type": "numeric",
+                    "example_values": [
+                        50
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.jql_query",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.start_index",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Total issues: 50"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "versions": "EQ(*)"
+        },
+        {
             "action": "on poll",
             "description": "Ingest tickets from JIRA",
             "verbose": "Basic configuration parameters for this action are available in the asset configuration.<br><br>If the <b>project_key</b> parameter is set, polling will only ingest tickets (issues) from the specified project.<br><br>If the <b>query</b> parameter is set, polling will filter tickets based on the JQL query specified in the parameter.<br><br>If the <b>first_run_max_tickets</b> parameter is set, the first poll will only ingest up to the specified amount of tickets. If the field is left empty, the first poll will ingest all the available tickets.<br><br>If the <b>max_tickets</b> parameter is set, each poll will ingest only up to the specified amount of newly updated tickets. If the field is left empty, all tickets available at the time of the poll will be ingested.<br><br>During each polling interval, the app will query the JIRA server for tickets that have been updated since the previous poll. The app will check if each ticket has already been ingested, if it has not, it will create a new container for the ticket. An artifact will be created in the container that will have a selection of the ticket's fields listed as CEF fields. All the data of tickets will be added to the container's data field. Each attachment and comment on the ticket will be ingested as artifacts. All attachments will also be added to the vault. If a ticket has been previously ingested, the app will update the ticket container's data field. The app will also add a new artifact with updated fields and it will add new artifacts for new comments and attachments. If a comment on a ticket is edited, a new artifact will be added to the container.<br><br>For a poll now, the app will ingest as many tickets as specified by the <b>container_count</b>.",
@@ -10783,16 +10871,12 @@
                 "input_file": "wheels/py3/PyJWT-2.0.1-py3-none-any.whl"
             },
             {
-                "module": "SecretStorage",
-                "input_file": "wheels/py3/SecretStorage-3.3.2-py3-none-any.whl"
-            },
-            {
                 "module": "beautifulsoup4",
                 "input_file": "wheels/py3/beautifulsoup4-4.9.1-py3-none-any.whl"
             },
             {
                 "module": "certifi",
-                "input_file": "wheels/py3/certifi-2022.6.15-py3-none-any.whl"
+                "input_file": "wheels/py3/certifi-2023.5.7-py3-none-any.whl"
             },
             {
                 "module": "cffi",
@@ -10804,7 +10888,7 @@
             },
             {
                 "module": "cryptography",
-                "input_file": "wheels/py36/cryptography-37.0.4-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+                "input_file": "wheels/py36/cryptography-39.0.2-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
             },
             {
                 "module": "defusedxml",
@@ -10815,28 +10899,24 @@
                 "input_file": "wheels/shared/idna-2.10-py2.py3-none-any.whl"
             },
             {
-                "module": "importlib_metadata",
-                "input_file": "wheels/py3/importlib_metadata-4.12.0-py3-none-any.whl"
-            },
-            {
-                "module": "jeepney",
-                "input_file": "wheels/py3/jeepney-0.8.0-py3-none-any.whl"
-            },
-            {
                 "module": "jira",
-                "input_file": "wheels/py3/jira-3.1.1-py3-none-any.whl"
-            },
-            {
-                "module": "keyring",
-                "input_file": "wheels/py3/keyring-23.7.0-py3-none-any.whl"
+                "input_file": "wheels/py3/jira-3.4.1-py3-none-any.whl"
             },
             {
                 "module": "oauthlib",
                 "input_file": "wheels/shared/oauthlib-3.1.0-py2.py3-none-any.whl"
             },
             {
+                "module": "packaging",
+                "input_file": "wheels/py3/packaging-23.1-py3-none-any.whl"
+            },
+            {
                 "module": "pbr",
                 "input_file": "wheels/shared/pbr-5.4.4-py2.py3-none-any.whl"
+            },
+            {
+                "module": "pyOpenSSL",
+                "input_file": "wheels/py3/pyOpenSSL-23.0.0-py3-none-any.whl"
             },
             {
                 "module": "pycparser",
@@ -10863,24 +10943,20 @@
                 "input_file": "wheels/shared/requests_toolbelt-0.9.1-py2.py3-none-any.whl"
             },
             {
-                "module": "setuptools",
-                "input_file": "wheels/py3/setuptools-63.2.0-py3-none-any.whl"
-            },
-            {
                 "module": "six",
                 "input_file": "wheels/shared/six-1.16.0-py2.py3-none-any.whl"
             },
             {
                 "module": "soupsieve",
-                "input_file": "wheels/py3/soupsieve-2.3.2.post1-py3-none-any.whl"
+                "input_file": "wheels/py3/soupsieve-2.4.1-py3-none-any.whl"
+            },
+            {
+                "module": "typing_extensions",
+                "input_file": "wheels/py3/typing_extensions-4.5.0-py3-none-any.whl"
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/shared/urllib3-1.26.10-py2.py3-none-any.whl"
-            },
-            {
-                "module": "zipp",
-                "input_file": "wheels/py3/zipp-3.8.1-py3-none-any.whl"
+                "input_file": "wheels/shared/urllib3-1.26.15-py2.py3-none-any.whl"
             }
         ]
     }
