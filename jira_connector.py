@@ -62,7 +62,6 @@ class JiraConnector(phantom.BaseConnector):
     ACTION_ID_ON_POLL = "on_poll"
     ACTION_ID_GET_ATTACHMENTS = "get_attachments"
     ACTION_ID_SEARCH_USERS = "search_users"
-    ACTION_ID_RUN_QUERY = "run_query"
 
     def __init__(self):
 
@@ -1015,10 +1014,13 @@ class JiraConnector(phantom.BaseConnector):
             return action_result.get_status()
 
         # get all the params for the search issue
-        project_key = param[JIRA_JSON_PROJECT_KEY]
-        query = "project={0}".format(project_key)
+        project_key = param.get(JIRA_JSON_PROJECT_KEY)
 
-        action_query = param.get(JIRA_JSON_QUERY, "")
+        query = ""
+        if project_key:
+            query = "project={0}".format(project_key)
+
+        action_query = param.get(JIRA_JSON_QUERY)
 
         start_index = param.get(JIRA_JSON_START_INDEX, DEFAULT_START_INDEX)
         start_index = self._validate_integers(action_result, start_index, 'start_index action', allow_zero=True)
@@ -1027,11 +1029,14 @@ class JiraConnector(phantom.BaseConnector):
 
         limit = param.get(JIRA_JSON_MAX_RESULTS, DEFAULT_MAX_VALUE)
         limit = self._validate_integers(action_result, limit, 'max_results action')
+
         if limit is None:
             return action_result.get_status()
 
-        if (len(action_query) > 0):
+        if action_query and query:
             query = "{0} and {1}".format(query, action_query)
+        else:
+            query = action_query
 
         issues = self._paginator(query, action_result, start_index=start_index, limit=limit)
 
@@ -1778,30 +1783,11 @@ class JiraConnector(phantom.BaseConnector):
 
         while True:
             try:
-                if endpoint:
-                    self.debug_print("Inside if for run_query")
-                    params = dict()
-                    params.update({
-                        "jql": jql_query,
-                        "startAt": start_index,
-                        "maxResults": limit
-                    })
-                    ret_val, issues = self._make_rest_call(endpoint, action_result, params=params)
-                    issues = issues["issues"]
-
-                    self.debug_print(f"run query type(issues): {type(issues)}")
-
-                    if (phantom.is_fail(ret_val)):
-                        return action_result.get_status()
-                    # issues = json.loads(issues.text)["issues"]
+                if fields:
+                    issues = self._jira.search_issues(
+                        jql_str=jql_query, startAt=start_index, maxResults=DEFAULT_MAX_RESULTS_PER_PAGE, fields='updated')
                 else:
-                    if fields:
-                        issues = self._jira.search_issues(
-                            jql_str=jql_query, startAt=start_index, maxResults=DEFAULT_MAX_RESULTS_PER_PAGE, fields='updated')
-                    else:
-                        issues = self._jira.search_issues(jql_str=jql_query, startAt=start_index, maxResults=DEFAULT_MAX_RESULTS_PER_PAGE)
-                    self.debug_print(f"type(issues): {type(issues)}")
-
+                    issues = self._jira.search_issues(jql_str=jql_query, startAt=start_index, maxResults=DEFAULT_MAX_RESULTS_PER_PAGE)
             except Exception as e:
                 self._set_jira_error(action_result, "Error occurred while fetching the list of tickets (issues)", e)
                 return None
@@ -2080,47 +2066,6 @@ class JiraConnector(phantom.BaseConnector):
             error_msg = self._get_error_message_from_exception(e)
             error_text = "Unable to get attachments. {}".format(error_msg)
             return action_result.set_status(phantom.APP_ERROR, error_text)
-
-    def _handle_run_query(self, param):
-
-        action_result = self.add_action_result(phantom.ActionResult(dict(param)))
-
-        self.save_progress(JIRA_USING_BASE_URL, base_url=self._base_url)
-        self.save_progress(phantom.APP_PROG_CONNECTING_TO_ELLIPSES, self._host)
-
-        # Create the jira object
-        if (phantom.is_fail(self._create_jira_object(action_result))):
-            return action_result.get_status()
-
-        query = param.get("jql_query")
-
-        # action_query = param.get(JIRA_JSON_QUERY, "")
-
-        start_index = param.get(JIRA_JSON_START_INDEX, DEFAULT_START_INDEX)
-        start_index = self._validate_integers(action_result, start_index, 'start_index action', allow_zero=True)
-        if start_index is None:
-            return action_result.get_status()
-
-        limit = param.get(JIRA_JSON_MAX_RESULTS, DEFAULT_MAX_VALUE)
-        limit = self._validate_integers(action_result, limit, 'max_results action')
-        if limit is None:
-            return action_result.get_status()
-
-        endpoint = "search"
-
-        issues = self._paginator(query, action_result, endpoint=endpoint, start_index=start_index, limit=limit)
-
-        if issues is None:
-            return action_result.get_status()
-
-        self.debug_print(f"Issues#######: {issues}")
-
-        action_result.update_data(issues)
-
-        summary = action_result.update_summary({})
-        summary[JIRA_TOTAL_ISSUES] = action_result.get_data_size()
-
-        return action_result.set_status(phantom.APP_SUCCESS)
 
     def _update_container(self, issue, container_id, last_time, action_result):
 
@@ -2520,7 +2465,6 @@ class JiraConnector(phantom.BaseConnector):
             self.ACTION_ID_ON_POLL: self._on_poll,
             self.ACTION_ID_GET_ATTACHMENTS: self._handle_get_attachments,
             self.ACTION_ID_SEARCH_USERS: self._handle_search_users,
-            self.ACTION_ID_RUN_QUERY: self._handle_run_query
         }
 
         if action in list(action_mapping.keys()):

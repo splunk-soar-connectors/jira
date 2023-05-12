@@ -4067,7 +4067,6 @@
                     "description": "Project key to list the tickets (issues) of",
                     "data_type": "string",
                     "order": 0,
-                    "required": true,
                     "primary": true,
                     "contains": [
                         "jira project key"
@@ -10740,90 +10739,6 @@
                 "type": "table",
                 "height": 5
             }
-        },
-        {
-            "action": "run query",
-            "description": "Get a list of tickets (issues)",
-            "verbose": "",
-            "type": "investigate",
-            "identifier": "run_query",
-            "read_only": false,
-            "parameters": {
-                "jql_query": {
-                    "description": "JQL query to fetch tickets",
-                    "data_type": "string",
-                    "order": 0
-                },
-                "start_index": {
-                    "description": "Start index of the list",
-                    "data_type": "numeric",
-                    "order": 1,
-                    "default": 0
-                },
-                "max_results": {
-                    "description": "Maximum number of issues to return",
-                    "data_type": "numeric",
-                    "order": 2,
-                    "default": 1000
-                }
-            },
-            "render": {
-                "width": 12,
-                "title": "Issues",
-                "type": "table",
-                "height": 5
-            },
-            "output": [
-                {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success",
-                        "failed"
-                    ]
-                },
-                {
-                    "data_path": "action_result.parameter.max_results",
-                    "data_type": "numeric",
-                    "example_values": [
-                        50
-                    ]
-                },
-                {
-                    "data_path": "action_result.parameter.jql_query",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.parameter.start_index",
-                    "data_type": "numeric"
-                },
-                {
-                    "data_path": "action_result.summary",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.message",
-                    "data_type": "string",
-                    "example_values": [
-                        "Total issues: 50"
-                    ]
-                },
-                {
-                    "data_path": "summary.total_objects",
-                    "data_type": "numeric",
-                    "example_values": [
-                        1
-                    ]
-                },
-                {
-                    "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric",
-                    "example_values": [
-                        1
-                    ]
-                }
-            ],
-            "versions": "EQ(*)"
         },
         {
             "action": "on poll",
