@@ -373,7 +373,6 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 [link tickets](#action-link-tickets) - Create a link between two separate tickets  
 [add watcher](#action-add-watcher) - Add a user to an issue's watchers list  
 [remove watcher](#action-remove-watcher) - Remove a user from an issue's watchers list  
-[run query](#action-run-query) - Get a list of tickets (issues)  
 [on poll](#action-on-poll) - Ingest tickets from JIRA  
 
 ## action: 'test connectivity'
@@ -959,7 +958,7 @@ The default value for the parameter <b>'start_index'</b> is <b>0</b> and for <b>
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**project_key** |  required  | Project key to list the tickets (issues) of | string |  `jira project key` 
+**project_key** |  optional  | Project key to list the tickets (issues) of | string |  `jira project key` 
 **query** |  optional  | Additional parameters to query for in JQL | string | 
 **start_index** |  optional  | Start index of the list | numeric | 
 **max_results** |  optional  | Maximum number of issues to return | numeric | 
@@ -1883,31 +1882,6 @@ action_result.parameter.username | string |  `user name`  |   admin-2
 action_result.data | string |  |  
 action_result.summary | string |  |  
 action_result.message | string |  |   Successfully removed the user from the watchers list of the issue ID: CJ-3 
-summary.total_objects | numeric |  |   1 
-summary.total_objects_successful | numeric |  |   1   
-
-## action: 'run query'
-Get a list of tickets (issues)
-
-Type: **investigate**  
-Read only: **False**
-
-#### Action Parameters
-PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
---------- | -------- | ----------- | ---- | --------
-**jql_query** |  optional  | JQL query to fetch tickets | string | 
-**start_index** |  optional  | Start index of the list | numeric | 
-**max_results** |  optional  | Maximum number of issues to return | numeric | 
-
-#### Action Output
-DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
---------- | ---- | -------- | --------------
-action_result.status | string |  |   success  failed 
-action_result.parameter.max_results | numeric |  |   50 
-action_result.parameter.jql_query | string |  |  
-action_result.parameter.start_index | numeric |  |  
-action_result.summary | string |  |  
-action_result.message | string |  |   Total issues: 50 
 summary.total_objects | numeric |  |   1 
 summary.total_objects_successful | numeric |  |   1   
 
