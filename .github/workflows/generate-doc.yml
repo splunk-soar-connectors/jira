@@ -5,6 +5,7 @@ on:
     paths:
       - '*.json'
       - 'readme.html'
+      - 'manual_readme_content.md'
     tags-ignore:
       - '**'
     branches-ignore:
