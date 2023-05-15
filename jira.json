@@ -10783,7 +10783,7 @@
         "wheel": [
             {
                 "module": "PyJWT",
-                "input_file": "wheels/py3/PyJWT-2.4.0-py3-none-any.whl"
+                "input_file": "wheels/py3/PyJWT-2.6.0-py3-none-any.whl"
             },
             {
                 "module": "beautifulsoup4",
@@ -10803,7 +10803,7 @@
             },
             {
                 "module": "cryptography",
-                "input_file": "wheels/py36/cryptography-39.0.2-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+                "input_file": "wheels/py36/cryptography-40.0.2-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
             },
             {
                 "module": "defusedxml",
@@ -10831,7 +10831,7 @@
             },
             {
                 "module": "pyOpenSSL",
-                "input_file": "wheels/py3/pyOpenSSL-23.0.0-py3-none-any.whl"
+                "input_file": "wheels/py3/pyOpenSSL-23.1.1-py3-none-any.whl"
             },
             {
                 "module": "pycparser",

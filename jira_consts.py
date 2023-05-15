@@ -42,7 +42,6 @@ JIRA_JSON_ATTACHMENT = "vault_id"
 JIRA_JSON_NAME = "name"
 JIRA_JSON_ID = "id"
 JIRA_JSON_PRIORITY = "priority"
-JIRA_JSON_RESOLUTTION = "resolution"
 JIRA_JSON_STATUS = "status"
 JIRA_JSON_REPORTER = "reporter"
 JIRA_JSON_UPDATE_FIELDS = "update_fields"
@@ -95,14 +94,14 @@ JIRA_ERROR_ISSUE_VALID_TRANSITIONS = "Input status does not seem to be a valid s
 JIRA_ERROR_ISSUE_VALID_RESOLUTION = "Input resolution does not seem to be valid"
 JIRA_ERROR_UPDATE_NO_PARAM = "Either the Vault ID or the JSON field must be filled out to perform this action"
 JIRA_ERROR_UPDATE_FAILED = "Unable to update the ticket with the given JSON"
-JIRA_ERROR_COMMENT_SET_STATUS_FAILURE = "Comment could not be added successfully due to either permissions or configuration issue " \
+JIRA_ERROR_COMMENT_SET_STATUS_FAILED = "Comment could not be added successfully due to either permissions or configuration issue " \
     "(changing the status of the ticket to Closed and then, trying to add comment to it is one such scenario)."
 JIRA_SUCCESS_TICKET_UPDATED = "Successfully updated the ticket"
 JIRA_SUCCESS_TICKET_DELETED = "Successfully deleted the ticket"
 JIRA_ERROR_INPUT_FIELDS_NOT_THE_ONLY_ONE = "Invalid fields value." \
     " The input json has a 'fields' key in it in addition to other keys." \
     " Either specify a dictionary with only one parent 'fields' key or multiple keys without the 'fields' key"
-JIRA_ERROR_FAILURES = "Some tickets had issues during ingestion, see logs for the details"
+JIRA_ERROR_FAILED = "Some tickets had issues during ingestion, see logs for the details"
 JIRA_ERROR_NEGATIVE_INPUT = "'start_index' cannot be a negative value"
 JIRA_LIMIT_VALIDATION_ALLOW_ZERO_MESSAGE = "Please provide zero or positive integer value in the {parameter} parameter"
 JIRA_LIMIT_VALIDATION_MESSAGE = "Please provide a valid non-zero positive integer value in the {parameter} parameter"
