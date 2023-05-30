@@ -10699,7 +10699,7 @@
             },
             {
                 "module": "jira",
-                "input_file": "wheels/py3/jira-3.4.1-py3-none-any.whl"
+                "input_file": "wheels/py3/jira-3.5.0-py3-none-any.whl"
             },
             {
                 "module": "oauthlib",
@@ -10731,7 +10731,7 @@
             },
             {
                 "module": "requests",
-                "input_file": "wheels/py3/requests-2.29.0-py3-none-any.whl"
+                "input_file": "wheels/py3/requests-2.31.0-py3-none-any.whl"
             },
             {
                 "module": "requests_oauthlib",
@@ -10751,11 +10751,11 @@
             },
             {
                 "module": "typing_extensions",
-                "input_file": "wheels/py3/typing_extensions-4.5.0-py3-none-any.whl"
+                "input_file": "wheels/py3/typing_extensions-4.6.2-py3-none-any.whl"
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/shared/urllib3-1.26.15-py2.py3-none-any.whl"
+                "input_file": "wheels/py3/urllib3-2.0.2-py3-none-any.whl"
             }
         ]
     }

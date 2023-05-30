@@ -1774,7 +1774,7 @@ class JiraConnector(phantom.BaseConnector):
 
         return phantom.APP_SUCCESS
 
-    def _paginator(self, jql_query, action_result, endpoint=None, start_index=0, limit=None, fields=False):
+    def _paginator(self, jql_query, action_result, start_index=0, limit=None, fields=False):
 
         issues_list = list()
 
