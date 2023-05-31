@@ -2,7 +2,7 @@
 # Jira
 
 Publisher: Splunk  
-Connector Version: 4.0.0  
+Connector Version: 3.6.0  
 Product Vendor: Atlassian  
 Product Name: Jira  
 Product Version Supported (regex): ".\*"  
@@ -350,7 +350,7 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 **device_url** |  required  | string | Device URL including the port, e.g. https://myjira.enterprise.com:8080
 **verify_server_cert** |  optional  | boolean | Verify server certificate
 **username** |  optional  | string | Username
-**password** |  required  | password | Password / API token (Jira Cloud) / PAT
+**password** |  required  | password | Password (Both) / API token (Jira Cloud) / PAT (Jira On-prem)
 **project_key** |  optional  | string | Project key to ingest tickets (issues) from
 **query** |  optional  | string | Additional parameters to query for during ingestion in JQL
 **first_run_max_tickets** |  optional  | numeric | Maximum tickets (issues) to poll first time
