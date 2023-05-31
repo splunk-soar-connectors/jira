@@ -10,7 +10,7 @@
     ],
     "type": "ticketing",
     "main_module": "jira_connector.py",
-    "app_version": "4.0.0",
+    "app_version": "3.6.0",
     "utctime_updated": "2022-02-04T03:00:20.000000Z",
     "package_name": "phantom_jira",
     "product_vendor": "Atlassian",
@@ -47,7 +47,7 @@
         "password": {
             "data_type": "password",
             "order": 3,
-            "description": "Password / API token (Jira Cloud) / PAT",
+            "description": "Password (Both) / API token (Jira Cloud) / PAT (Jira On-prem)",
             "required": true
         },
         "project_key": {

@@ -1,3 +1,3 @@
 **Unreleased**
-* Updated project_id parameter to optional in list_tickets action [PAPP-29414]
-* Fixed bug for test_connectivity passing for bad_cloud_asset [PAPP-30095]
+* Updated 'project id' parameter to optional in 'list tickets' action [PAPP-29414]
+* Fixed bug for 'test connectivity' passing for bad cloud asset [PAPP-30095]
