@@ -1019,6 +1019,11 @@ class JiraConnector(phantom.BaseConnector):
         query = "project={0}".format(project_key) if project_key else ""
         action_query = param.get(JIRA_JSON_QUERY, "")
 
+        if not project_key and not action_query:
+            error_text = JIRA_ERROR_LIST_TICKETS_FAILED + \
+                ". Please provide either project_key or query. Both fields cannot be empty"
+            return action_result.set_status(phantom.APP_ERROR, error_text)
+
         start_index = param.get(JIRA_JSON_START_INDEX, DEFAULT_START_INDEX)
         start_index = self._validate_integers(action_result, start_index, 'start_index action', allow_zero=True)
         if start_index is None:
