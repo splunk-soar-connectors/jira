@@ -6,11 +6,14 @@
     "contributors": [
         {
             "name": "Juliya Smith"
+        },
+        {
+            "name": "Vasek Lorenc"
         }
     ],
     "type": "ticketing",
     "main_module": "jira_connector.py",
-    "app_version": "3.5.1",
+    "app_version": "3.5.2",
     "utctime_updated": "2023-05-04T21:55:37.000000Z",
     "package_name": "phantom_jira",
     "product_vendor": "Atlassian",
