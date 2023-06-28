@@ -10,16 +10,16 @@
     ],
     "type": "ticketing",
     "main_module": "jira_connector.py",
-    "app_version": "3.5.1",
-    "utctime_updated": "2023-05-04T21:55:37.000000Z",
+    "app_version": "3.6.0",
+    "utctime_updated": "2022-02-04T03:00:20.000000Z",
     "package_name": "phantom_jira",
     "product_vendor": "Atlassian",
     "product_name": "Jira",
     "product_version_regex": ".*",
-    "min_phantom_version": "5.5.0",
+    "min_phantom_version": "6.0.0",
     "latest_tested_versions": [
         "On prem v8.21.0",
-        "Cloud Copyright (c) 2002 - 2022 Atlassian Corporation Pty Ltd."
+        "Cloud Copyright (c) 2002 - 2023 Atlassian Corporation Pty Ltd."
     ],
     "python_version": "3",
     "fips_compliant": true,
@@ -47,7 +47,7 @@
         "password": {
             "data_type": "password",
             "order": 3,
-            "description": "Password / API token (Jira Cloud) / PAT",
+            "description": "Password (Both) / API token (Jira Cloud) / PAT (Jira On-prem)",
             "required": true
         },
         "project_key": {
@@ -3951,7 +3951,6 @@
                     "description": "Project key to list the tickets (issues) of",
                     "data_type": "string",
                     "order": 0,
-                    "required": true,
                     "primary": true,
                     "contains": [
                         "jira project key"
@@ -10671,16 +10670,12 @@
                 "input_file": "wheels/py3/PyJWT-2.6.0-py3-none-any.whl"
             },
             {
-                "module": "SecretStorage",
-                "input_file": "wheels/py3/SecretStorage-3.3.3-py3-none-any.whl"
-            },
-            {
                 "module": "beautifulsoup4",
                 "input_file": "wheels/py3/beautifulsoup4-4.9.1-py3-none-any.whl"
             },
             {
                 "module": "certifi",
-                "input_file": "wheels/py3/certifi-2022.12.7-py3-none-any.whl"
+                "input_file": "wheels/py3/certifi-2023.5.7-py3-none-any.whl"
             },
             {
                 "module": "cffi",
@@ -10703,32 +10698,16 @@
                 "input_file": "wheels/py3/idna-3.4-py3-none-any.whl"
             },
             {
-                "module": "importlib_metadata",
-                "input_file": "wheels/py3/importlib_metadata-6.6.0-py3-none-any.whl"
-            },
-            {
-                "module": "jaraco.classes",
-                "input_file": "wheels/py3/jaraco.classes-3.2.3-py3-none-any.whl"
-            },
-            {
-                "module": "jeepney",
-                "input_file": "wheels/py3/jeepney-0.8.0-py3-none-any.whl"
-            },
-            {
                 "module": "jira",
-                "input_file": "wheels/py3/jira-3.1.1-py3-none-any.whl"
-            },
-            {
-                "module": "keyring",
-                "input_file": "wheels/py3/keyring-23.13.1-py3-none-any.whl"
-            },
-            {
-                "module": "more_itertools",
-                "input_file": "wheels/py3/more_itertools-9.1.0-py3-none-any.whl"
+                "input_file": "wheels/py3/jira-3.5.0-py3-none-any.whl"
             },
             {
                 "module": "oauthlib",
                 "input_file": "wheels/shared/oauthlib-3.1.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "packaging",
+                "input_file": "wheels/py3/packaging-23.1-py3-none-any.whl"
             },
             {
                 "module": "pbr",
@@ -10751,10 +10730,6 @@
                 "input_file": "wheels/shared/pytz-2021.1-py2.py3-none-any.whl"
             },
             {
-                "module": "requests",
-                "input_file": "wheels/py3/requests-2.29.0-py3-none-any.whl"
-            },
-            {
                 "module": "requests_oauthlib",
                 "input_file": "wheels/shared/requests_oauthlib-1.3.1-py2.py3-none-any.whl"
             },
@@ -10763,24 +10738,12 @@
                 "input_file": "wheels/shared/requests_toolbelt-0.10.1-py2.py3-none-any.whl"
             },
             {
-                "module": "setuptools",
-                "input_file": "wheels/py3/setuptools-67.7.2-py3-none-any.whl"
-            },
-            {
                 "module": "six",
                 "input_file": "wheels/shared/six-1.16.0-py2.py3-none-any.whl"
             },
             {
                 "module": "soupsieve",
                 "input_file": "wheels/py3/soupsieve-2.4.1-py3-none-any.whl"
-            },
-            {
-                "module": "urllib3",
-                "input_file": "wheels/shared/urllib3-1.26.15-py2.py3-none-any.whl"
-            },
-            {
-                "module": "zipp",
-                "input_file": "wheels/py3/zipp-3.15.0-py3-none-any.whl"
             }
         ]
     }

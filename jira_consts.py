@@ -42,7 +42,6 @@ JIRA_JSON_ATTACHMENT = "vault_id"
 JIRA_JSON_NAME = "name"
 JIRA_JSON_ID = "id"
 JIRA_JSON_PRIORITY = "priority"
-JIRA_JSON_RESOLUTTION = "resolution"
 JIRA_JSON_STATUS = "status"
 JIRA_JSON_REPORTER = "reporter"
 JIRA_JSON_UPDATE_FIELDS = "update_fields"
@@ -79,11 +78,11 @@ JIRA_ERROR_API_INITIALIZATION = "API Initialization failed"
 JIRA_ERROR_API_TIMEOUT = "Timed out waiting for API to initialize. Please verify the asset configuration parameters"
 JIRA_ERROR_CONNECTIVITY_TEST = "Connectivity test failed"
 JIRA_ERROR_PROJECTS_INFO = "Error getting projects info"
-JIRA_SUCC_CONNECTIVITY_TEST = "Connectivity test passed"
+JIRA_ERROR_SERVER_INFO = "Error getting server info"
+JIRA_SUCCESS_CONNECTIVITY_TEST = "Connectivity test passed"
 JIRA_ERROR_TICKET_ASSIGNMENT_FAILED = "Ticket assignment to user '{0}' failed. {1}"
 JIRA_ERROR_CREATE_TICKET_FAILED = "Ticket creation failed"
-JIRA_SUCC_TICKET_CREATED = "Created ticket with id: {id}, key: {key}"
-JIRA_ERROR_AUTH_FAILED = "Authentication to Jira server failed"
+JIRA_SUCCESS_TICKET_CREATED = "Created ticket with id: {id}, key: {key}"
 JIRA_ERROR_ARTIFACT_NOT_FOUND_IN_CONTAINER = "Either the ticket artifact with issue key: {issue_key} got deleted " \
     "from the container: {container_id} or the type of the issue has changed on the JIRA instance." \
     "Please delete the container and re-run the ingestion."
@@ -98,8 +97,8 @@ JIRA_ERROR_UPDATE_NO_PARAM = "Either the Vault ID or the JSON field must be fill
 JIRA_ERROR_UPDATE_FAILED = "Unable to update the ticket with the given JSON"
 JIRA_ERROR_COMMENT_SET_STATUS_FAILED = "Comment could not be added successfully due to either permissions or configuration issue " \
     "(changing the status of the ticket to Closed and then, trying to add comment to it is one such scenario)."
-JIRA_SUCC_TICKET_UPDATED = "Successfully updated the ticket"
-JIRA_SUCC_TICKET_DELETED = "Successfully deleted the ticket"
+JIRA_SUCCESS_TICKET_UPDATED = "Successfully updated the ticket"
+JIRA_SUCCESS_TICKET_DELETED = "Successfully deleted the ticket"
 JIRA_ERROR_INPUT_FIELDS_NOT_THE_ONLY_ONE = "Invalid fields value." \
     " The input json has a 'fields' key in it in addition to other keys." \
     " Either specify a dictionary with only one parent 'fields' key or multiple keys without the 'fields' key"
