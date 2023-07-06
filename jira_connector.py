@@ -1669,7 +1669,7 @@ class JiraConnector(phantom.BaseConnector):
             self.debug_print("Error downloading file: {}".format(error_text))
             return phantom.APP_ERROR
 
-        os.chmod(local_file_path, 0o660)
+        os.chmod(local_file_path, 0o660)    # nosemgrep
 
         return phantom.APP_SUCCESS
 
