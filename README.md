@@ -2,11 +2,11 @@
 # Jira
 
 Publisher: Splunk  
-Connector Version: 3.5.1  
+Connector Version: 3.6.0  
 Product Vendor: Atlassian  
 Product Name: Jira  
 Product Version Supported (regex): ".\*"  
-Minimum Product Version: 5.5.0  
+Minimum Product Version: 6.0.0  
 
 This app integrates with JIRA to perform several ticket management actions
 
@@ -350,7 +350,7 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 **device_url** |  required  | string | Device URL including the port, e.g. https://myjira.enterprise.com:8080
 **verify_server_cert** |  optional  | boolean | Verify server certificate
 **username** |  optional  | string | Username
-**password** |  required  | password | Password / API token (Jira Cloud) / PAT
+**password** |  required  | password | Password (Both) / API token (Jira Cloud) / PAT (Jira On-prem)
 **project_key** |  optional  | string | Project key to ingest tickets (issues) from
 **query** |  optional  | string | Additional parameters to query for during ingestion in JQL
 **first_run_max_tickets** |  optional  | numeric | Maximum tickets (issues) to poll first time
@@ -958,7 +958,7 @@ The default value for the parameter <b>'start_index'</b> is <b>0</b> and for <b>
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**project_key** |  required  | Project key to list the tickets (issues) of | string |  `jira project key` 
+**project_key** |  optional  | Project key to list the tickets (issues) of | string |  `jira project key` 
 **query** |  optional  | Additional parameters to query for in JQL | string | 
 **start_index** |  optional  | Start index of the list | numeric | 
 **max_results** |  optional  | Maximum number of issues to return | numeric | 

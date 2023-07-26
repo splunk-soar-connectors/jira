@@ -84,27 +84,12 @@
         {% if not result.data %}
             <h4 class="wf-h4-style">No data found</h4>
         {% else %}
-				<h4 class="wf-h4-style">Info</h4>
-				<table class="wf-table-vertical">
-                    <tr>
-                        <td>Project Key</td>
-                        <td>
-                            <a href="javascript:;" onclick="context_menu(this, [{'contains': ['jira project key'], 'value':'{{ result.param.project_key }}' }], 0, {{ container.id }}, null, false);">
-                                {{ result.param.project_key }}
-                                &nbsp;
-                                <span class="fa fa-caret-down" style="font-size: smaller;"></span>
-                            </a>
-                        </td>
-                    </tr>
-				</table>
-
-            &nbsp;
             <h4 class="wf-h4-style">Ticket Info</h4>
-
             <div class="list_items_table overflow-column">
                 <table class="phantom-table dataTable">
                     <thead>
-                        <th class="widget-th">ID</th>
+                        <th class="widget-th">Project ID</th>
+                        <th class="widget-th">Ticket ID</th>
                         <th class="widget-th">Type</th>
                         <th class="widget-th">Key</th>
                         <th class="widget-th">Status</th>
@@ -117,6 +102,14 @@
                     <tbody>
                     {% for ticket in result.data %}
                         <tr>
+                            <td class="widget-td">
+                                <a href="javascript:;"
+                                onclick="context_menu(this, [{'contains': ['jira project key'], 'value': '{{ ticket.project_key }}' }], 0, {{ container.id }}, null, false);">
+                                {{ ticket.project_key }}
+                                &nbsp;
+                                <span class="fa fa-caret-down" style="font-size: smaller;"></span>
+                                </a>
+                            </td>
                             <td class="widget-td">{{ ticket.id }}</td>
                             <td class="widget-td">
                                 <a href="javascript:;"
