@@ -31,6 +31,7 @@ import requests
 from bs4 import BeautifulSoup, UnicodeDammit
 from dateutil.parser import parse
 from phantom.vault import Vault
+from phantom_common import paths
 
 from jira.client import JIRA
 # THIS Connector imports
@@ -1679,7 +1680,8 @@ class JiraConnector(phantom.BaseConnector):
             if hasattr(Vault, 'get_vault_tmp_dir'):
                 tmp = tempfile.NamedTemporaryFile(dir=Vault.get_vault_tmp_dir(), delete=False)
             else:
-                tmp = tempfile.NamedTemporaryFile(dir='/opt/phantom/vault/tmp/', delete=False)
+                local_dir = os.path.join(paths.PHANTOM_VAULT, "tmp")
+                tmp = tempfile.NamedTemporaryFile(dir=local_dir, delete=False)
 
             ret_val = self._download_file(attachment.content, tmp.name)
 
