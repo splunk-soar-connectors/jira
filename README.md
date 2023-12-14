@@ -6,7 +6,7 @@ Connector Version: 3.6.1
 Product Vendor: Atlassian  
 Product Name: Jira  
 Product Version Supported (regex): ".\*"  
-Minimum Product Version: 6.0.0  
+Minimum Product Version: 6.1.1  
 
 This app integrates with JIRA to perform several ticket management actions
 
