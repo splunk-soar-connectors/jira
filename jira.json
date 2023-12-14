@@ -16,7 +16,7 @@
     "product_vendor": "Atlassian",
     "product_name": "Jira",
     "product_version_regex": ".*",
-    "min_phantom_version": "6.0.0",
+    "min_phantom_version": "6.1.1",
     "latest_tested_versions": [
         "On prem v8.21.0",
         "Cloud Copyright (c) 2002 - 2023 Atlassian Corporation Pty Ltd."
@@ -10687,7 +10687,7 @@
             },
             {
                 "module": "cryptography",
-                "input_file": "wheels/py36/cryptography-40.0.2-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+                "input_file": "wheels/py3/cryptography-41.0.6-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
             },
             {
                 "module": "defusedxml",
@@ -10715,7 +10715,7 @@
             },
             {
                 "module": "pyOpenSSL",
-                "input_file": "wheels/py3/pyOpenSSL-23.1.1-py3-none-any.whl"
+                "input_file": "wheels/py3/pyOpenSSL-23.3.0-py3-none-any.whl"
             },
             {
                 "module": "pycparser",
@@ -10755,7 +10755,7 @@
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/py3/urllib3-2.1.0-py3-none-any.whl"
+                "input_file": "wheels/shared/urllib3-1.26.18-py2.py3-none-any.whl"
             }
         ]
     }
