@@ -2,11 +2,11 @@
 # Jira
 
 Publisher: Splunk  
-Connector Version: 3.6.2  
+Connector Version: 3.7.0  
 Product Vendor: Atlassian  
 Product Name: Jira  
 Product Version Supported (regex): ".\*"  
-Minimum Product Version: 6.0.0  
+Minimum Product Version: 6.1.1  
 
 This app integrates with JIRA to perform several ticket management actions
 
