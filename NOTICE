@@ -1,5 +1,5 @@
 Splunk SOAR Jira
-Copyright (c) 2016-2023 Splunk Inc.
+Copyright (c) 2016-2024 Splunk Inc.
 
 Third-party Software Attributions:
 
@@ -67,11 +67,6 @@ License: MIT
 License: Zope
 Copyright 1987-2006 implementation only works for dates between
 Copyright 2003-2019 Stuart Bishop <stuart@stuartbishop.net>
-
-Library: requests
-Version: 2.25.0
-License: Apache 2.0
-Kenneth Reitz
 
 Library: requests-mock
 Version: 1.9.3

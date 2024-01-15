@@ -10,13 +10,13 @@
     ],
     "type": "ticketing",
     "main_module": "jira_connector.py",
-    "app_version": "3.6.1",
+    "app_version": "3.7.0",
     "utctime_updated": "2023-11-29T20:43:56.000000Z",
     "package_name": "phantom_jira",
     "product_vendor": "Atlassian",
     "product_name": "Jira",
     "product_version_regex": ".*",
-    "min_phantom_version": "6.0.0",
+    "min_phantom_version": "6.1.1",
     "latest_tested_versions": [
         "On prem v8.21.0",
         "Cloud Copyright (c) 2002 - 2023 Atlassian Corporation Pty Ltd."
@@ -25,7 +25,7 @@
     "fips_compliant": true,
     "logo": "logo_atlassian.svg",
     "logo_dark": "logo_atlassian_dark.svg",
-    "license": "Copyright (c) 2016-2023 Splunk Inc.",
+    "license": "Copyright (c) 2016-2024 Splunk Inc.",
     "configuration": {
         "device_url": {
             "data_type": "string",
