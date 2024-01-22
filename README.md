@@ -2,16 +2,16 @@
 # Jira
 
 Publisher: Splunk  
-Connector Version: 3.6.1  
+Connector Version: 3.7.0  
 Product Vendor: Atlassian  
 Product Name: Jira  
 Product Version Supported (regex): ".\*"  
-Minimum Product Version: 6.0.0  
+Minimum Product Version: 6.1.1  
 
 This app integrates with JIRA to perform several ticket management actions
 
 [comment]: # " File: README.md"
-[comment]: # "  Copyright (c) 2016-2023 Splunk Inc."
+[comment]: # "  Copyright (c) 2016-2024 Splunk Inc."
 [comment]: # "  Licensed under the Apache License, Version 2.0 (the 'License');"
 [comment]: # "  you may not use this file except in compliance with the License."
 [comment]: # "  You may obtain a copy of the License at"

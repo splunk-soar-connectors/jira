@@ -1,6 +1,6 @@
 # File: jira_connector.py
 #
-# Copyright (c) 2016-2023 Splunk Inc.
+# Copyright (c) 2016-2024 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -1473,7 +1473,7 @@ class JiraConnector(phantom.BaseConnector):
             self.get_phantom_base_url(), issue_key, self.get_asset_id())
 
         try:
-            r = requests.get(url, verify=self._verify_cert)  # nosemgrep
+            r = requests.get(url, verify=False)  # nosemgrep
             resp_json = r.json()
         except Exception as e:
             self.debug_print("Unable to query JIRA ticket container: ", e)
@@ -1497,7 +1497,7 @@ class JiraConnector(phantom.BaseConnector):
                         self.get_phantom_base_url(), sdi, container_id)
 
         try:
-            r = requests.get(url, verify=self._verify_cert)  # nosemgrep
+            r = requests.get(url, verify=False)  # nosemgrep
             resp_json = r.json()
         except Exception as e:
             self.debug_print("Unable to query JIRA artifact: ", e)
@@ -2080,7 +2080,7 @@ class JiraConnector(phantom.BaseConnector):
         url = '{0}rest/container/{1}'.format(self.get_phantom_base_url(), container_id)
 
         try:
-            r = requests.post(url, data=json.dumps(update_json), verify=self._verify_cert)  # nosemgrep
+            r = requests.post(url, data=json.dumps(update_json), verify=False)  # nosemgrep
             resp_json = r.json()
         except Exception as e:
             error_text = self._get_error_message_from_exception(e)
