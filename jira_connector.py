@@ -331,7 +331,7 @@ class JiraConnector(phantom.BaseConnector):
         return phantom.APP_SUCCESS
 
     def _set_jira_error(self, result_object, message, e):
-        # Never versions of Jira API may not include the error messages in
+        # Newer versions of Jira API may not include the error messages in
         # e.text. Instead, these messages are included in e.response,
         # which is a Response object from requests package.
         if hasattr(e, "text") and e.text:
