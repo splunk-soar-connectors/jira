@@ -10,7 +10,7 @@
     ],
     "type": "ticketing",
     "main_module": "jira_connector.py",
-    "app_version": "3.6.1",
+    "app_version": "3.7.0",
     "utctime_updated": "2023-11-29T20:43:56.000000Z",
     "package_name": "phantom_jira",
     "product_vendor": "Atlassian",
@@ -25,7 +25,7 @@
     "fips_compliant": true,
     "logo": "logo_atlassian.svg",
     "logo_dark": "logo_atlassian_dark.svg",
-    "license": "Copyright (c) 2016-2023 Splunk Inc.",
+    "license": "Copyright (c) 2016-2024 Splunk Inc.",
     "configuration": {
         "device_url": {
             "data_type": "string",
@@ -10728,10 +10728,6 @@
             {
                 "module": "pytz",
                 "input_file": "wheels/shared/pytz-2021.1-py2.py3-none-any.whl"
-            },
-            {
-                "module": "requests",
-                "input_file": "wheels/py3/requests-2.31.0-py3-none-any.whl"
             },
             {
                 "module": "requests_oauthlib",
