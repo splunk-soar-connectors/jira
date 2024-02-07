@@ -13,9 +13,10 @@
 # either express or implied. See the License for the specific language governing permissions
 # and limitations under the License.
 def get_ctx_result(provides, result):
-    """Function that parses data.
+    """
+    Extracts ctx data from action's result.
 
-    :param result: result
+    :param result: action's result
     :param provides: action name
     :return: response data
     """
@@ -32,16 +33,13 @@ def get_ctx_result(provides, result):
 
     ctx_result["action"] = provides
 
-    if not data:
-        ctx_result["data"] = []
-        return ctx_result
-    ctx_result["data"] = data
-
+    ctx_result["data"] = data if data else []
     return ctx_result
 
 
 def display_view(provides, all_app_runs, context):
-    """Function that displays view.
+    """
+    Returns a view of the results of jira connector actions.
 
     :param provides: action name
     :param context: context

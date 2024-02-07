@@ -335,55 +335,13 @@ class JiraConnector(phantom.BaseConnector):
         # e.text. Instead, these messages are included in e.response,
         # which is a Response object from requests package.
         if hasattr(e, "text") and e.text:
-            error_text = e.text
-            # Try to parse the HTML content of the error in majority situations and if it fails to parse
-            # the error response as HTML, then, return the raw error text to ensure that the error text
-            # is not getting dropped from this point
-            self.debug_print(
-                "Jira error details available in exception, parsing it with "
-                "BeautifulSoup."
-            )
-            try:
-                soup = BeautifulSoup(error_text, "html.parser")
-                error_text = soup.text
-                split_lines = error_text.split('\n')
-                split_lines = [x.strip() for x in split_lines if x.strip()]
-                error_text = '\n'.join(split_lines)
-            except Exception as parsing_exception:
-                try:
-                    error_text = (
-                        f"Cannot parse error details. Unparsed error: "
-                        f"{error_text}. Parsing exception: {parsing_exception}"
-                    )
-                except Exception as ex:
-                    error_text = (
-                        f"Unable to parse the details of the error received "
-                        f"in the output response. Parsing exception: "
-                        f"{parsing_exception}. Formatting to str exception: "
-                        f"{ex}."
-                    )
+            error_text: str = self._extract_err_msg_from_jira_exc_text(e)
         else:
             self.debug_print(
                 "Jira error details missing in exception. Details will be "
                 "fetched from HTTP Response."
             )
-            try:
-                response_content: dict = e.response.json()
-                jira_error_messages: list[str] = response_content.get(JIRA_RESPONSE_ERROR_MESSAGES_KEY, [])
-                jira_errors: dict[str, str] = response_content.get(JIRA_RESPONSE_ERRORS_KEY, {})
-                all_jira_error_messages: list[str] = jira_error_messages + [
-                    f"{field_name}: {error_details}"
-                    for field_name, error_details in jira_errors.items()
-                ]
-                error_text = (
-                    "\n".join(all_jira_error_messages)
-                    if all_jira_error_messages
-                    else "Unable to parse the details of the error received "
-                    "in the output response"
-                )
-
-            except Exception as e:
-                error_text = self._get_error_message_from_exception(e)
+            error_text = self._extract_err_msg_from_jira_exc_response(e)
 
         if "Epic Name is required" in error_text:
             error_text = "{}. {}".format(error_text,
@@ -391,11 +349,61 @@ class JiraConnector(phantom.BaseConnector):
 
         return result_object.set_status(phantom.APP_ERROR, "{0}. Message: {1}".format(message, error_text))
 
+    def _extract_err_msg_from_jira_exc_text(self, jira_exc) -> str:
+        error_text = jira_exc.text
+        # Try to parse the HTML content of the error in majority situations and if it fails to parse
+        # the error response as HTML, then, return the raw error text to ensure that the error text
+        # is not getting dropped from this point
+        self.debug_print(
+            "Jira error details available in exception, parsing it with "
+            "BeautifulSoup."
+        )
+        try:
+            soup = BeautifulSoup(error_text, "html.parser")
+            error_text = soup.text
+            split_lines = error_text.split('\n')
+            split_lines = [x.strip() for x in split_lines if x.strip()]
+            error_text = '\n'.join(split_lines)
+        except Exception as parsing_exception:
+            try:
+                error_text = (
+                    f"Cannot parse error details. Unparsed error: "
+                    f"{error_text}. Parsing exception: {parsing_exception}"
+                )
+            except Exception as ex:
+                error_text = (
+                    f"Unable to parse the details of the error received "
+                    f"in the output response. Parsing exception: "
+                    f"{parsing_exception}. Formatting to str exception: "
+                    f"{ex}."
+                )
+        return error_text
+
+    def _extract_err_msg_from_jira_exc_response(self, jira_exc) -> str:
+        try:
+            response_content: dict = jira_exc.response.json()
+            jira_error_messages: list[str] = response_content.get(JIRA_RESPONSE_ERROR_MESSAGES_KEY, [])
+            jira_errors: dict[str, str] = response_content.get(JIRA_RESPONSE_ERRORS_KEY, {})
+            all_jira_error_messages: list[str] = jira_error_messages + [
+                f"{field_name}: {error_details}"
+                for field_name, error_details in jira_errors.items()
+            ]
+            error_text = (
+                "\n".join(all_jira_error_messages)
+                if all_jira_error_messages
+                else "Unable to parse the details of the error received "
+                     "in the output response"
+            )
+
+        except Exception as e:
+            error_text = self._get_error_message_from_exception(e)
+
+        return error_text
+
     def _create_jira_object(self, action_result):
 
-        if not self._verify_cert:
-            if 'REQUESTS_CA_BUNDLE' in os.environ:
-                del os.environ['REQUESTS_CA_BUNDLE']
+        if not self._verify_cert and 'REQUESTS_CA_BUNDLE' in os.environ:
+            del os.environ['REQUESTS_CA_BUNDLE']
 
         # create the options dictionary
         options = {'server': self._base_url, 'verify': self._verify_cert}
