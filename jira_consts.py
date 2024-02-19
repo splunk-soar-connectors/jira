@@ -62,6 +62,9 @@ JIRA_JSON_DISPLAY_NAME = 'display_name'
 JIRA_JSON_USER_ACCOUNT_ID = 'user_account_id'
 JIRA_JSON_TIMESPENT = 'time_spent'
 
+JIRA_RESPONSE_ERROR_MESSAGES_KEY = "errorMessages"
+JIRA_RESPONSE_ERRORS_KEY = "errors"
+
 JIRA_WATCHERS_ERROR = "Please provide either 'user_account_id' or 'username' action parameter. " \
     "For JIRA on-prem, use 'username' action parameter, and, for JIRA cloud, use 'user_account_id' action parameter"
 JIRA_SEARCH_USERS_ERROR = "Please provide either 'display_name' or 'username' action parameter. " \
