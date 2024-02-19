@@ -13,9 +13,10 @@
 # either express or implied. See the License for the specific language governing permissions
 # and limitations under the License.
 def get_ctx_result(provides, result):
-    """ Function that parses data.
+    """
+    Extracts ctx data from action's result.
 
-    :param result: result
+    :param result: action's result
     :param provides: action name
     :return: response data
     """
@@ -25,23 +26,20 @@ def get_ctx_result(provides, result):
     summary = result.get_summary()
     data = result.get_data()
 
-    ctx_result['param'] = param
+    ctx_result["param"] = param
 
     if summary:
-        ctx_result['summary'] = summary
+        ctx_result["summary"] = summary
 
-    ctx_result['action'] = provides
+    ctx_result["action"] = provides
 
-    if not data:
-        ctx_result['data'] = []
-        return ctx_result
-    ctx_result['data'] = data
-
+    ctx_result["data"] = data if data else []
     return ctx_result
 
 
 def display_view(provides, all_app_runs, context):
-    """ Function that displays view.
+    """
+    Returns a view of the results of jira connector actions.
 
     :param provides: action name
     :param context: context
@@ -49,7 +47,7 @@ def display_view(provides, all_app_runs, context):
     :return: html page
     """
 
-    context['results'] = results = []
+    context["results"] = results = []
     for _, action_results in all_app_runs:
         for result in action_results:
             ctx_result = get_ctx_result(provides, result)
@@ -57,13 +55,13 @@ def display_view(provides, all_app_runs, context):
                 continue
             results.append(ctx_result)
 
-    if provides == 'set status':
+    if provides == "set status":
         return "jira_set_status_items.html"
-    elif provides == 'get ticket':
+    elif provides == "get ticket":
         return "jira_get_ticket.html"
-    elif provides == 'update ticket':
+    elif provides == "update ticket":
         return "jira_update_ticket.html"
     elif provides == "list tickets":
         return "jira_list_tickets.html"
-    elif provides == 'lookup users':
+    elif provides == "lookup users":
         return "jira_search_users.html"
