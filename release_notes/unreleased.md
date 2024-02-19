@@ -1,2 +1,1 @@
 **Unreleased**
-* Adding support for Jira error messages stored in HTTP Response object [PAPP-32695]
