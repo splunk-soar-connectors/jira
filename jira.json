@@ -10702,10 +10702,6 @@
                 "input_file": "wheels/shared/pbr-5.4.4-py2.py3-none-any.whl"
             },
             {
-                "module": "pyOpenSSL",
-                "input_file": "wheels/py3/pyOpenSSL-23.1.1-py3-none-any.whl"
-            },
-            {
                 "module": "pycparser",
                 "input_file": "wheels/shared/pycparser-2.21-py2.py3-none-any.whl"
             },
