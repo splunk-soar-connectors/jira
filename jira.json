@@ -10,7 +10,7 @@
     ],
     "type": "ticketing",
     "main_module": "jira_connector.py",
-    "app_version": "3.7.1",
+    "app_version": "3.7.2",
     "utctime_updated": "2024-02-19T12:22:11.000000Z",
     "package_name": "phantom_jira",
     "product_vendor": "Atlassian",
@@ -10674,14 +10674,6 @@
                 "input_file": "wheels/py3/beautifulsoup4-4.9.1-py3-none-any.whl"
             },
             {
-                "module": "cffi",
-                "input_file": "wheels/py39/cffi-1.16.0-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
-            },
-            {
-                "module": "cryptography",
-                "input_file": "wheels/py36/cryptography-40.0.2-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
-            },
-            {
                 "module": "defusedxml",
                 "input_file": "wheels/shared/defusedxml-0.7.1-py2.py3-none-any.whl"
             },
@@ -10695,15 +10687,11 @@
             },
             {
                 "module": "packaging",
-                "input_file": "wheels/py3/packaging-23.2-py3-none-any.whl"
+                "input_file": "wheels/py3/packaging-24.0-py3-none-any.whl"
             },
             {
                 "module": "pbr",
                 "input_file": "wheels/shared/pbr-5.4.4-py2.py3-none-any.whl"
-            },
-            {
-                "module": "pycparser",
-                "input_file": "wheels/shared/pycparser-2.21-py2.py3-none-any.whl"
             },
             {
                 "module": "python_dateutil",
