@@ -22,6 +22,7 @@ import tempfile
 import time
 from builtins import str
 from datetime import datetime
+from urllib.parse import urlparse, urlunparse
 
 import dateutil
 import phantom.app as phantom
@@ -72,7 +73,7 @@ class JiraConnector(phantom.BaseConnector):
         self._jira = None
         self._timezone = None
 
-    def initialize(self):
+    def _base_url(self):
 
         config = self.get_config()
 
@@ -491,6 +492,35 @@ class JiraConnector(phantom.BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
+    def _get_base_url(self, url):
+        parsed_url = urlparse(url)
+        return f"{parsed_url.scheme}://{parsed_url.netloc}"
+
+    def _update_base_url(self, url, new_base):
+        parsed_url = urlparse(url)
+        new_parsed_base = urlparse(new_base)
+        updated_url = urlunparse((
+            new_parsed_base.scheme, new_parsed_base.netloc,
+            parsed_url.path, parsed_url.params,
+            parsed_url.query, parsed_url.fragment
+        ))
+        return updated_url
+
+    def _validate_and_update_custom_fields_url(self, custom_fields):
+        try:
+            allowed_values = custom_fields['custom_field']['allowed_values']
+            for value in allowed_values:
+                if 'self' in value:
+                    self_url = value['self']
+                    base_url = self._get_base_url(self_url)
+                    if base_url != self._base_url:
+                        value['self'] = self._update_base_url(self_url, self._base_url)
+            return custom_fields, None
+        except KeyError as e:
+            return False, f"Key error: {e}"
+        except Exception as e:
+            return False, f"Error: {e}"
+
     def _get_custom_fields_for_issue(self, issue_id, action_result):
 
         try:
@@ -513,6 +543,10 @@ class JiraConnector(phantom.BaseConnector):
             error_text = "Unable to parse edit meta info to extract custom fields. \
                 {}".format(error_message)
             return action_result.set_status(phantom.APP_ERROR, error_text), None, None
+
+        custom_fields, err = self._validate_and_update_custom_fields_url(custom_fields)
+        if err:
+            return action_result.set_status(phantom.APP_ERROR, err), None, None
 
         return phantom.APP_SUCCESS, custom_fields, fields_meta
 
