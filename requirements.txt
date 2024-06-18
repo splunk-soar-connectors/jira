@@ -7,4 +7,3 @@ python-dateutil==2.9.0.post0
 pytz==2024.1
 requests_oauthlib==2.0.0
 requests_toolbelt==1.0.0
-urllib3==2.2.1
