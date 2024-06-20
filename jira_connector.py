@@ -506,18 +506,15 @@ class JiraConnector(phantom.BaseConnector):
         ))
 
     def _validate_and_update_custom_fields_url(self, custom_fields):
-        try:
-            allowed_values = custom_fields['custom_field']['allowed_values']
-            for value in allowed_values:
-                if 'self' not in value:
-                    continue
-                self_url = value['self']
-                base_url = self._get_base_url_from_url_path(self_url)
-                if base_url != self._base_url:
-                    value['self'] = self._update_base_url_in_url_path(self_url, self._base_url)
-            return custom_fields
-        except KeyError:
-            return False
+        allowed_values = custom_fields['custom_field']['allowed_values']
+        for value in allowed_values:
+            if 'self' not in value:
+                continue
+            self_url = value['self']
+            base_url = self._get_base_url_from_url_path(self_url)
+            if base_url != self._base_url:
+                value['self'] = self._update_base_url_in_url_path(self_url, self._base_url)
+        return custom_fields
 
     def _get_custom_fields_for_issue(self, issue_id, action_result):
 
@@ -542,8 +539,9 @@ class JiraConnector(phantom.BaseConnector):
                 {}".format(error_message)
             return action_result.set_status(phantom.APP_ERROR, error_text), None, None
 
-        custom_fields = self._validate_and_update_custom_fields_url(custom_fields)
-        if not custom_fields:
+        try:
+            custom_fields = self._validate_and_update_custom_fields_url(custom_fields)
+        except KeyError:
             return action_result.set_status(phantom.APP_ERROR, "Unable to validate custom fields"), None, None
 
         return phantom.APP_SUCCESS, custom_fields, fields_meta
