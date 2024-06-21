@@ -10665,7 +10665,50 @@
     ],
     "pip39_dependencies": {
         "wheel": [
-
+            {
+                "module": "PyJWT",
+                "input_file": "wheels/py3/PyJWT-2.8.0-py3-none-any.whl"
+            },
+            {
+                "module": "defusedxml",
+                "input_file": "wheels/shared/defusedxml-0.7.1-py2.py3-none-any.whl"
+            },
+            {
+                "module": "jira",
+                "input_file": "wheels/py3/jira-3.8.0-py3-none-any.whl"
+            },
+            {
+                "module": "oauthlib",
+                "input_file": "wheels/py3/oauthlib-3.2.2-py3-none-any.whl"
+            },
+            {
+                "module": "packaging",
+                "input_file": "wheels/py3/packaging-24.1-py3-none-any.whl"
+            },
+            {
+                "module": "pbr",
+                "input_file": "wheels/shared/pbr-6.0.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "pillow",
+                "input_file": "wheels/py39/pillow-10.3.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+            },
+            {
+                "module": "pytz",
+                "input_file": "wheels/shared/pytz-2024.1-py2.py3-none-any.whl"
+            },
+            {
+                "module": "requests_oauthlib",
+                "input_file": "wheels/shared/requests_oauthlib-2.0.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "requests_toolbelt",
+                "input_file": "wheels/shared/requests_toolbelt-1.0.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "typing_extensions",
+                "input_file": "wheels/py3/typing_extensions-4.12.2-py3-none-any.whl"
+            }
         ]
     }
 }
