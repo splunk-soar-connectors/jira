@@ -494,7 +494,7 @@ class JiraConnector(phantom.BaseConnector):
 
     def _get_base_url_from_url_path(self, url):
         parsed_url = urlparse(url)
-        return f"{parsed_url.scheme}://{parsed_url.netloc}"
+        return f"{parsed_url.scheme}://{parsed_url.netloc}/"
 
     def _update_base_url_in_url_path(self, url, new_base):
         parsed_url = urlparse(url)
