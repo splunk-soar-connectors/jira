@@ -505,19 +505,9 @@ class JiraConnector(phantom.BaseConnector):
             parsed_url.query, parsed_url.fragment
         ))
 
-    def _validate_and_update_custom_fields_url(self, custom_fields):
-        for custom_field in custom_fields:
-            allowed_values = custom_field['allowedValues']
-            for value in allowed_values:
-                if 'self' not in value:
-                    continue
-                self_url = value['self']
-                base_url = self._get_base_url_from_url_path(self_url)
-                if base_url != self._base_url:
-                    value['self'] = self._update_base_url_in_url_path(self_url, self._base_url)
-
     def _get_custom_fields_for_issue(self, issue_id, action_result):
-
+        if self.get_config().get("verify_server_cert"):
+            return phantom.APP_SUCCESS, None, None
         try:
             edit_meta = self._jira.editmeta(issue_id)
         except Exception as e:
@@ -538,11 +528,6 @@ class JiraConnector(phantom.BaseConnector):
             error_text = "Unable to parse edit meta info to extract custom fields. \
                 {}".format(error_message)
             return action_result.set_status(phantom.APP_ERROR, error_text), None, None
-
-        try:
-            self._validate_and_update_custom_fields_url(custom_fields)
-        except KeyError:
-            return action_result.set_status(phantom.APP_ERROR, "Unable to validate custom fields"), None, None
 
         return phantom.APP_SUCCESS, custom_fields, fields_meta
 
