@@ -22,7 +22,6 @@ import tempfile
 import time
 from builtins import str
 from datetime import datetime
-from urllib.parse import urlparse, urlunparse
 
 import dateutil
 import phantom.app as phantom
@@ -491,19 +490,6 @@ class JiraConnector(phantom.BaseConnector):
         action_result.set_summary({JIRA_TOTAL_PROJECTS: len(projects)})
 
         return action_result.set_status(phantom.APP_SUCCESS)
-
-    def _get_base_url_from_url_path(self, url):
-        parsed_url = urlparse(url)
-        return f"{parsed_url.scheme}://{parsed_url.netloc}/"
-
-    def _update_base_url_in_url_path(self, url, new_base):
-        parsed_url = urlparse(url)
-        new_parsed_base = urlparse(new_base)
-        return urlunparse((
-            new_parsed_base.scheme, new_parsed_base.netloc,
-            parsed_url.path, parsed_url.params,
-            parsed_url.query, parsed_url.fragment
-        ))
 
     def _get_custom_fields_for_issue(self, issue_id, action_result):
         if self.get_config().get("verify_server_cert"):
