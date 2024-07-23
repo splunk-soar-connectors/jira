@@ -77,18 +77,18 @@
             "order": 8,
             "description": "JSON formatted list of names of custom fields (case-sensitive) to be ingested"
         },
-        "disable_field_enumeration": {
-            "data_type": "boolean",
-            "order": 9,
-            "description": "Disable Field Enumeration",
-            "default": false
-        },
         "timezone": {
             "data_type": "timezone",
-            "order": 10,
+            "order": 9,
             "description": "Jira instance timezone (used for timezone conversions for querying in ingestion). Refer to README",
             "default": "GMT",
             "required": true
+        },
+        "disable_field_enumeration": {
+            "data_type": "boolean",
+            "order": 10,
+            "description": "Disable Field Enumeration",
+            "default": false
         }
     },
     "actions": [
