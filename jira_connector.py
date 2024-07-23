@@ -492,7 +492,7 @@ class JiraConnector(phantom.BaseConnector):
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _get_custom_fields_for_issue(self, issue_id, action_result):
-        if self.get_config().get("verify_server_cert"):
+        if self.get_config().get("disable_field_enumeration"):
             return phantom.APP_SUCCESS, None, None
         try:
             edit_meta = self._jira.editmeta(issue_id)
