@@ -2,7 +2,7 @@
 # Jira
 
 Publisher: Splunk  
-Connector Version: 3.7.2  
+Connector Version: 3.7.3  
 Product Vendor: Atlassian  
 Product Name: Jira  
 Product Version Supported (regex): ".\*"  
@@ -357,6 +357,7 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 **max_tickets** |  optional  | numeric | Maximum tickets (issues) for scheduled polling
 **custom_fields** |  optional  | string | JSON formatted list of names of custom fields (case-sensitive) to be ingested
 **timezone** |  required  | timezone | Jira instance timezone (used for timezone conversions for querying in ingestion). Refer to README
+**disable_field_enumeration** |  optional  | boolean | Disable Field Enumeration
 
 ### Supported Actions  
 [test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using the supplied credentials  
