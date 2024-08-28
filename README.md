@@ -357,7 +357,8 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 **max_tickets** |  optional  | numeric | Maximum tickets (issues) for scheduled polling
 **custom_fields** |  optional  | string | JSON formatted list of names of custom fields (case-sensitive) to be ingested
 **timezone** |  required  | timezone | Jira instance timezone (used for timezone conversions for querying in ingestion). Refer to README
-**disable_field_enumeration** |  optional  | boolean | Disable Field Enumeration
+**custom_field_enumeration** |  optional  | boolean | Disable Field Enumeration
+**internal_address_behind_proxy** |  optional  | string | URL address of JIRA service behind proxy (To be replaced in order to properly access)
 
 ### Supported Actions  
 [test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using the supplied credentials  
