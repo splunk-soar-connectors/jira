@@ -84,11 +84,16 @@
             "default": "GMT",
             "required": true
         },
-        "disable_field_enumeration": {
+        "custom_field_enumeration": {
             "data_type": "boolean",
             "order": 10,
             "description": "Disable Field Enumeration",
             "default": false
+        },
+        "internal_address_behind_proxy": {
+            "data_type": "string",
+            "order": 11,
+            "description": "URL address of JIRA service behind proxy (To be replaced in order to properly access)"
         }
     },
     "actions": [

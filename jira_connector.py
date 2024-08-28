@@ -491,9 +491,26 @@ class JiraConnector(phantom.BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
+    @staticmethod
+    def _replace_internal_with_proxy_url(value, internal_address, proxy_address):
+        # If the value is a string and contains the internal address, replace it with the proxy address
+        if isinstance(value, str) and internal_address in value:
+            return value.replace(internal_address, proxy_address)
+        return value
+
+    @staticmethod
+    def _traverse_and_replace(data, internal_address, proxy_address):
+        if isinstance(data, dict):
+            for key, value in data.items():
+                data[key] = JiraConnector._traverse_and_replace(value, internal_address, proxy_address)
+        elif isinstance(data, list):
+            for i in range(len(data)):
+                data[i] = JiraConnector._traverse_and_replace(data[i], internal_address, proxy_address)
+        elif isinstance(data, str):
+            data = JiraConnector._replace_internal_with_proxy_url(data, internal_address, proxy_address)
+        return data
+
     def _get_custom_fields_for_issue(self, issue_id, action_result):
-        if self.get_config().get("disable_field_enumeration"):
-            return phantom.APP_SUCCESS, None, None
         try:
             edit_meta = self._jira.editmeta(issue_id)
         except Exception as e:
@@ -506,9 +523,19 @@ class JiraConnector(phantom.BaseConnector):
             return (action_result.set_status(phantom.APP_ERROR,
                 "Got an empty response to the 'editmeta' REST endpoint. This may be caused by a jira permission problem"), None, None)
 
-        # create an array of custom fields
+        # Create an array of custom fields
         try:
-            custom_fields = [x for x in fields_meta if ('customfield' in x)]
+            custom_fields = [x for x in fields_meta if 'customfield' in x]
+
+            if self.get_config().get("custom_field_enumeration"):
+                # Define your internal and proxy addresses
+                internal_address = self.get_config().get("internal_address_behind_proxy")
+                proxy_address = self._base_url
+
+                # Replace internal URLs in the entire fields_meta dictionary
+                fields_meta = self._traverse_and_replace(fields_meta, internal_address, proxy_address)
+
+                # Now fields_meta should contain proxy-accessible URLs
         except Exception as e:
             error_message = self._get_error_message_from_exception(e)
             error_text = "Unable to parse edit meta info to extract custom fields. \
