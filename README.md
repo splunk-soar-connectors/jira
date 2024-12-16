@@ -342,8 +342,8 @@ ports used by the Splunk SOAR Connector.
 | https        | tcp                | 443  |
 
 
-### Configuration Variables
-The below configuration variables are required for this Connector to operate.  These variables are specified when configuring a Jira asset in SOAR.
+### Configuration variables
+This table lists the configuration variables required to operate Jira. These variables are specified when configuring a Jira asset in Splunk SOAR.
 
 VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
