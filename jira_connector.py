@@ -34,7 +34,6 @@ from phantom.vault import Vault
 from phantom_common import paths
 
 from jira.client import JIRA
-# THIS Connector imports
 from jira_consts import *
 
 
