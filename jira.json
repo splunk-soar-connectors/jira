@@ -10,13 +10,13 @@
     ],
     "type": "ticketing",
     "main_module": "jira_connector.py",
-    "app_version": "3.7.1",
+    "app_version": "3.7.2",
     "utctime_updated": "2024-02-19T12:22:11.000000Z",
     "package_name": "phantom_jira",
     "product_vendor": "Atlassian",
     "product_name": "Jira",
     "product_version_regex": ".*",
-    "min_phantom_version": "6.1.1",
+    "min_phantom_version": "6.3.0",
     "latest_tested_versions": [
         "On prem v8.21.0",
         "Cloud Copyright (c) 2002 - 2023 Atlassian Corporation Pty Ltd."
@@ -10670,18 +10670,6 @@
                 "input_file": "wheels/py3/PyJWT-2.6.0-py3-none-any.whl"
             },
             {
-                "module": "beautifulsoup4",
-                "input_file": "wheels/py3/beautifulsoup4-4.9.1-py3-none-any.whl"
-            },
-            {
-                "module": "cffi",
-                "input_file": "wheels/py39/cffi-1.16.0-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
-            },
-            {
-                "module": "cryptography",
-                "input_file": "wheels/py36/cryptography-40.0.2-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
-            },
-            {
                 "module": "defusedxml",
                 "input_file": "wheels/shared/defusedxml-0.7.1-py2.py3-none-any.whl"
             },
@@ -10695,19 +10683,11 @@
             },
             {
                 "module": "packaging",
-                "input_file": "wheels/py3/packaging-23.2-py3-none-any.whl"
+                "input_file": "wheels/py3/packaging-24.2-py3-none-any.whl"
             },
             {
                 "module": "pbr",
                 "input_file": "wheels/shared/pbr-5.4.4-py2.py3-none-any.whl"
-            },
-            {
-                "module": "pycparser",
-                "input_file": "wheels/shared/pycparser-2.21-py2.py3-none-any.whl"
-            },
-            {
-                "module": "python_dateutil",
-                "input_file": "wheels/shared/python_dateutil-2.8.1-py2.py3-none-any.whl"
             },
             {
                 "module": "pytz",
@@ -10722,12 +10702,8 @@
                 "input_file": "wheels/shared/requests_toolbelt-0.10.1-py2.py3-none-any.whl"
             },
             {
-                "module": "six",
-                "input_file": "wheels/shared/six-1.16.0-py2.py3-none-any.whl"
-            },
-            {
-                "module": "soupsieve",
-                "input_file": "wheels/py3/soupsieve-2.5-py3-none-any.whl"
+                "module": "typing_extensions",
+                "input_file": "wheels/py3/typing_extensions-4.12.2-py3-none-any.whl"
             }
         ]
     }
