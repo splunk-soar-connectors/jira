@@ -16,7 +16,7 @@
     "product_vendor": "Atlassian",
     "product_name": "Jira",
     "product_version_regex": ".*",
-    "min_phantom_version": "6.1.1",
+    "min_phantom_version": "6.3.0",
     "latest_tested_versions": [
         "On prem v8.21.0",
         "Cloud Copyright (c) 2002 - 2023 Atlassian Corporation Pty Ltd."
@@ -10670,10 +10670,6 @@
                 "input_file": "wheels/py3/PyJWT-2.6.0-py3-none-any.whl"
             },
             {
-                "module": "beautifulsoup4",
-                "input_file": "wheels/py3/beautifulsoup4-4.9.1-py3-none-any.whl"
-            },
-            {
                 "module": "defusedxml",
                 "input_file": "wheels/shared/defusedxml-0.7.1-py2.py3-none-any.whl"
             },
@@ -10687,15 +10683,11 @@
             },
             {
                 "module": "packaging",
-                "input_file": "wheels/py3/packaging-24.0-py3-none-any.whl"
+                "input_file": "wheels/py3/packaging-24.2-py3-none-any.whl"
             },
             {
                 "module": "pbr",
                 "input_file": "wheels/shared/pbr-5.4.4-py2.py3-none-any.whl"
-            },
-            {
-                "module": "python_dateutil",
-                "input_file": "wheels/shared/python_dateutil-2.8.1-py2.py3-none-any.whl"
             },
             {
                 "module": "pytz",
@@ -10710,12 +10702,8 @@
                 "input_file": "wheels/shared/requests_toolbelt-0.10.1-py2.py3-none-any.whl"
             },
             {
-                "module": "six",
-                "input_file": "wheels/shared/six-1.16.0-py2.py3-none-any.whl"
-            },
-            {
-                "module": "soupsieve",
-                "input_file": "wheels/py3/soupsieve-2.5-py3-none-any.whl"
+                "module": "typing_extensions",
+                "input_file": "wheels/py3/typing_extensions-4.12.2-py3-none-any.whl"
             }
         ]
     }
