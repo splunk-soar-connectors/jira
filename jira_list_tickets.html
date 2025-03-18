@@ -1,15 +1,17 @@
 {% extends 'widgets/widget_template.html' %}
 {% load custom_template %}
-
-{% block custom_title_prop %}{% if title_logo %}style="background-size: auto 60%; background-position: 50%; background-repeat: no-repeat; background-image: url('/app_resource/{{ title_logo }}');"{% endif %}{% endblock %}
+{% block custom_title_prop %}
+  {% if title_logo %}
+    style="background-size: auto 60%; background-position: 50%; background-repeat: no-repeat; background-image: url('/app_resource/{{ title_logo }}');"
+  {% endif %}
+{% endblock %}
 {% block title1 %}{{ title1 }}{% endblock %}
 {% block title2 %}{{ title2 }}{% endblock %}
-{% block custom_tools %}
-{% endblock %}
-{% block widget_content %} <!-- Main Start Block -->
-
-<!-- File: jira_list_tickets.html
-  Copyright (c) 2016-2024 Splunk Inc.
+{% block custom_tools %}{% endblock %}
+{% block widget_content %}
+  <!-- Main Start Block -->
+  <!-- File: jira_list_tickets.html
+  Copyright (c) 2016-2025 Splunk Inc.
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -21,8 +23,7 @@
   either express or implied. See the License for the specific language governing permissions
   and limitations under the License.
 -->
-<style>
-
+  <style>
     .jira a:hover {
         text-decoration:underline;
     }
@@ -74,95 +75,98 @@
     }
 
 
-</style>
-
-
-<div class="jira" style="overflow: auto; width: 100%; height: 100%; padding-left:10px; padding-right:10px;">
+  </style>
+  <div class="jira"
+       style="overflow: auto;
+              width: 100%;
+              height: 100%;
+              padding-left:10px;
+              padding-right:10px">
     <!-- Main Div -->
-
-    {% for result in results %} <!-- loop for each result -->
-        {% if not result.data %}
-            <h4 class="wf-h4-style">No data found</h4>
-        {% else %}
-            <h4 class="wf-h4-style">Ticket Info</h4>
-            <div class="list_items_table overflow-column">
-                <table class="phantom-table dataTable">
-                    <thead>
-                        <th class="widget-th">Project ID</th>
-                        <th class="widget-th">Ticket ID</th>
-                        <th class="widget-th">Type</th>
-                        <th class="widget-th">Key</th>
-                        <th class="widget-th">Status</th>
-                        <th class="widget-th">Priority</th>
-                        <th class="widget-th">Resolution</th>
-                        <th class="widget-th">Reporter</th>
-                        <th class="widget-th">Summary</th>
-                        <th class="widget-th">Description</th>
-                    </thead>
-                    <tbody>
-                    {% for ticket in result.data %}
-                        <tr>
-                            <td class="widget-td">
-                                <a href="javascript:;"
-                                onclick="context_menu(this, [{'contains': ['jira project key'], 'value': '{{ ticket.project_key }}' }], 0, {{ container.id }}, null, false);">
-                                {{ ticket.project_key }}
-                                &nbsp;
-                                <span class="fa fa-caret-down" style="font-size: smaller;"></span>
-                                </a>
-                            </td>
-                            <td class="widget-td">{{ ticket.id }}</td>
-                            <td class="widget-td">
-                                <a href="javascript:;"
-                                onclick="context_menu(this, [{'contains': ['jira issue type'], 'value': '{{ ticket.issue_type }}' }], 0, {{ container.id }}, null, false);">
-                                {{ ticket.issue_type }}
-                                &nbsp;
-                                <span class="fa fa-caret-down" style="font-size: smaller;"></span>
-                                </a>
-                            </td>
-                            <td class="widget-td">
-                                <a href="javascript:;"
-                                onclick="context_menu(this, [{'contains': ['jira ticket key'], 'value': '{{ ticket.name }}' }], 0, {{ container.id }}, null, false);">
-                                {{ ticket.name }}
-                                &nbsp;
-                                <span class="fa fa-caret-down" style="font-size: smaller;"></span>
-                                </a>
-                            </td>
-                            <td class="widget-td">
-                                    {{ ticket.status }}
-                            </td>
-                            <td class="widget-td">
-                                <a href="javascript:;" onclick="context_menu(this, [{'contains': ['jira ticket priority'], 'value':'{{ ticket.priority }}' }], 0, {{ container.id }}, null, false);">
-                                        {{ ticket.priority }}
-                                    &nbsp;
-                                    <span class="fa fa-caret-down" style="font-size: smaller;"></span>
-                                </a>
-                            </td>
-                            <td class="widget-td">
-                                <a href="javascript:;" onclick="context_menu(this, [{'contains': ['jira ticket resolution'], 'value':'{{ ticket.resolution }}' }], 0, {{ container.id }}, null, false);">
-                                        {{ ticket.resolution }}
-                                    &nbsp;
-                                    <span class="fa fa-caret-down" style="font-size: smaller;"></span>
-                                </a>
-                            </td>
-                            <td class="widget-td">
-                                <a href="javascript:;" onclick="context_menu(this, [{'contains': ['jira user display name'], 'value':'{{ ticket.reporter }}' }], 0, {{ container.id }}, null, false);">
-                                        {{ ticket.reporter }}
-                                    &nbsp;
-                                    <span class="fa fa-caret-down" style="font-size: smaller;"></span>
-                                </a>
-                            </td>
-                            <td class="widget-td">{{ ticket.summary }}</td>
-                            <td class="widget-td">{{ ticket.description }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% endif %}
+    {% for result in results %}
+      <!-- loop for each result -->
+      {% if not result.data %}
+        <h4 class="wf-h4-style">No data found</h4>
+      {% else %}
+        <h4 class="wf-h4-style">Ticket Info</h4>
+        <div class="list_items_table overflow-column">
+          <table class="phantom-table dataTable">
+            <thead>
+              <th class="widget-th">Project ID</th>
+              <th class="widget-th">Ticket ID</th>
+              <th class="widget-th">Type</th>
+              <th class="widget-th">Key</th>
+              <th class="widget-th">Status</th>
+              <th class="widget-th">Priority</th>
+              <th class="widget-th">Resolution</th>
+              <th class="widget-th">Reporter</th>
+              <th class="widget-th">Summary</th>
+              <th class="widget-th">Description</th>
+            </thead>
+            <tbody>
+              {% for ticket in result.data %}
+                <tr>
+                  <td class="widget-td">
+                    <a href="javascript:;"
+                       onclick="context_menu(this, [{'contains': ['jira project key'], 'value': '{{ ticket.project_key }}' }], 0, {{ container.id }}, null, false);">
+                      {{ ticket.project_key }}
+                      &nbsp;
+                      <span class="fa fa-caret-down" style="font-size: smaller;"></span>
+                    </a>
+                  </td>
+                  <td class="widget-td">{{ ticket.id }}</td>
+                  <td class="widget-td">
+                    <a href="javascript:;"
+                       onclick="context_menu(this, [{'contains': ['jira issue type'], 'value': '{{ ticket.issue_type }}' }], 0, {{ container.id }}, null, false);">
+                      {{ ticket.issue_type }}
+                      &nbsp;
+                      <span class="fa fa-caret-down" style="font-size: smaller;"></span>
+                    </a>
+                  </td>
+                  <td class="widget-td">
+                    <a href="javascript:;"
+                       onclick="context_menu(this, [{'contains': ['jira ticket key'], 'value': '{{ ticket.name }}' }], 0, {{ container.id }}, null, false);">
+                      {{ ticket.name }}
+                      &nbsp;
+                      <span class="fa fa-caret-down" style="font-size: smaller;"></span>
+                    </a>
+                  </td>
+                  <td class="widget-td">{{ ticket.status }}</td>
+                  <td class="widget-td">
+                    <a href="javascript:;"
+                       onclick="context_menu(this, [{'contains': ['jira ticket priority'], 'value':'{{ ticket.priority }}' }], 0, {{ container.id }}, null, false);">
+                      {{ ticket.priority }}
+                      &nbsp;
+                      <span class="fa fa-caret-down" style="font-size: smaller;"></span>
+                    </a>
+                  </td>
+                  <td class="widget-td">
+                    <a href="javascript:;"
+                       onclick="context_menu(this, [{'contains': ['jira ticket resolution'], 'value':'{{ ticket.resolution }}' }], 0, {{ container.id }}, null, false);">
+                      {{ ticket.resolution }}
+                      &nbsp;
+                      <span class="fa fa-caret-down" style="font-size: smaller;"></span>
+                    </a>
+                  </td>
+                  <td class="widget-td">
+                    <a href="javascript:;"
+                       onclick="context_menu(this, [{'contains': ['jira user display name'], 'value':'{{ ticket.reporter }}' }], 0, {{ container.id }}, null, false);">
+                      {{ ticket.reporter }}
+                      &nbsp;
+                      <span class="fa fa-caret-down" style="font-size: smaller;"></span>
+                    </a>
+                  </td>
+                  <td class="widget-td">{{ ticket.summary }}</td>
+                  <td class="widget-td">{{ ticket.description }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
     {% endfor %}
-</div>
-
-<script>
+  </div>
+  <script>
 $.extend(true, $.fn.dataTable.defaults, {
     "searching": true,
     "bLengthChange": false,
@@ -181,6 +185,5 @@ $.extend(true, $.fn.dataTable.defaults, {
   });
   $('.dataTable').DataTable();
 
-</script>
-
+  </script>
 {% endblock %}
