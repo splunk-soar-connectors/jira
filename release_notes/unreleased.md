@@ -1,3 +1,3 @@
 **Unreleased**
 
-* fix: Workflow file updates
+* fix: App dependency updates and NOTICE file generation
