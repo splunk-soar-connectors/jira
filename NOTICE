@@ -1,69 +1,99 @@
 Splunk SOAR Jira
-Copyright (c) 2016-2024 Splunk Inc.
+Copyright (c) 2016-2025 Splunk Inc.
 
-Third-party Software Attributions:
+Third Party Software Attributions:
 
-Library: PyJWT
-Version: 2.0.1
-License: MIT
-Copyright 2015 José Padilla
-
-Library: beautifulsoup4
+Name: beautifulsoup4
 Version: 4.9.1
+Author: Leonard Richardson
 License: MIT
-Copyright 2004-2017 Leonard Richardson
-Copyright 2004-2019 Leonard Richardson
-Copyright 2018 Isaac Muse
 
-Library: defusedxml
+Name: certifi
+Version: 2025.1.31
+Author: Kenneth Reitz
+License: MPL-2.0
+
+Name: charset-normalizer
+Version: 3.4.1
+Author:
+License: MIT
+
+Name: defusedxml
 Version: 0.7.1
-License: Python 2.0
-Copyright 2002-2008 ,
-Copyright 2013-2017 by Christian Heimes <christian@python.org>
+Author: Christian Heimes
+License: PSFL
 
-Library: oauthlib
+Name: idna
+Version: 3.10
+Author:
+License:
+
+Name: jira
+Version: 3.5.0
+Author: Ben Speakmon
+License: BSD-2-Clause
+
+Name: oauthlib
 Version: 3.1.0
+Author: The OAuthlib Community
 License: BSD
-License: BSD 3
-Copyright 2019 The OAuthlib Community
 
-Library: pbr
+Name: packaging
+Version: 24.2
+Author:
+License:
+
+Name: pbr
 Version: 5.4.4
-License: Apache 2.0
-Hewlett-Packard Development Company L.P
+Author: OpenStack
+License: UNKNOWN
 
-Library: pycparser
-Version: 2.21
-License: BSD 3
-Copyright 2008-2020 Eli Bendersky
-Copyright parser in Python
-Copyright parser in Python
-
-Library: python-dateutil
-Version: 2.8.1
-License: Apache 2.0
-License: BSD 3
-Copyright 2003-2011 - Gustavo Niemeyer <gustavo@niemeyer.net>
-Copyright 2012-2014 - Tomi Pieviläinen <tomi.pievilainen@iki.fi>
-Copyright 2014-2016 - Yaron de Leeuw <me@jarondl.net>
-Copyright 2015 - Paul Ganssle <paul@ganssle.io>
-Copyright 2015 - dateutil contributors (see AUTHORS file)
-Copyright 2017 Paul Ganssle <paul@ganssle.io>
-Copyright 2017 dateutil contributors (see AUTHORS file)
-
-Library: pytz
-Version: 2021.1
+Name: PyJWT
+Version: 2.6.0
+Author: Jose Padilla
 License: MIT
-License: Zope
-Copyright 1987-2006 implementation only works for dates between
-Copyright 2003-2019 Stuart Bishop <stuart@stuartbishop.net>
 
-Library: requests-oauthlib
-Version: 1.3.0
+Name: python-dateutil
+Version: 2.8.1
+Author: Gustavo Niemeyer
+License: Dual License
+
+Name: pytz
+Version: 2021.1
+Author: Stuart Bishop
+License: MIT
+
+Name: requests
+Version: 2.32.3
+Author: Kenneth Reitz
+License: Apache-2.0
+
+Name: requests-oauthlib
+Version: 1.3.1
+Author: Kenneth Reitz
 License: ISC
-Copyright 2014 Kenneth Reitz
 
-Library: requests-toolbelt
-Version: 0.9.1
+Name: requests-toolbelt
+Version: 0.10.1
+Author: Ian Cordasco, Cory Benfield
 License: Apache 2.0
-Copyright 2014 Ian Cordasco, Cory Benfield
+
+Name: six
+Version: 1.17.0
+Author: Benjamin Peterson
+License: MIT
+
+Name: soupsieve
+Version: 2.6
+Author:
+License:
+
+Name: typing_extensions
+Version: 4.13.0
+Author:
+License:
+
+Name: urllib3
+Version: 2.3.0
+Author:
+License:

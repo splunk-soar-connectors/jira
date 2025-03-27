@@ -29,10 +29,10 @@ import pytz
 import requests
 from bs4 import BeautifulSoup, UnicodeDammit
 from dateutil.parser import parse
+from jira.client import JIRA
 from phantom.vault import Vault
 from phantom_common import paths
 
-from jira.client import JIRA
 from jira_consts import *
 
 
