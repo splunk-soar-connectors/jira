@@ -2123,6 +2123,7 @@ class JiraConnector(phantom.BaseConnector):
                 # 2. Fetch the current comment's artifact's updated time and convert it to UTC
                 comment_artifact_current_updated_time = full_artifact.get("cef", {}).get("updated")
 
+                comment_artifact_updated_time_utc_tz_specific = None
                 if comment_artifact_current_updated_time:
                     comment_artifact_updated_time_jira_server_tz_specific = parse(comment_artifact_current_updated_time)
                     comment_artifact_updated_time_utc_tz_specific = comment_artifact_updated_time_jira_server_tz_specific.astimezone(
