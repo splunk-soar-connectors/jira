@@ -1,9 +1,9 @@
 # Jira
 
-Publisher: Splunk \
-Connector Version: 3.7.2 \
-Product Vendor: Atlassian \
-Product Name: Jira \
+Publisher: Splunk <br>
+Connector Version: 3.7.2 <br>
+Product Vendor: Atlassian <br>
+Product Name: Jira <br>
 Minimum Product Version: 6.3.0
 
 This app integrates with JIRA to perform several ticket management actions
@@ -298,27 +298,27 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 
 ### Supported Actions
 
-[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using the supplied credentials \
-[create ticket](#action-create-ticket) - Create a ticket (issue) \
-[get attachments](#action-get-attachments) - Gets specific attachments from a Jira Ticket (issue) \
-[update ticket](#action-update-ticket) - Update ticket (issue) \
-[add comment](#action-add-comment) - Add a comment to the ticket (issue) \
-[delete ticket](#action-delete-ticket) - Delete ticket (issue) \
-[list projects](#action-list-projects) - List all projects \
-[list tickets](#action-list-tickets) - Get a list of tickets (issues) in a specified project \
-[lookup users](#action-lookup-users) - Get a list of user resources that match the specified search string \
-[get ticket](#action-get-ticket) - Get ticket (issue) information \
-[set status](#action-set-status) - Set ticket (issue) status \
-[link tickets](#action-link-tickets) - Create a link between two separate tickets \
-[add watcher](#action-add-watcher) - Add a user to an issue's watchers list \
-[remove watcher](#action-remove-watcher) - Remove a user from an issue's watchers list \
+[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using the supplied credentials <br>
+[create ticket](#action-create-ticket) - Create a ticket (issue) <br>
+[get attachments](#action-get-attachments) - Gets specific attachments from a Jira Ticket (issue) <br>
+[update ticket](#action-update-ticket) - Update ticket (issue) <br>
+[add comment](#action-add-comment) - Add a comment to the ticket (issue) <br>
+[delete ticket](#action-delete-ticket) - Delete ticket (issue) <br>
+[list projects](#action-list-projects) - List all projects <br>
+[list tickets](#action-list-tickets) - Get a list of tickets (issues) in a specified project <br>
+[lookup users](#action-lookup-users) - Get a list of user resources that match the specified search string <br>
+[get ticket](#action-get-ticket) - Get ticket (issue) information <br>
+[set status](#action-set-status) - Set ticket (issue) status <br>
+[link tickets](#action-link-tickets) - Create a link between two separate tickets <br>
+[add watcher](#action-add-watcher) - Add a user to an issue's watchers list <br>
+[remove watcher](#action-remove-watcher) - Remove a user from an issue's watchers list <br>
 [on poll](#action-on-poll) - Ingest tickets from JIRA
 
 ## action: 'test connectivity'
 
 Validate the asset configuration for connectivity using the supplied credentials
 
-Type: **test** \
+Type: **test** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -333,7 +333,7 @@ No Output
 
 Create a ticket (issue)
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 The <b>fields</b> parameter is provided for advanced use of the JIRA API. It is passed directly to the "fields" attribute in the JIRA API call. Values in the <b>fields</b> parameter will take precedence over the individual parameters such as <b>summary</b>, <b>description</b>, <b>project_key</b>, <b>issue_type</b>, etc.<br><br>When using the <b>fields</b> parameter, you are required to know how a particular field is inputted. To give a few examples (might differ in your JIRA environment):<ul><li>The <b>description</b> of a ticket can be added as the first level key with a value like { "description": "ticket description" }</li><li><b>issuetype</b> needs to be set as a dictionary like { "issuetype": { "name": "Task" } }</li><li><b>priority</b> is set as { "priority": { "name": "Medium" } }</li><li>The <b>project</b> key is set like { "project": { "key": "SPLUNK_APP" } }</li></ul><br>The <b>vault_id</b> parameter takes the vault ID of a file in the vault and attaches the file to the JIRA ticket.<br><b>Assignee</b> and attachments by <b>vault_id</b> are addressed in a separate call to JIRA made after ticket creation.<br><br>The <b>project_key</b> parameter is case sensitive.<h3>Default Values</h3>Previous versions of the app set default values for <b>priority</b> and <b>issue_type</b>. This caused issues in situations where the default values used by the app were incompatible with the configured values. The app does not set default values anymore. If an optional field below is required by the JIRA environment and it is not provided, JIRA will give an error causing the action to fail.<br><br>This action will pass if a ticket is successfully created, even if it fails to assign the ticket, add an attachment to the ticket, or fill out the custom fields. These failures will be indicated in the result message.<h3>Creating a subtask</h3>The following <b>fields</b> parameter value can be used to create a sub-task, the key is to use the correct <b>issuetype</b>.<pre>{"fields":{"project":{"key":"AP"},"parent":{"key":"AP-231"},"summary":"Sub-taskofAP-231","description":"Don'tforgettodothistoo.","issuetype":{"name":"Sub-Task"}}}</pre><h3>Caveats</h3>Jira Cloud is removing the username field from user profiles in Atlassian Cloud sites. They are also removing username support from their product APIs for Jira Cloud. Since it is not possible to add an assignee to the Jira ticket using a username for the Jira cloud, we will use the user's account_id to add the assignee. Use 'lookup users' action to find out a user's account_id. You can use the [assignee_account_id] action parameter to add an assignee to the Jira ticket for the Jira cloud, and, [assignee] action parameter will be used to add an assignee to the Jira ticket for Jira on-prem.
@@ -519,7 +519,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Gets specific attachments from a Jira Ticket (issue)
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 The function will store specific attachments from a given Jira ticket inside the vault.
@@ -558,7 +558,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Update ticket (issue)
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 Update an existing issue with the values specified in the <b>update_fields</b> parameter.<br>The results of the <b>get ticket</b> action may be used to obtain the <b>update_fields</b> parameters, including any custom fields present in the JIRA.</br>The JSON specified in the <b>update_fields</b> parameter requires the keys and the values specified in case-sensitive and double-quotes string format, except in the case of boolean values, which should be either <i>true</i> or <i>false</i> for example:</br>{"summary": "Zeus, multiple action need to be taken", "description": "A new summary was added"}</br></br>The App supports multiple methods for specifying the input dictionary. Please see <a href="https://developer.atlassian.com/server/jira/platform/jira-rest-api-examples/#editing-an-issue-examples" target='_blank'><b>the Atlassian documentation for the JIRA REST <i>update issue</i> API</b></a> for more information.<br>The following formats can be passed as input: <ul><li>Simple format; Create a dictionary with all the fields that need to be set:<br>{"summary": "Zeus detected on endpoint", "description": "Investigate further"}</li><li>Using the <i>update</i> key; Some issue fields support operations like <i>remove</i> and <i>add</i>, these operations can be combined to update a ticket: <br>{"<b>update</b>": {"components" : [{"remove" : {"name" : "secondcomponent"}}, {"add" : {"name" : "firstcomponent"}}]}}<br>{"<b>update</b>": {"comment": [{"add": {"body": "test comment update"}}]}} </li><li>Using the <i>fields</i> key;</br>{"<b>fields</b>":{"labels" : ["FIRSTLABEL"]}}</li></ul></br>The app supports updating custom fields; depending on the custom field type, some operations might not be available. Review the <b>jira_app</b> playbook for examples.<br><br>The <b>vault_id</b> parameter takes the vault ID of a file in the vault and attaches the file to the JIRA ticket.<br><br>This action requires that either the <b>update_fields</b> parameter or the <b>vault_id</b> parameter is filled out. The action will fail if it either unsuccessfully attempts to add the attachment to the ticket or update the fields on the ticket.<h3>Caveats</h3>Jira Cloud is removing the username field from user profiles in Atlassian Cloud sites. They are also removing username support from their product APIs for Jira Cloud. Since it is not possible to update fields related to user resources in the Jira ticket using username for Jira cloud, we will use the user's account_id to update fields related to user resources. Use 'lookup users' action to find out user's account_id. Use 'get ticket' action results to obtain the [update_fields] parameters. Please find out below-mentioned examples for the [update_fields] parameter which is related to user resources.<ul><li>Add assignee to the Jira ticket for Jira on-prem:<br>{"fields":{"assignee" : {"name": "username"}}}</li><li>Add assignee to the Jira ticket for Jira cloud:<br>{"fields":{"assignee" : {"accountId": "6d1ef6xy52z7360c267f27bb"}}}</li></ul>.
@@ -833,7 +833,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Add a comment to the ticket (issue)
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -862,7 +862,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Delete ticket (issue)
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -887,7 +887,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 List all projects
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -911,7 +911,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Get a list of tickets (issues) in a specified project
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 The default value for the parameter <b>'start_index'</b> is <b>0</b> and for <b>'max_results'</b> is <b>1000</b>. The maximum number of tickets as specified by the parameter <b>'max_results'</b> will be fetched starting from the index specified by the parameter <b>'start_index'</b>.
@@ -1151,7 +1151,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Get a list of user resources that match the specified search string
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 This action will be used to fetch the username of user resources for Jira on-prem and account_id of user resources for Jira cloud. The default value for [max_results] action parameter is <b>1000</b>. The maximum number of users as specified by the parameter [max_results] will be fetched starting from the first.<h3>Caveats</h3>Jira Cloud is removing the username field from user profiles in Atlassian Cloud sites. They are also removing username support from their product APIs for Jira Cloud. Since it is not possible to search users using username for Jira cloud, we will use the user's display name to search users. You can use the [display_name] action parameter to search users for Jira cloud, and, [username] action parameter will be used to search users for Jira on-prem.
@@ -1195,7 +1195,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Get ticket (issue) information
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 The keys in the <b>action_result.data.\*.fields</b> output section of the results can differ based on the JIRA server configuration.
@@ -1466,7 +1466,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Set ticket (issue) status
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 In JIRA, the status transition of an issue is determined by the workflow defined for the project. The app will return an error if an un-allowed status transition is attempted. In such cases, the possible statuses are returned based on the issue's current status value.<br>The same is the case for invalid resolutions. Do note that some combinations of status and resolution values might be invalid, even if they are allowed individually.<br>To get valid values to use as input for the parameters:<ul><li>For valid <b>status</b> values:<ul><li>Log in to the JIRA server from the UI</li><li>Go to http://my_jira_ip/rest/api/2/issue/<i>[jira_issue_key]</i>/transitions</li><li>The returned JSON should contain a list of transitions</li><li>The name field denotes the status that can be set using this action</li></ul></li><li>For valid <b>resolution</b> values: <ul><li>Log in to the JIRA server from the UI</li><li>Go to http://my_jira_ip/rest/api/2/resolution</li><li>The returned JSON should contain a list of resolutions</li><li>The name field in each resolution denotes the value to be used</li></ul></li></ul>.
@@ -1771,7 +1771,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Create a link between two separate tickets
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 If the comment is not added, comment_visibility and comment_visibility_type values will not affect the action result.
@@ -1808,7 +1808,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Add a user to an issue's watchers list
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 <h3>Caveats</h3>Jira Cloud is removing the username field from user profiles in Atlassian Cloud sites. They are also removing username support from their product APIs for Jira Cloud. Since it is not possible to add a watcher using username for Jira cloud, we will use a user's account_id to add a watcher for Jira cloud. Use 'lookup users' action to find out a user's account_id. You can use the [user_account_id] action parameter to add a watcher to the Jira ticket for Jira cloud, and, [username] action parameter will be used to add a watcher to the Jira ticket for Jira on-prem.
@@ -1839,7 +1839,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Remove a user from an issue's watchers list
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 <h3>Caveats</h3>Jira Cloud is removing the username field from user profiles in Atlassian Cloud sites. They are also removing username support from their product APIs for Jira Cloud. Since it is not possible to remove a watcher using username for Jira cloud, we will use a user's account_id to remove a watcher for Jira cloud. Use 'lookup users' action to find out a user's account_id. You can use the [user_account_id] action parameter to remove a watcher from the Jira ticket for Jira cloud, and, [username] action parameter will be used to remove a watcher from the Jira ticket for Jira on-prem.
@@ -1870,7 +1870,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Ingest tickets from JIRA
 
-Type: **ingest** \
+Type: **ingest** <br>
 Read only: **True**
 
 Basic configuration parameters for this action are available in the asset configuration.<br><br>If the <b>project_key</b> parameter is set, polling will only ingest tickets (issues) from the specified project.<br><br>If the <b>query</b> parameter is set, polling will filter tickets based on the JQL query specified in the parameter.<br><br>If the <b>first_run_max_tickets</b> parameter is set, the first poll will only ingest up to the specified amount of tickets. If the field is left empty, the first poll will ingest all the available tickets.<br><br>If the <b>max_tickets</b> parameter is set, each poll will ingest only up to the specified amount of newly updated tickets. If the field is left empty, all tickets available at the time of the poll will be ingested.<br><br>During each polling interval, the app will query the JIRA server for tickets that have been updated since the previous poll. The app will check if each ticket has already been ingested, if it has not, it will create a new container for the ticket. An artifact will be created in the container that will have a selection of the ticket's fields listed as CEF fields. All the data of tickets will be added to the container's data field. Each attachment and comment on the ticket will be ingested as artifacts. All attachments will also be added to the vault. If a ticket has been previously ingested, the app will update the ticket container's data field. The app will also add a new artifact with updated fields and it will add new artifacts for new comments and attachments. If a comment on a ticket is edited, a new artifact will be added to the container.<br><br>For a poll now, the app will ingest as many tickets as specified by the <b>container_count</b>.

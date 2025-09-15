@@ -1640,10 +1640,14 @@ class JiraConnector(phantom.BaseConnector):
         self.debug_print("Downloading from: ", url)
 
         config = self.get_config()
-        auth = (config[phantom.APP_JSON_USERNAME], config[phantom.APP_JSON_PASSWORD])
 
         try:
-            r = requests.get(url, verify=self.get_config().get("verify_server_cert"), stream=True, auth=auth)  # nosemgrep
+            if config.get(phantom.APP_JSON_USERNAME):
+                auth = (config[phantom.APP_JSON_USERNAME], config[phantom.APP_JSON_PASSWORD])
+                r = requests.get(url, verify=self.get_config().get("verify_server_cert"), stream=True, auth=auth)  # nosemgrep
+            else:
+                headers = {"Authorization": f"Bearer {config[phantom.APP_JSON_PASSWORD]}"}
+                r = requests.get(url, verify=self.get_config().get("verify_server_cert"), stream=True, headers=headers)  # nosemgrep
         except Exception as e:
             error_text = self._get_error_message_from_exception(e)
             self.debug_print("Could not connect to url to download attachment: ", error_text)

@@ -10683,7 +10683,7 @@
             },
             {
                 "module": "packaging",
-                "input_file": "wheels/py3/packaging-24.2-py3-none-any.whl"
+                "input_file": "wheels/py3/packaging-25.0-py3-none-any.whl"
             },
             {
                 "module": "pbr",
@@ -10703,7 +10703,7 @@
             },
             {
                 "module": "typing_extensions",
-                "input_file": "wheels/py3/typing_extensions-4.12.2-py3-none-any.whl"
+                "input_file": "wheels/py3/typing_extensions-4.15.0-py3-none-any.whl"
             }
         ]
     }
