@@ -2468,18 +2468,18 @@ class JiraConnector(phantom.BaseConnector):
         # Ingest the issues
         failed = 0
         for issue in issues:
-            if not self._save_issue(self._jira.issue(issue.key), last_time, action_result):
+            if not self._save_issue(self._jira.issue(issue["key"]), last_time, action_result):
                 failed += 1
 
         if not self.is_poll_now() and issues:
-            last_fetched_issue = self._jira.issue(issues[-1].key)
+            last_fetched_issue = self._jira.issue(issues[-1]["key"])
             last_time_jira_server_tz_specific = parse(last_fetched_issue.fields.updated)
             last_time_phantom_server_tz_specific = last_time_jira_server_tz_specific.astimezone(dateutil.tz.tzlocal())
             state["last_time"] = time.mktime(last_time_phantom_server_tz_specific.timetuple())
 
             try:
                 self.debug_print(f"State File: {state!s}")
-                self.debug_print(f"Last fetched Jira ticket: {issues[-1].key}")
+                self.debug_print(f"Last fetched Jira ticket: {issues[-1]['key']}")
             except Exception:
                 self.debug_print(
                     "Error occurred while logging the value of state file and last fetched Jira ticket, \
