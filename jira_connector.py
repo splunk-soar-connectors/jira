@@ -1064,10 +1064,10 @@ class JiraConnector(phantom.BaseConnector):
         for issue in issues:
             issue_ar = phantom.ActionResult()
 
-            ret_val = self._parse_issue_data(issue, issue_ar)
+            ret_val = self._parse_ticket_data(issue, issue_ar)
 
             if phantom.is_fail(ret_val):
-                self.debug_print(f"Error occurred while parsing the issue data: {issue.key}. Error: {issue_ar.get_message()}")
+                self.debug_print(f"Error occurred while parsing the issue data: {issue.get('key')}. Error: {issue_ar.get_message()}")
 
             data = issue_ar.get_data()
             action_result.update_data(data)
@@ -1366,6 +1366,70 @@ class JiraConnector(phantom.BaseConnector):
 
         return ""
 
+    def _parse_ticket_data(self, issue, action_result):
+        try:
+            # get the issue dict
+            data = {}
+            data[JIRA_JSON_NAME] = issue.get("key")
+            data[JIRA_JSON_ID] = issue.get("id")
+            data["fields"] = issue.get("fields")
+
+            data = action_result.add_data(data)
+        except Exception:
+            return action_result.set_status(phantom.APP_ERROR, "Unable to parse the response containing issue details from the server")
+
+        try:
+            data[JIRA_JSON_PRIORITY] = issue.get("fields", {}).get("priority", {}).get("name")
+        except Exception:
+            pass
+
+        try:
+            data[JIRA_JSON_RESOLUTION] = issue.get("fields", {}).get("resolution", {}).get("name")
+        except Exception:
+            data[JIRA_JSON_RESOLUTION] = "Unresolved"
+
+        try:
+            data[JIRA_JSON_STATUS] = issue.get("fields", {}).get("status", {}).get("name")
+        except Exception:
+            pass
+
+        try:
+            data[JIRA_JSON_REPORTER] = issue.get("fields", {}).get("reporter", {}).get("displayName")
+        except Exception:
+            pass
+
+        try:
+            data[JIRA_JSON_PROJECT_KEY] = issue.get("fields", {}).get("project", {}).get("key")
+        except Exception:
+            pass
+
+        try:
+            data[JIRA_JSON_SUMMARY] = issue.get("fields", {}).get("summary")
+        except Exception:
+            pass
+
+        try:
+            data[JIRA_JSON_DESCRIPTION] = issue.get("fields", {}).get("description")
+        except Exception:
+            pass
+
+        try:
+            data[JIRA_JSON_ISSUE_TYPE] = issue.get("fields", {}).get("issuetype", {}).get("name")
+        except Exception:
+            pass
+
+        if not data.get("fields"):
+            # No fields, so nothing more to do, we've already added the data
+            return phantom.APP_SUCCESS
+
+        custom_fields_by_name = self._fetch_fields_by_replacing_custom_fields_id_to_name(issue, action_result, obj=False)
+
+        if custom_fields_by_name is None:
+            self.debug_print("Dev test: Custom fields by name is None")
+            return phantom.APP_ERROR
+
+        return phantom.APP_SUCCESS
+
     def _parse_issue_data(self, issue, action_result):
         try:
             # get the issue dict
@@ -1428,6 +1492,7 @@ class JiraConnector(phantom.BaseConnector):
         custom_fields_by_name = self._fetch_fields_by_replacing_custom_fields_id_to_name(issue, action_result)
 
         if custom_fields_by_name is None:
+            self.debug_print("Dev test: Custom fields by name is None")
             return phantom.APP_ERROR
 
         return phantom.APP_SUCCESS
@@ -1542,12 +1607,16 @@ class JiraConnector(phantom.BaseConnector):
         else:
             return dict([(fields_meta[x]["name"], x) for x in custom_fields_info])
 
-    def _fetch_fields_by_replacing_custom_fields_id_to_name(self, issue, action_result):
-        custom_id_to_name = self._get_custom_fields_id_name_map(issue.key, action_result)
+    def _fetch_fields_by_replacing_custom_fields_id_to_name(self, issue, action_result, obj=True):
+        issue_key = issue.key if obj else issue.get("key")
+        custom_id_to_name = self._get_custom_fields_id_name_map(issue_key, action_result)
 
         try:
-            issue_dict = issue.raw
-            fields = issue_dict.get("fields")
+            if obj:
+                issue_dict = issue.raw
+                fields = issue_dict.get("fields")
+            else:
+                fields = issue.get("fields")
         except Exception:
             action_result.set_status(phantom.APP_ERROR, f"Error occurred while fetching the fields from the issue: {issue.key}")
             return None
@@ -1788,31 +1857,57 @@ class JiraConnector(phantom.BaseConnector):
 
     def _paginator(self, jql_query, action_result, start_index=0, limit=None, fields=False):
         issues_list = list()
+        next_page = None
+        current_index = 0
 
         while True:
             try:
                 if fields:
-                    issues = self._jira.search_issues(
-                        jql_str=jql_query, startAt=start_index, maxResults=DEFAULT_MAX_RESULTS_PER_PAGE, fields="updated"
+                    search_result = self._jira.enhanced_search_issues(
+                        jql_str=jql_query, nextPageToken=next_page, fields="updated", maxResults=DEFAULT_MAX_RESULTS_PER_PAGE, json_result=True
                     )
                 else:
-                    issues = self._jira.search_issues(jql_str=jql_query, startAt=start_index, maxResults=DEFAULT_MAX_RESULTS_PER_PAGE)
+                    search_result = self._jira.enhanced_search_issues(
+                        jql_str=jql_query, nextPageToken=next_page, maxResults=DEFAULT_MAX_RESULTS_PER_PAGE, json_result=True
+                    )
             except Exception as e:
                 self._set_jira_error(action_result, "Error occurred while fetching the list of tickets (issues)", e)
                 return None
 
-            if issues is None:
+            if search_result is None:
                 action_result.set_status(phantom.APP_ERROR, "Unknown error occurred while fetching list of tickets (issues) using pagination")
                 return None
 
-            issues_list.extend(issues)
-            if limit and len(issues_list) >= limit:
-                return issues_list[:limit]
+            # Extract issues from the search result
+            issues = search_result.get("issues", [])
 
-            if len(issues) < DEFAULT_MAX_RESULTS_PER_PAGE:
+            # Handle start_index by skipping records until we reach the desired starting point
+            if current_index + len(issues) <= start_index:
+                # Skip entire page if we haven't reached start_index yet
+                current_index += len(issues)
+            else:
+                # Process issues in current page
+                start_offset = max(0, start_index - current_index)
+                relevant_issues = issues[start_offset:]
+
+                # Calculate how many issues we can take from this page
+                if limit:
+                    remaining_needed = limit - len(issues_list)
+                    relevant_issues = relevant_issues[:remaining_needed]
+
+                issues_list.extend(relevant_issues)
+
+                # Early return if we've reached the limit
+                if limit and len(issues_list) >= limit:
+                    return issues_list
+
+                current_index += len(issues)
+
+            # Check if we've reached the end of results
+            if search_result.get("isLast"):
                 break
 
-            start_index = start_index + DEFAULT_MAX_RESULTS_PER_PAGE
+            next_page = search_result["nextPageToken"]
 
         return issues_list
 
@@ -2164,7 +2259,7 @@ class JiraConnector(phantom.BaseConnector):
         artifact_list.append(artifact_json)
 
         if artifact_list:
-            ret_val, message, resp = self.save_artifacts(artifact_list)
+            ret_val, message, _resp = self.save_artifacts(artifact_list)
 
             if not ret_val:
                 self.debug_print("Error saving the artifact: ", message)
@@ -2197,6 +2292,7 @@ class JiraConnector(phantom.BaseConnector):
         ret_val, message, container_id = self.save_container(container_json)
 
         if not ret_val:
+            self.debug_print(f"Failed to save container. Error: {message}")
             return phantom.APP_ERROR
 
         artifact_list = []
@@ -2235,7 +2331,7 @@ class JiraConnector(phantom.BaseConnector):
 
         artifact_list.append(artifact_json)
 
-        ret_val, message, resp = self.save_artifacts(artifact_list)
+        ret_val, _message, _resp = self.save_artifacts(artifact_list)
 
         if not ret_val:
             return phantom.APP_ERROR
