@@ -1064,13 +1064,11 @@ class JiraConnector(phantom.BaseConnector):
         for issue in issues:
             issue_ar = phantom.ActionResult()
 
-            if isinstance(issue, dict):
-                ret_val = self._parse_ticket_data(issue, issue_ar)
-            else:
-                ret_val = self._parse_issue_data(issue, issue_ar)
+            ret_val = self._parse_issue_data_unified(issue, issue_ar)
 
             if phantom.is_fail(ret_val):
-                self.debug_print(f"Error occurred while parsing the issue data: {issue.get('key')}. Error: {issue_ar.get_message()}")
+                issue_key = issue.get("key") if isinstance(issue, dict) else getattr(issue, "key", "unknown")
+                self.debug_print(f"Error occurred while parsing the issue data: {issue_key}. Error: {issue_ar.get_message()}")
 
             data = issue_ar.get_data()
             action_result.update_data(data)
@@ -1369,134 +1367,58 @@ class JiraConnector(phantom.BaseConnector):
 
         return ""
 
-    def _parse_ticket_data(self, issue, action_result):
+    def _parse_issue_data_unified(self, issue, action_result):
+        """Unified issue parsing method that handles both dict and object formats efficiently."""
+        is_dict = isinstance(issue, dict)
+
         try:
-            # get the issue dict
+            # Initialize data structure
             data = {}
-            data[JIRA_JSON_NAME] = issue.get("key")
-            data[JIRA_JSON_ID] = issue.get("id")
-            data["fields"] = issue.get("fields")
+
+            # Extract basic issue information
+            if is_dict:
+                data[JIRA_JSON_NAME] = issue.get("key")
+                data[JIRA_JSON_ID] = issue.get("id")
+                data["fields"] = issue.get("fields")
+                fields = issue.get("fields", {})
+            else:
+                data[JIRA_JSON_NAME] = issue.key
+                data[JIRA_JSON_ID] = issue.id
+                issue_dict = issue.raw
+                data["fields"] = issue_dict.get("fields") if "fields" in issue_dict else None
+                fields = issue.fields
 
             data = action_result.add_data(data)
         except Exception:
             return action_result.set_status(phantom.APP_ERROR, "Unable to parse the response containing issue details from the server")
 
-        try:
-            data[JIRA_JSON_PRIORITY] = issue.get("fields", {}).get("priority", {}).get("name")
-        except Exception:
-            pass
+        # Extract field values efficiently
+        for json_key, field_name, sub_field in FIELD_MAPPINGS:
+            try:
+                if is_dict:
+                    field_value = fields.get(field_name, {})
+                    if sub_field and isinstance(field_value, dict):
+                        data[json_key] = field_value.get(sub_field)
+                    elif not sub_field:
+                        data[json_key] = field_value
+                else:
+                    field_obj = getattr(fields, field_name, None)
+                    if field_obj:
+                        data[json_key] = getattr(field_obj, sub_field) if sub_field else field_obj
+            except Exception:
+                # Set default for resolution if it fails
+                if json_key == JIRA_JSON_RESOLUTION:
+                    data[json_key] = "Unresolved"
 
-        try:
-            data[JIRA_JSON_RESOLUTION] = issue.get("fields", {}).get("resolution", {}).get("name")
-        except Exception:
-            data[JIRA_JSON_RESOLUTION] = "Unresolved"
+        # Set default for resolution if it None
+        if not data.get("resolution", None):
+            data["resolution"] = "Unresolved"
 
-        try:
-            data[JIRA_JSON_STATUS] = issue.get("fields", {}).get("status", {}).get("name")
-        except Exception:
-            pass
-
-        try:
-            data[JIRA_JSON_REPORTER] = issue.get("fields", {}).get("reporter", {}).get("displayName")
-        except Exception:
-            pass
-
-        try:
-            data[JIRA_JSON_PROJECT_KEY] = issue.get("fields", {}).get("project", {}).get("key")
-        except Exception:
-            pass
-
-        try:
-            data[JIRA_JSON_SUMMARY] = issue.get("fields", {}).get("summary")
-        except Exception:
-            pass
-
-        try:
-            data[JIRA_JSON_DESCRIPTION] = issue.get("fields", {}).get("description")
-        except Exception:
-            pass
-
-        try:
-            data[JIRA_JSON_ISSUE_TYPE] = issue.get("fields", {}).get("issuetype", {}).get("name")
-        except Exception:
-            pass
-
-        if not data.get("fields"):
-            # No fields, so nothing more to do, we've already added the data
-            return phantom.APP_SUCCESS
-
-        custom_fields_by_name = self._fetch_fields_by_replacing_custom_fields_id_to_name(issue, action_result)
-
-        if custom_fields_by_name is None:
-            self.debug_print("Dev test: Custom fields by name is None")
-            return phantom.APP_ERROR
-
-        return phantom.APP_SUCCESS
-
-    def _parse_issue_data(self, issue, action_result):
-        try:
-            # get the issue dict
-            data = {}
-            data[JIRA_JSON_NAME] = issue.key
-            data[JIRA_JSON_ID] = issue.id
-            issue_dict = issue.raw
-
-            if "fields" in issue_dict:
-                data["fields"] = issue_dict["fields"]
-
-            data = action_result.add_data(data)
-        except Exception:
-            return action_result.set_status(phantom.APP_ERROR, "Unable to parse the response containing issue details from the server")
-
-        try:
-            data[JIRA_JSON_PRIORITY] = issue.fields.priority.name
-        except Exception:
-            pass
-
-        try:
-            data[JIRA_JSON_RESOLUTION] = issue.fields.resolution.name
-        except Exception:
-            data[JIRA_JSON_RESOLUTION] = "Unresolved"
-
-        try:
-            data[JIRA_JSON_STATUS] = issue.fields.status.name
-        except Exception:
-            pass
-
-        try:
-            data[JIRA_JSON_REPORTER] = issue.fields.reporter.displayName
-        except Exception:
-            pass
-
-        try:
-            data[JIRA_JSON_PROJECT_KEY] = issue.fields.project.key
-        except Exception:
-            pass
-
-        try:
-            data[JIRA_JSON_SUMMARY] = issue.fields.summary
-        except Exception:
-            pass
-
-        try:
-            data[JIRA_JSON_DESCRIPTION] = issue.fields.description
-        except Exception:
-            pass
-
-        try:
-            data[JIRA_JSON_ISSUE_TYPE] = issue.fields.issuetype.name
-        except Exception:
-            pass
-
-        if not data.get("fields"):
-            # No fields, so nothing more to do, we've already added the data
-            return phantom.APP_SUCCESS
-
-        custom_fields_by_name = self._fetch_fields_by_replacing_custom_fields_id_to_name(issue, action_result)
-
-        if custom_fields_by_name is None:
-            self.debug_print("Dev test: Custom fields by name is None")
-            return phantom.APP_ERROR
+        # Handle custom fields if present
+        if data.get("fields"):
+            custom_fields_by_name = self._fetch_fields_by_replacing_custom_fields_id_to_name(issue, action_result)
+            if custom_fields_by_name is None:
+                return phantom.APP_ERROR
 
         return phantom.APP_SUCCESS
 
@@ -1506,7 +1428,7 @@ class JiraConnector(phantom.BaseConnector):
         except Exception as e:
             return self._set_jira_error(action_result, JIRA_ERROR_GET_TICKET, e)
 
-        return self._parse_issue_data(issue, action_result)
+        return self._parse_issue_data_unified(issue, action_result)
 
     def _get_ticket(self, param):
         action_result = self.add_action_result(phantom.ActionResult(dict(param)))

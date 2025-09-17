@@ -8,6 +8,17 @@ Minimum Product Version: 7.0.0
 
 This app integrates with JIRA to perform several ticket management actions
 
+## Backward compatibility
+
+**Version Requirements**
+
+- This app now requires minimum Splunk SOAR version 7.0.0 and will not support versions below 7.0.0.
+
+**Major Changes**
+
+- **JIRA Cloud List Tickets Behavior Change**: Previously, if you provided an invalid project ID or query in the "list tickets" action, it would fail with an error. Now for JIRA Cloud instances, it will pass and return 0 tickets instead of failing. This provides better error handling and prevents workflow interruption.
+- **JIRA Server Behavior**: For JIRA Server instances, the behavior remains unchanged - invalid project ID or query will still fail as before.
+
 ## JIRA
 
 This app uses the python JIRA module, which is licensed under the BSD License (BSD), Copyright (c)

@@ -134,3 +134,15 @@ JIRA_DEFAULT_TIMEOUT = 60
 JIRA_TIME_FORMAT = "%Y/%m/%d %H:%M"
 ERROR_MESSAGE_UNAVAILABLE = "Error message unavailable. Please check the asset configuration and|or action parameters"
 JIRA_ERROR_INVALID_FILE_PATH = "The file path is invalid"
+
+# Define field mapping for efficient extraction
+FIELD_MAPPINGS = [
+    (JIRA_JSON_PRIORITY, "priority", "name"),
+    (JIRA_JSON_RESOLUTION, "resolution", "name"),
+    (JIRA_JSON_STATUS, "status", "name"),
+    (JIRA_JSON_REPORTER, "reporter", "displayName"),
+    (JIRA_JSON_PROJECT_KEY, "project", "key"),
+    (JIRA_JSON_SUMMARY, "summary", None),
+    (JIRA_JSON_DESCRIPTION, "description", None),
+    (JIRA_JSON_ISSUE_TYPE, "issuetype", "name"),
+]
