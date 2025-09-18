@@ -21,7 +21,7 @@
         "On prem v8.21.0",
         "Cloud Copyright (c) 2002 - 2025 Atlassian Corporation Pty Ltd."
     ],
-    "python_version": "3.9, 3.13",
+    "python_version": "3.13",
     "fips_compliant": true,
     "logo": "logo_atlassian.svg",
     "logo_dark": "logo_atlassian_dark.svg",
