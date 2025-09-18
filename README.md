@@ -4,9 +4,20 @@ Publisher: Splunk <br>
 Connector Version: 3.7.3 <br>
 Product Vendor: Atlassian <br>
 Product Name: Jira <br>
-Minimum Product Version: 6.3.0
+Minimum Product Version: 7.0.0
 
 This app integrates with JIRA to perform several ticket management actions
+
+## Backward compatibility
+
+**Version Requirements**
+
+- This app now requires minimum Splunk SOAR version 7.0.0 and will not support versions below 7.0.0.
+
+**Major Changes**
+
+- **JIRA Cloud List Tickets Behavior Change**: Previously, if you provided an invalid project ID or query in the "list tickets" action, it would fail with an error. Now for JIRA Cloud instances, it will pass and return 0 tickets instead of failing. This provides better error handling and prevents workflow interruption.
+- **JIRA Server Behavior**: For JIRA Server instances, the behavior remains unchanged - invalid project ID or query will still fail as before.
 
 ## JIRA
 
