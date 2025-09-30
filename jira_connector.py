@@ -229,7 +229,7 @@ class JiraConnector(phantom.BaseConnector):
         headers.update({"Content-Type": "application/json"})
 
         # Create a URL to connect to Jira server
-        url = f"{self._base_url}/rest/api/2/{endpoint}"
+        url = f"{self._base_url}/rest/api/3/{endpoint}"
 
         self.debug_print("Making a REST call with provided request parameters")
 
@@ -1782,17 +1782,24 @@ class JiraConnector(phantom.BaseConnector):
         next_page = None
         current_index = 0
 
+        # handle the case when project key is not provided and query is not provided by user for on poll
+        # API call not allowed jql query " order by updated asc" in Jira cloud
+        if jql_query == " order by updated asc":
+            jql_query = "issueKey IS NOT EMPTY order by updated asc"
+
         # Prepare search parameters
-        search_params = {"jql_str": jql_query, "maxResults": DEFAULT_MAX_RESULTS_PER_PAGE, "json_result": True}
+        search_params = {"jql": jql_query, "maxResults": DEFAULT_MAX_RESULTS_PER_PAGE, "json_result": True}
         if fields:
-            search_params["fields"] = "updated"
+            search_params["fields"] = ["updated"]
+        else:
+            search_params["fields"] = ["*all"]
 
         while True:
-            try:
-                search_params["nextPageToken"] = next_page
-                search_result = self._jira.enhanced_search_issues(**search_params)
-            except Exception as e:
-                self._set_jira_error(action_result, "Error occurred while fetching the list of tickets (issues)", e)
+            search_params["nextPageToken"] = next_page
+            ret_val, search_result = self._make_rest_call("search/jql", action_result, params=search_params, method="get")
+
+            if phantom.is_fail(ret_val):
+                self._set_jira_error(action_result, "Error occurred while fetching the list of tickets (issues)", action_result.get_status())
                 return None
 
             if not search_result:

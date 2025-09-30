@@ -4,7 +4,7 @@ Publisher: Splunk <br>
 Connector Version: 4.0.0 <br>
 Product Vendor: Atlassian <br>
 Product Name: Jira <br>
-Minimum Product Version: 7.0.0
+Minimum Product Version: 6.3.1
 
 This app integrates with JIRA to perform several ticket management actions
 
