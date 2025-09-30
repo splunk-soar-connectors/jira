@@ -10675,7 +10675,7 @@
             },
             {
                 "module": "jira",
-                "input_file": "wheels/py3/jira-3.8.0-py3-none-any.whl"
+                "input_file": "wheels/py3/jira-3.5.0-py3-none-any.whl"
             },
             {
                 "module": "oauthlib",
@@ -10688,10 +10688,6 @@
             {
                 "module": "pbr",
                 "input_file": "wheels/shared/pbr-7.0.1-py2.py3-none-any.whl"
-            },
-            {
-                "module": "pillow",
-                "input_file": "wheels/py39/pillow-11.3.0-cp39-cp39-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl"
             },
             {
                 "module": "pytz",
@@ -10727,7 +10723,7 @@
             },
             {
                 "module": "jira",
-                "input_file": "wheels/py3/jira-3.8.0-py3-none-any.whl"
+                "input_file": "wheels/py3/jira-3.10.5-py3-none-any.whl"
             },
             {
                 "module": "oauthlib",
@@ -10740,10 +10736,6 @@
             {
                 "module": "pbr",
                 "input_file": "wheels/shared/pbr-7.0.1-py2.py3-none-any.whl"
-            },
-            {
-                "module": "pillow",
-                "input_file": "wheels/py313/pillow-11.3.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl"
             },
             {
                 "module": "pytz",
