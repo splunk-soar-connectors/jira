@@ -1,7 +1,7 @@
 # Jira
 
 Publisher: Splunk <br>
-Connector Version: 4.0.1 <br>
+Connector Version: 4.0.2 <br>
 Product Vendor: Atlassian <br>
 Product Name: Jira <br>
 Minimum Product Version: 6.3.1
