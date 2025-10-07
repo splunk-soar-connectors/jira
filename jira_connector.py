@@ -1802,7 +1802,7 @@ class JiraConnector(phantom.BaseConnector):
                 self._set_jira_error(action_result, "Error occurred while fetching the list of tickets (issues)", action_result.get_status())
                 return None
 
-            if not search_result:
+            if search_result is None:
                 action_result.set_status(phantom.APP_ERROR, "Unknown error occurred while fetching list of tickets (issues) using pagination")
                 return None
 
@@ -1859,7 +1859,7 @@ class JiraConnector(phantom.BaseConnector):
                 self._set_jira_error(action_result, "Error occurred while fetching the list of tickets (issues)", e)
                 return None
 
-            if not issues:
+            if issues is None:
                 action_result.set_status(phantom.APP_ERROR, "Unknown error occurred while fetching list of tickets (issues) using pagination")
                 return None
 

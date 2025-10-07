@@ -1,1 +1,2 @@
 **Unreleased**
+* fix: list tickets action issue for empty list
