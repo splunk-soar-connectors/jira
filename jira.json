@@ -31,6 +31,7 @@
             "data_type": "string",
             "order": 0,
             "description": "Device URL including the port, e.g. https://myjira.enterprise.com:8080",
+            "verbose": "Device URL format depends on the account type:<br><ul><li><b>Regular accounts (Jira Cloud/On-prem)</b>: https://myjira.enterprise.com:8080</li><li><b>Service accounts (Jira Cloud)</b>: https://api.atlassian.com/ex/jira/{cloudId}</li></ul><br>. To find your Cloud ID, visit: https://your-site.atlassian.net/_edge/tenant_info",
             "required": true
         },
         "verify_server_cert": {
@@ -42,12 +43,12 @@
         "username": {
             "data_type": "string",
             "order": 2,
-            "description": "Username"
+            "description": "Username / Email (Jira Cloud) / Service Account Email (e.g., bot@serviceaccount.atlassian.com)"
         },
         "password": {
             "data_type": "password",
             "order": 3,
-            "description": "Password (Both) / API token (Jira Cloud) / PAT (Jira On-prem)",
+            "description": "Password (Both) / API token (Jira Cloud) / PAT (Jira On-prem) / Service Account API token (Jira Cloud Service Account)",
             "required": true
         },
         "project_key": {
