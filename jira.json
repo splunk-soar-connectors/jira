@@ -10684,7 +10684,7 @@
             },
             {
                 "module": "packaging",
-                "input_file": "wheels/py3/packaging-25.0-py3-none-any.whl"
+                "input_file": "wheels/py3/packaging-26.0-py3-none-any.whl"
             },
             {
                 "module": "pbr",
@@ -10704,7 +10704,7 @@
             },
             {
                 "module": "setuptools",
-                "input_file": "wheels/py3/setuptools-80.9.0-py3-none-any.whl"
+                "input_file": "wheels/py3/setuptools-82.0.0-py3-none-any.whl"
             },
             {
                 "module": "typing_extensions",
@@ -10732,7 +10732,7 @@
             },
             {
                 "module": "packaging",
-                "input_file": "wheels/py3/packaging-25.0-py3-none-any.whl"
+                "input_file": "wheels/py3/packaging-26.0-py3-none-any.whl"
             },
             {
                 "module": "pbr",
@@ -10752,7 +10752,7 @@
             },
             {
                 "module": "setuptools",
-                "input_file": "wheels/py3/setuptools-80.9.0-py3-none-any.whl"
+                "input_file": "wheels/py3/setuptools-82.0.0-py3-none-any.whl"
             },
             {
                 "module": "typing_extensions",
