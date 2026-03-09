@@ -1,6 +1,6 @@
 # File: jira_connector.py
 #
-# Copyright (c) 2016-2025 Splunk Inc.
+# Copyright (c) 2016-2026 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -79,21 +79,16 @@ class JiraConnector(phantom.BaseConnector):
         self._verify_cert = config.get(phantom.APP_JSON_VERIFY, False)
         self._username = config.get(phantom.APP_JSON_USERNAME)
         self._password = config[phantom.APP_JSON_PASSWORD]
-        
+
         # Auto-detect service account based on email format
-        self._use_service_account = (
-            self._username and "@serviceaccount.atlassian.com" in self._username
-        )
-        
+        self._use_service_account = self._username and "@serviceaccount.atlassian.com" in self._username
+
         self._custom_fields_list = None
         self._custom_fields = config.get(JIRA_JSON_CUSTOM_FIELDS)
 
         # Log and validate URL format for service accounts
         if self._use_service_account:
-            self.debug_print(
-                "Service account detected. "
-                "Using service account authentication mode (validation disabled)."
-            )
+            self.debug_print("Service account detected. Using service account authentication mode (validation disabled).")
             if "api.atlassian.com/ex/jira/" not in self._base_url:
                 self.debug_print(
                     "WARNING: Service account detected but URL format may be incorrect. "

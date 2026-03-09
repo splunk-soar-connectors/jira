@@ -158,11 +158,11 @@ information to assist in debugging.
 - Configuring SOAR for Service Accounts
 
   1. Find your Cloud ID using one of the methods above
-  2. Set **Device URL** to: `https://api.atlassian.com/ex/jira/{cloudId}` (replace {cloudId} with
+  1. Set **Device URL** to: `https://api.atlassian.com/ex/jira/{cloudId}` (replace {cloudId} with
      your actual Cloud ID, e.g., `https://api.atlassian.com/ex/jira/0c4c2bff-89b3-46a1-bc44-ea648483e109`)
-  3. Set **Username** to your service account email (e.g., `bot@serviceaccount.atlassian.com`)
-  4. Set **Password** to the service account API token
-  5. Run **Test Connectivity** to verify the configuration
+  1. Set **Username** to your service account email (e.g., `bot@serviceaccount.atlassian.com`)
+  1. Set **Password** to the service account API token
+  1. Run **Test Connectivity** to verify the configuration
 
 **The functioning of On Poll**
 
