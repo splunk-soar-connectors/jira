@@ -154,9 +154,7 @@ information to assist in debugging.
   - Go to [admin.atlassian.com](https://admin.atlassian.com)
   - Navigate to **Directory** > **Service accounts**
   - Click **Create service account** and follow the setup wizard
-  - After creating the service account, create an **API token** with appropriate scopes (read,
-    write, delete as needed)
-  - You can create up to 5 service accounts for free per organization
+  - After creating the service account, create an **API token** with appropriate scopes
 
 - Finding Your Cloud ID
 
