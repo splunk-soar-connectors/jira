@@ -10704,7 +10704,7 @@
             },
             {
                 "module": "setuptools",
-                "input_file": "wheels/py3/setuptools-82.0.0-py3-none-any.whl"
+                "input_file": "wheels/py3/setuptools-82.0.1-py3-none-any.whl"
             },
             {
                 "module": "typing_extensions",
@@ -10752,7 +10752,7 @@
             },
             {
                 "module": "setuptools",
-                "input_file": "wheels/py3/setuptools-82.0.0-py3-none-any.whl"
+                "input_file": "wheels/py3/setuptools-82.0.1-py3-none-any.whl"
             },
             {
                 "module": "typing_extensions",
