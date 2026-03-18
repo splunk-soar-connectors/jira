@@ -137,6 +137,41 @@ information to assist in debugging.
     if necessary, create a new token.
   - For any invalid PAT value, the test_connectivity will pass as per the API behaviour.
 
+**Authentication via Service Account (Jira Cloud)**
+
+- Service accounts are non-human accounts designed for application integrations and automation in
+  Atlassian Cloud. They use scoped API tokens that require specific URL formats.
+
+- **Service Account Auto-Detection**
+
+  - The app automatically detects service account authentication when the username ends with
+    `@serviceaccount.atlassian.com`
+  - When detected, the app automatically disables session validation to avoid calling the
+    deprecated `/rest/auth/1/session` endpoint
+
+- Creating a Service Account
+
+  - Go to [admin.atlassian.com](https://admin.atlassian.com)
+  - Navigate to **Directory** > **Service accounts**
+  - Click **Create service account** and follow the setup wizard
+  - After creating the service account, create an **API token** with appropriate scopes
+
+- Finding Your Cloud ID
+
+  - Navigate to `https://your-site.atlassian.net/_edge/tenant_info` in your
+    browser
+  - The response will contain your Cloud ID: `{"cloudId":"your-cloud-id-here"}`
+  - Alternatively, go to `admin.atlassian.com` and look for the string after `/s/` in the URL
+
+- Configuring SOAR for Service Accounts
+
+  1. Find your Cloud ID using one of the methods above
+  1. Set **Device URL** to: `https://api.atlassian.com/ex/jira/{cloudId}` (replace {cloudId} with
+     your actual Cloud ID, e.g., `https://api.atlassian.com/ex/jira/0c4c2bff-89b3-46a1-bc44-ea648483e109`)
+  1. Set **Username** to your service account email (e.g., `bot@serviceaccount.atlassian.com`)
+  1. Set **Password** to the service account API token
+  1. Run **Test Connectivity** to verify the configuration
+
 **The functioning of On Poll**
 
 - **NOTE (Consider below points due to a minute's granularity (instead of a second or lesser) for
@@ -298,8 +333,8 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
 **device_url** | required | string | Device URL including the port, e.g. https://myjira.enterprise.com:8080 |
 **verify_server_cert** | optional | boolean | Verify server certificate |
-**username** | optional | string | Username |
-**password** | required | password | Password (Both) / API token (Jira Cloud) / PAT (Jira On-prem) |
+**username** | optional | string | Username / Email (Jira Cloud) / Service Account Email (e.g., bot@serviceaccount.atlassian.com) |
+**password** | required | password | Password (Both) / API token (Jira Cloud) / PAT (Jira On-prem) / Service Account API token (Jira Cloud Service Account) |
 **project_key** | optional | string | Project key to ingest tickets (issues) from |
 **query** | optional | string | Additional parameters to query for during ingestion in JQL |
 **first_run_max_tickets** | optional | numeric | Maximum tickets (issues) to poll first time |
@@ -1904,7 +1939,7 @@ ______________________________________________________________________
 
 Auto-generated Splunk SOAR Connector documentation.
 
-Copyright 2025 Splunk Inc.
+Copyright 2026 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

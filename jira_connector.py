@@ -1,6 +1,6 @@
 # File: jira_connector.py
 #
-# Copyright (c) 2016-2025 Splunk Inc.
+# Copyright (c) 2016-2026 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -79,8 +79,22 @@ class JiraConnector(phantom.BaseConnector):
         self._verify_cert = config.get(phantom.APP_JSON_VERIFY, False)
         self._username = config.get(phantom.APP_JSON_USERNAME)
         self._password = config[phantom.APP_JSON_PASSWORD]
+
+        # Auto-detect service account based on email format
+        self._use_service_account = self._username and "@serviceaccount.atlassian.com" in self._username
+
         self._custom_fields_list = None
         self._custom_fields = config.get(JIRA_JSON_CUSTOM_FIELDS)
+
+        # Log and validate URL format for service accounts
+        if self._use_service_account:
+            self.debug_print("Service account detected. Using service account authentication mode (validation disabled).")
+            if "api.atlassian.com/ex/jira/" not in self._base_url:
+                self.debug_print(
+                    "WARNING: Service account detected but URL format may be incorrect. "
+                    "Service accounts require URL format: https://api.atlassian.com/ex/jira/{cloudId}. "
+                    f"Current URL: {self._base_url}"
+                )
 
         if self._custom_fields:
             try:
@@ -396,13 +410,19 @@ class JiraConnector(phantom.BaseConnector):
         signal.signal(signal.SIGALRM, timeout_handler)
         signal.alarm(JIRA_START_TIMEOUT)
 
+        # Determine validation setting
+        # Service accounts don't support /rest/auth/1/session, so skip validation
+        should_validate = not self._use_service_account
+
+        if not should_validate:
+            self.debug_print("Service account detected")
         try:
             if self._username:
                 self.save_progress("Creating JIRA client with HTTP Basic Authentication")
-                self._jira = JIRA(options=options, basic_auth=(self._username, self._password), validate=True)
+                self._jira = JIRA(options=options, basic_auth=(self._username, self._password), validate=should_validate)
             else:
                 self.save_progress("Creating JIRA client with Bearer Token Authentication")
-                self._jira = JIRA(options=options, token_auth=self._password, validate=True)
+                self._jira = JIRA(options=options, token_auth=self._password, validate=should_validate)
         except Timeout:
             return action_result.set_status(phantom.APP_ERROR, JIRA_ERROR_API_TIMEOUT)
         except Exception as e:

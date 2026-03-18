@@ -25,12 +25,13 @@
     "fips_compliant": true,
     "logo": "logo_atlassian.svg",
     "logo_dark": "logo_atlassian_dark.svg",
-    "license": "Copyright (c) 2016-2025 Splunk Inc.",
+    "license": "Copyright (c) 2016-2026 Splunk Inc.",
     "configuration": {
         "device_url": {
             "data_type": "string",
             "order": 0,
             "description": "Device URL including the port, e.g. https://myjira.enterprise.com:8080",
+            "verbose": "Device URL format depends on the account type:<br><ul><li><b>Regular accounts (Jira Cloud/On-prem)</b>: https://myjira.enterprise.com:8080</li><li><b>Service accounts (Jira Cloud)</b>: https://api.atlassian.com/ex/jira/{cloudId}</li></ul><br>. To find your Cloud ID, visit: https://your-site.atlassian.net/_edge/tenant_info",
             "required": true
         },
         "verify_server_cert": {
@@ -42,12 +43,12 @@
         "username": {
             "data_type": "string",
             "order": 2,
-            "description": "Username"
+            "description": "Username / Email (Jira Cloud) / Service Account Email (e.g., bot@serviceaccount.atlassian.com)"
         },
         "password": {
             "data_type": "password",
             "order": 3,
-            "description": "Password (Both) / API token (Jira Cloud) / PAT (Jira On-prem)",
+            "description": "Password (Both) / API token (Jira Cloud) / PAT (Jira On-prem) / Service Account API token (Jira Cloud Service Account)",
             "required": true
         },
         "project_key": {
@@ -10683,7 +10684,7 @@
             },
             {
                 "module": "packaging",
-                "input_file": "wheels/py3/packaging-25.0-py3-none-any.whl"
+                "input_file": "wheels/py3/packaging-26.0-py3-none-any.whl"
             },
             {
                 "module": "pbr",
@@ -10703,7 +10704,7 @@
             },
             {
                 "module": "setuptools",
-                "input_file": "wheels/py3/setuptools-80.9.0-py3-none-any.whl"
+                "input_file": "wheels/py3/setuptools-82.0.1-py3-none-any.whl"
             },
             {
                 "module": "typing_extensions",
@@ -10731,7 +10732,7 @@
             },
             {
                 "module": "packaging",
-                "input_file": "wheels/py3/packaging-25.0-py3-none-any.whl"
+                "input_file": "wheels/py3/packaging-26.0-py3-none-any.whl"
             },
             {
                 "module": "pbr",
@@ -10751,7 +10752,7 @@
             },
             {
                 "module": "setuptools",
-                "input_file": "wheels/py3/setuptools-80.9.0-py3-none-any.whl"
+                "input_file": "wheels/py3/setuptools-82.0.1-py3-none-any.whl"
             },
             {
                 "module": "typing_extensions",
