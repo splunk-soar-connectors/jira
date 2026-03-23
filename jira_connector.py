@@ -32,7 +32,7 @@ from dateutil.parser import parse
 from phantom.vault import Vault
 from phantom_common import paths
 
-from jira.client import JIRA
+from jira.client import JIRA  # pylint: disable=import-error,no-name-in-module  # PyPI "jira" package (not app code)
 from jira_consts import *
 
 

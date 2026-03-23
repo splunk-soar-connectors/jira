@@ -8,7 +8,7 @@ default_stages: [pre-commit]
 # This is a template for connector pre-commit hooks
 repos:
   - repo: https://github.com/compilerla/conventional-pre-commit
-    rev: v4.2.0
+    rev: v4.4.0
     hooks:
       - id: conventional-pre-commit
         stages: [commit-msg]
@@ -17,50 +17,58 @@ repos:
     rev: v6.0.0
     hooks:
       - id: check-merge-conflict
+        exclude: ^(\.venv|venv)/
       - id: end-of-file-fixer
-        exclude: ^NOTICE$
+        exclude: (^NOTICE$|^(\.venv|venv)/)
         exclude_types: [ markdown ]
       - id: trailing-whitespace
-        exclude: ^NOTICE$
+        exclude: (^NOTICE$|^(\.venv|venv)/)
         exclude_types: [ markdown ]
       - id: requirements-txt-fixer
       - id: check-json
+        exclude: ^(\.venv|venv)/
       - id: check-yaml
+        exclude: ^(\.venv|venv)/
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.13.2
+    rev: v0.15.7
     hooks:
       - id: ruff
         args: [ "--fix", "--unsafe-fixes"] # Allow unsafe fixes (ruff pretty strict about what it can fix)
+        exclude: ^(\.venv|venv)/
       - id: ruff-format
+        exclude: ^(\.venv|venv)/
   - repo: https://github.com/djlint/djLint
     rev: v1.36.4
     hooks:
       - id: djlint-reformat-django
+        exclude: ^(\.venv|venv)/
       - id: djlint-django
+        exclude: ^(\.venv|venv)/
   - repo: https://github.com/phantomcyber/soar-app-linter
     rev: 0.1.0
     hooks:
       - id: soar-app-linter
         args: ["--single-repo", "--message-level", "error"]
   - repo: https://github.com/hukkin/mdformat
-    rev: 0.7.22
+    rev: 1.0.0
     hooks:
       - id: mdformat
-        exclude: "release_notes/.*"
+        exclude: (^release_notes/.*|^(\.venv|venv)/)
   - repo: https://github.com/returntocorp/semgrep
     rev: v1.89.0
     hooks:
       - id: semgrep-docker
+        exclude: ^(\.venv|venv)/
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.5.0
     hooks:
       - id: detect-secrets
         args: ['--no-verify']
         exclude_types: [json]
-        exclude: "README.md"
+        exclude: (^README\.md$|^(\.venv|venv)/)
   # Central hooks
   - repo: https://github.com/phantomcyber/dev-cicd-tools
-    rev: v2.0.5
+    rev: v2.1.1
     hooks:
       - id: build-docs
         language: python
