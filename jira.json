@@ -10667,10 +10667,6 @@
     "pip39_dependencies": {
         "wheel": [
             {
-                "module": "PyJWT",
-                "input_file": "wheels/py3/PyJWT-2.10.1-py3-none-any.whl"
-            },
-            {
                 "module": "defusedxml",
                 "input_file": "wheels/shared/defusedxml-0.7.1-py2.py3-none-any.whl"
             },
@@ -10689,6 +10685,10 @@
             {
                 "module": "pbr",
                 "input_file": "wheels/shared/pbr-7.0.1-py2.py3-none-any.whl"
+            },
+            {
+                "module": "pyjwt",
+                "input_file": "wheels/py3/pyjwt-2.12.1-py3-none-any.whl"
             },
             {
                 "module": "pytz",
@@ -10715,10 +10715,6 @@
     "pip313_dependencies": {
         "wheel": [
             {
-                "module": "PyJWT",
-                "input_file": "wheels/py3/PyJWT-2.10.1-py3-none-any.whl"
-            },
-            {
                 "module": "defusedxml",
                 "input_file": "wheels/shared/defusedxml-0.7.1-py2.py3-none-any.whl"
             },
@@ -10737,6 +10733,10 @@
             {
                 "module": "pbr",
                 "input_file": "wheels/shared/pbr-7.0.1-py2.py3-none-any.whl"
+            },
+            {
+                "module": "pyjwt",
+                "input_file": "wheels/py3/pyjwt-2.12.1-py3-none-any.whl"
             },
             {
                 "module": "pytz",
