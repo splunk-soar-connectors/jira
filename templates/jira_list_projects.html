@@ -1,0 +1,78 @@
+{% extends 'widgets/widget_template.html' %}
+{% block title %}Jira{% endblock %}
+{% block subtitle %}List Projects{% endblock %}
+{% block custom_tools %}{% endblock %}
+{% block widget_content %}
+  <!-- File: jira_list_projects.html
+  Copyright (c) 2016-2026 Splunk Inc.
+  Licensed under the Apache License, Version 2.0 -->
+  <style>
+    .jira a:hover { text-decoration: underline; }
+    .jira .wf-h4-style { font-size: 20px; }
+    .jira .wf-table-vertical { width: initial; font-size: 12px; }
+    .jira .wf-table-vertical td { padding: 5px; border: 1px solid !important; }
+    .jira .wf-table-vertical tr td:first-child { font-weight: bold; }
+    .jira .dataTable th.widget-th { border-top: 1px solid !important; border-bottom: 1px solid !important; }
+    .jira .dataTable td { vertical-align: top; }
+    .jira .dataTable td.widget-td a { font-size: 12px; }
+    .jira .dataTable { font-size: 12px; }
+    .jira .overflow-column { overflow: auto; }
+  </style>
+  <div class="jira"
+       style="overflow: auto;
+              width: 100%;
+              height: 100%;
+              padding-left:10px;
+              padding-right:10px">
+    {% for result in results %}
+      {% if not result.data %}
+        <h4 class="wf-h4-style">No data found</h4>
+      {% else %}
+        <h4 class="wf-h4-style">Projects</h4>
+        <div class="list_items_table overflow-column">
+          <table class="phantom-table dataTable">
+            <thead>
+              <th class="widget-th">Project Key</th>
+              <th class="widget-th">Name</th>
+              <th class="widget-th">ID</th>
+            </thead>
+            <tbody>
+              {% for project in result.data %}
+                <tr>
+                  <td class="widget-td">
+                    <a href="javascript:;"
+                       onclick="context_menu(this, [{'contains': ['jira project key'], 'value': '{{ project.project_key }}' }], 0, {{ container }}, null, false);">
+                      {{ project.project_key }}
+                      &nbsp;<span class="fa fa-caret-down" style="font-size: smaller;"></span>
+                    </a>
+                  </td>
+                  <td class="widget-td">{{ project.name }}</td>
+                  <td class="widget-td">{{ project.id }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+  <script>
+    $.extend(true, $.fn.dataTable.defaults, {
+      "searching": true,
+      "bLengthChange": false,
+      "language": {
+        "paginate": {
+          "previous": "<i class='fa fa-angle-left fa-lg'></i>",
+          "next": "<i class='fa fa-angle-right fa-lg'></i>"
+        },
+        "emptyTable": "No data available"
+      },
+      "dom": '<"top">rt<"bottom"p><"clear">',
+      drawCallback: function(settings) {
+        var pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
+        pagination.toggle(this.api().page.info().pages > 1);
+      }
+    });
+    $('.dataTable').DataTable();
+  </script>
+{% endblock %}
