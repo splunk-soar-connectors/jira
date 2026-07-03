@@ -141,6 +141,7 @@ venv.bak/
 
 # mkdocs documentation
 /site
+CLAUDE.md
 
 # mypy
 .mypy_cache/
@@ -177,3 +178,5 @@ pyrightconfig.json
 
 test_asset.json
 *.tgz
+
+
