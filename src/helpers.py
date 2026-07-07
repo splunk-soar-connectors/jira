@@ -21,11 +21,11 @@ from soar_sdk.exceptions import ActionFailure
 from soar_sdk.logging import getLogger
 
 from .auth import resolve_jira_auth
+from .client import call_jira
 from .consts import (
     JIRA_DEFAULT_TIMEOUT,
     JIRA_RESPONSE_ERROR_MESSAGES_KEY,
     JIRA_RESPONSE_ERRORS_KEY,
-    JIRA_USING_BASE_URL,
 )
 
 if TYPE_CHECKING:
@@ -123,38 +123,20 @@ def jira_request(
 ) -> Any:
     """Make an authenticated request to the Jira REST API.
 
-    Prepends asset.device_url to endpoint, applies auth, and returns the
+    Delegates the actual transport to :func:`call_jira` and returns the
     parsed JSON body. Raises ActionFailure on HTTP errors or network failures.
     """
-    base_url = asset.device_url.rstrip("/")
-    full_url = f"{base_url}/{endpoint.lstrip('/')}"
-    logger.info(JIRA_USING_BASE_URL.format(base_url=base_url))
-
-    auth = get_auth(asset)
-    verify: bool = bool(asset.verify_server_cert)
-
-    request_headers = {"Accept": "application/json", "Content-Type": "application/json"}
-    if headers:
-        request_headers.update(headers)
-    # File uploads must not have Content-Type set (httpx sets multipart boundary automatically)
-    if files:
-        request_headers.pop("Content-Type", None)
-
-    with httpx.Client(verify=verify, follow_redirects=True) as client:
-        try:
-            response = client.request(
-                method=method.upper(),
-                url=full_url,
-                params=params,
-                json=json,
-                data=data,
-                files=files,
-                headers=request_headers,
-                auth=auth,
-                timeout=timeout,
-            )
-        except httpx.RequestError as exc:
-            raise ActionFailure(f"Request to Jira failed: {exc}") from exc
+    response = call_jira(
+        method,
+        endpoint,
+        asset,
+        params=params,
+        json=json,
+        data=data,
+        files=files,
+        headers=headers,
+        timeout=timeout,
+    )
 
     if not response.is_success:
         error_msg = _parse_jira_error(response)

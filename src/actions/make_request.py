@@ -33,12 +33,10 @@ def make_request(
     """
     import json as _json
 
-    import httpx
-
     from soar_sdk.exceptions import ActionFailure
     from soar_sdk.logging import getLogger
 
-    from ..helpers import get_auth
+    from ..client import call_jira
 
     logger = getLogger()
 
@@ -58,35 +56,26 @@ def make_request(
                 f"Invalid JSON in 'query_parameters' parameter: {exc}"
             ) from exc
 
-    base_url = asset.device_url.rstrip("/")
-    full_url = f"{base_url}/{params.endpoint.lstrip('/')}"
-    auth = get_auth(asset)
-    verify = bool(asset.verify_server_cert)
-
     timeout = float(params.timeout) if params.timeout else 60.0
 
-    headers: dict = {"Accept": "application/json", "Content-Type": "application/json"}
+    extra_headers: dict = {}
     if params.headers:
         try:
-            headers.update(_json.loads(params.headers))
+            extra_headers.update(_json.loads(params.headers))
         except Exception as exc:
             raise ActionFailure(f"Invalid JSON in 'headers' parameter: {exc}") from exc
 
-    logger.info(f"Making {params.http_method} request to {full_url}")
+    logger.info(f"Making {params.http_method} request to {params.endpoint}")
 
-    with httpx.Client(verify=verify) as client:
-        try:
-            response = client.request(
-                method=params.http_method.upper(),
-                url=full_url,
-                params=query_dict,
-                json=body_dict,
-                headers=headers,
-                auth=auth,
-                timeout=timeout,
-            )
-        except httpx.RequestError as exc:
-            raise ActionFailure(f"Request to Jira failed: {exc}") from exc
+    response = call_jira(
+        params.http_method,
+        params.endpoint,
+        asset,
+        params=query_dict,
+        json=body_dict,
+        headers=extra_headers,
+        timeout=timeout,
+    )
 
     logger.info(f"Response: {response.status_code}")
 
