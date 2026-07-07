@@ -522,9 +522,19 @@ action_result.parameter.assignee | string | `user name` | |
 action_result.parameter.assignee_account_id | string | `jira user account id` | |
 action_result.parameter.fields | string | | |
 action_result.parameter.vault_id | string | `vault id` | |
+action_result.data.\*.summary | string | | Jira QA ticket |
+action_result.data.\*.description | string | | Jira QA automation ticket description |
+action_result.data.\*.id | string | | 11850 |
+action_result.data.\*.issue_type | string | `jira issue type` | Story Task |
+action_result.data.\*.name | string | `jira ticket key` | MAN-240 |
+action_result.data.\*.status | string | | To Do |
+action_result.data.\*.priority | string | `jira ticket priority` | Medium |
+action_result.data.\*.resolution | string | `jira ticket resolution` | Unresolved |
+action_result.data.\*.reporter | string | `jira user display name` | Test Admin |
+action_result.data.\*.project_key | string | `jira project key` | MAN |
 action_result.data.\*.assign_error | string | | |
 action_result.data.\*.attach_error | string | | |
-action_result.data.\*.description | string | | Jira QA automation ticket description |
+action_result.data.\*.json_fields_error | string | | |
 action_result.data.\*.fields.Epic Link | string | | |
 action_result.data.\*.fields.Epic Name | string | | Test epic |
 action_result.data.\*.fields.Severity | string | | |
@@ -686,16 +696,6 @@ action_result.data.\*.fields.worklog.maxResults | numeric | | 20 |
 action_result.data.\*.fields.worklog.startAt | numeric | | 0 |
 action_result.data.\*.fields.worklog.total | numeric | | 0 |
 action_result.data.\*.fields.workratio | numeric | | -1 |
-action_result.data.\*.id | string | | 11850 |
-action_result.data.\*.issue_type | string | `jira issue type` | Story Task |
-action_result.data.\*.json_fields_error | string | | |
-action_result.data.\*.name | string | `jira ticket key` | MAN-240 |
-action_result.data.\*.priority | string | `jira ticket priority` | Medium |
-action_result.data.\*.project_key | string | `jira project key` | MAN |
-action_result.data.\*.reporter | string | `jira user display name` | Test Admin |
-action_result.data.\*.resolution | string | `jira ticket resolution` | Unresolved |
-action_result.data.\*.status | string | | To Do |
-action_result.data.\*.summary | string | | Jira QA ticket |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 
@@ -750,13 +750,13 @@ action_result.parameter.id | string | `jira ticket key` | |
 action_result.parameter.retrieve_all | boolean | | |
 action_result.parameter.container_id | string | | |
 action_result.parameter.extension_filter | string | | |
+action_result.data.\*.vault_id | string | `vault id` | 9c03244555e41685dc5f03ec7d9de1c6db26c318 |
+action_result.data.\*.id | numeric | | 501 |
+action_result.data.\*.size | numeric | | 231003 |
+action_result.data.\*.message | string | | success |
+action_result.data.\*.succeeded | boolean | | True False |
 action_result.data.\*.container | numeric | | 2446 |
 action_result.data.\*.hash | string | `md5` | 9c03244555e41685dc5f03ec7d9de1c6db26c318 |
-action_result.data.\*.id | numeric | | 501 |
-action_result.data.\*.message | string | | success |
-action_result.data.\*.size | numeric | | 231003 |
-action_result.data.\*.succeeded | boolean | | True False |
-action_result.data.\*.vault_id | string | `vault id` | 9c03244555e41685dc5f03ec7d9de1c6db26c318 |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 
@@ -782,7 +782,16 @@ DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 action_result.status | string | | success failure |
 action_result.message | string | | |
 action_result.parameter.id | string | `jira ticket key` | |
+action_result.data.\*.summary | string | | Sample summary |
 action_result.data.\*.description | string | | This is a sample testing description of the ticket |
+action_result.data.\*.id | string | | 10246 |
+action_result.data.\*.issue_type | string | `jira issue type` | Defect |
+action_result.data.\*.name | string | `jira ticket key` | MAN-1 |
+action_result.data.\*.status | string | | Done |
+action_result.data.\*.priority | string | `jira ticket priority` | Medium |
+action_result.data.\*.resolution | string | `jira ticket resolution` | Done |
+action_result.data.\*.reporter | string | `jira user display name` | Test Admin |
+action_result.data.\*.project_key | string | `jira project key` | MAN |
 action_result.data.\*.fields.Epic Link | string | | |
 action_result.data.\*.fields.Sprint | string | | com.atlassian.greenhopper.service.sprint.Sprint@6bb9ab97\[id=1,rapidViewId=1,state=ACTIVE,name=MAN Sprint 1,startDate=2017-10-30T16:22:44.954-07:00,endDate=2017-11-13T16:22:00.000-08:00,completeDate=<null>,sequence=1\] |
 action_result.data.\*.fields.aggregateprogress.progress | numeric | | 0 |
@@ -1016,15 +1025,6 @@ action_result.data.\*.fields.worklog.maxResults | numeric | | 20 |
 action_result.data.\*.fields.worklog.startAt | numeric | | 0 |
 action_result.data.\*.fields.worklog.total | numeric | | 0 |
 action_result.data.\*.fields.workratio | numeric | | -1 |
-action_result.data.\*.id | string | | 10246 |
-action_result.data.\*.issue_type | string | `jira issue type` | Defect |
-action_result.data.\*.name | string | `jira ticket key` | MAN-1 |
-action_result.data.\*.priority | string | `jira ticket priority` | Medium |
-action_result.data.\*.project_key | string | `jira project key` | MAN |
-action_result.data.\*.reporter | string | `jira user display name` | Test Admin |
-action_result.data.\*.resolution | string | `jira ticket resolution` | Done |
-action_result.data.\*.status | string | | Done |
-action_result.data.\*.summary | string | | Sample summary |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 
@@ -1081,9 +1081,9 @@ DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 --------- | ---- | -------- | --------------
 action_result.status | string | | success failure |
 action_result.message | string | | |
-action_result.data.\*.id | string | | 10207 |
-action_result.data.\*.name | string | | Access Uplift Alerts |
 action_result.data.\*.project_key | string | `jira project key` | AUA |
+action_result.data.\*.name | string | | Access Uplift Alerts |
+action_result.data.\*.id | string | | 10207 |
 action_result.summary.total_projects | numeric | | 5 |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
@@ -1116,6 +1116,15 @@ action_result.parameter.project_key | string | `jira project key` | |
 action_result.parameter.query | string | | |
 action_result.parameter.start_index | numeric | | |
 action_result.parameter.max_results | numeric | | |
+action_result.data.\*.project_key | string | `jira project key` | PRJ |
+action_result.data.\*.id | string | | 11840 |
+action_result.data.\*.issue_type | string | `jira issue type` | Sub-Task |
+action_result.data.\*.name | string | `jira ticket key` | PHANINCIDE-317 |
+action_result.data.\*.status | string | | To Do |
+action_result.data.\*.priority | string | `jira ticket priority` | Medium |
+action_result.data.\*.resolution | string | `jira ticket resolution` | Unresolved |
+action_result.data.\*.reporter | string | `jira user display name` | Test Admin |
+action_result.data.\*.summary | string | | Sub-taskofBigTask |
 action_result.data.\*.description | string | `url` | This is a sample testing description |
 action_result.data.\*.fields.aggregateprogress.progress | numeric | | 0 |
 action_result.data.\*.fields.aggregateprogress.total | numeric | | 0 |
@@ -1313,15 +1322,6 @@ action_result.data.\*.fields.worklog.maxResults | numeric | | |
 action_result.data.\*.fields.worklog.startAt | numeric | | |
 action_result.data.\*.fields.worklog.total | numeric | | |
 action_result.data.\*.fields.workratio | numeric | | -1 |
-action_result.data.\*.id | string | | 11840 |
-action_result.data.\*.issue_type | string | `jira issue type` | Sub-Task |
-action_result.data.\*.name | string | `jira ticket key` | PHANINCIDE-317 |
-action_result.data.\*.priority | string | `jira ticket priority` | Medium |
-action_result.data.\*.project_key | string | `jira project key` | PRJ |
-action_result.data.\*.reporter | string | `jira user display name` | Test Admin |
-action_result.data.\*.resolution | string | `jira ticket resolution` | Unresolved |
-action_result.data.\*.status | string | | To Do |
-action_result.data.\*.summary | string | | Sub-taskofBigTask |
 action_result.summary.total_issues | numeric | | 10 |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
@@ -1352,18 +1352,18 @@ action_result.message | string | | |
 action_result.parameter.username | string | `user name` | |
 action_result.parameter.display_name | string | `jira user display name` | |
 action_result.parameter.max_results | numeric | | |
+action_result.data.\*.name | string | `user name` | test |
+action_result.data.\*.displayName | string | `jira user display name` | Test Name |
 action_result.data.\*.accountId | string | `jira user account id` | 5d2ef6aa6637260c19b78dfd |
+action_result.data.\*.emailAddress | string | `email` | test@domain.us |
 action_result.data.\*.accountType | string | | atlassian |
 action_result.data.\*.active | boolean | | True False |
 action_result.data.\*.avatarUrls.16x16 | string | `url` | http://jira.instance.ip/secure/useravatar?size=xsmall&ownerId=admin&avatarId=10500 |
 action_result.data.\*.avatarUrls.24x24 | string | `url` | http://jira.instance.ip/secure/useravatar?size=small&ownerId=admin&avatarId=10500 |
 action_result.data.\*.avatarUrls.32x32 | string | `url` | http://jira.instance.ip/secure/useravatar?size=medium&ownerId=admin&avatarId=10500 |
 action_result.data.\*.avatarUrls.48x48 | string | `url` | http://jira.instance.ip/secure/useravatar?ownerId=admin&avatarId=10500 |
-action_result.data.\*.displayName | string | `jira user display name` | Test Name |
-action_result.data.\*.emailAddress | string | `email` | test@domain.us |
 action_result.data.\*.key | string | | test |
 action_result.data.\*.locale | string | | en_US |
-action_result.data.\*.name | string | `user name` | test |
 action_result.data.\*.self | string | `url` | http://jira.instance.ip/rest/api/2/user?username=test |
 action_result.data.\*.timeZone | string | | America/Los_Angeles |
 action_result.summary.total_users | numeric | | 5 |
@@ -1431,7 +1431,16 @@ action_result.parameter.resolution | string | `jira ticket resolution` | |
 action_result.parameter.comment | string | | |
 action_result.parameter.update_fields | string | | |
 action_result.parameter.time_spent | string | | |
+action_result.data.\*.summary | string | | Sample summary |
 action_result.data.\*.description | string | | This is a sample testing description of the ticket |
+action_result.data.\*.id | string | | 10246 |
+action_result.data.\*.issue_type | string | `jira issue type` | Defect |
+action_result.data.\*.name | string | `jira ticket key` | MAN-1 |
+action_result.data.\*.status | string | | Done |
+action_result.data.\*.priority | string | `jira ticket priority` | Medium |
+action_result.data.\*.resolution | string | `jira ticket resolution` | Done |
+action_result.data.\*.reporter | string | `jira user display name` | Test Admin |
+action_result.data.\*.project_key | string | `jira project key` | MAN |
 action_result.data.\*.fields.Epic Link | string | | |
 action_result.data.\*.fields.Severity | string | | |
 action_result.data.\*.fields.Sprint | string | | com.atlassian.greenhopper.service.sprint.Sprint@6bb9ab97\[id=1,rapidViewId=1,state=ACTIVE,name=MAN Sprint 1,startDate=2017-10-30T16:22:44.954-07:00,endDate=2017-11-13T16:22:00.000-08:00,completeDate=<null>,sequence=1\] |
@@ -1695,15 +1704,6 @@ action_result.data.\*.fields.worklog.worklogs.\*.updateAuthor.self | string | `u
 action_result.data.\*.fields.worklog.worklogs.\*.updateAuthor.timeZone | string | | UTC |
 action_result.data.\*.fields.worklog.worklogs.\*.updated | string | | 2021-12-06T06:35:45.703+0000 |
 action_result.data.\*.fields.workratio | numeric | | -1 |
-action_result.data.\*.id | string | | 10246 |
-action_result.data.\*.issue_type | string | `jira issue type` | Defect |
-action_result.data.\*.name | string | `jira ticket key` | MAN-1 |
-action_result.data.\*.priority | string | `jira ticket priority` | Medium |
-action_result.data.\*.project_key | string | `jira project key` | MAN |
-action_result.data.\*.reporter | string | `jira user display name` | Test Admin |
-action_result.data.\*.resolution | string | `jira ticket resolution` | Done |
-action_result.data.\*.status | string | | Done |
-action_result.data.\*.summary | string | | Sample summary |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 
@@ -1733,7 +1733,16 @@ action_result.message | string | | |
 action_result.parameter.id | string | `jira ticket key` | |
 action_result.parameter.update_fields | string | | |
 action_result.parameter.vault_id | string | `vault id` | |
+action_result.data.\*.summary | string | | Sample summary |
 action_result.data.\*.description | string | | This is a sample testing description of the ticket |
+action_result.data.\*.id | string | | 10246 |
+action_result.data.\*.issue_type | string | `jira issue type` | Defect |
+action_result.data.\*.name | string | `jira ticket key` | MAN-1 |
+action_result.data.\*.status | string | | Done |
+action_result.data.\*.priority | string | `jira ticket priority` | Medium |
+action_result.data.\*.resolution | string | `jira ticket resolution` | Done |
+action_result.data.\*.reporter | string | `jira user display name` | Test Admin |
+action_result.data.\*.project_key | string | `jira project key` | MAN |
 action_result.data.\*.fields.Epic Link | string | | |
 action_result.data.\*.fields.Sprint | string | | com.atlassian.greenhopper.service.sprint.Sprint@6bb9ab97\[id=1,rapidViewId=1,state=ACTIVE,name=MAN Sprint 1,startDate=2017-10-30T16:22:44.954-07:00,endDate=2017-11-13T16:22:00.000-08:00,completeDate=<null>,sequence=1\] |
 action_result.data.\*.fields.aggregateprogress.progress | numeric | | 0 |
@@ -1967,15 +1976,6 @@ action_result.data.\*.fields.worklog.maxResults | numeric | | 20 |
 action_result.data.\*.fields.worklog.startAt | numeric | | 0 |
 action_result.data.\*.fields.worklog.total | numeric | | 0 |
 action_result.data.\*.fields.workratio | numeric | | -1 |
-action_result.data.\*.id | string | | 10246 |
-action_result.data.\*.issue_type | string | `jira issue type` | Defect |
-action_result.data.\*.name | string | `jira ticket key` | MAN-1 |
-action_result.data.\*.priority | string | `jira ticket priority` | Medium |
-action_result.data.\*.project_key | string | `jira project key` | MAN |
-action_result.data.\*.reporter | string | `jira user display name` | Test Admin |
-action_result.data.\*.resolution | string | `jira ticket resolution` | Done |
-action_result.data.\*.status | string | | Done |
-action_result.data.\*.summary | string | | Sample summary |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 

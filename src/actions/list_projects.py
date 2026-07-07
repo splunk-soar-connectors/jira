@@ -14,29 +14,22 @@
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput, OutputField
 from soar_sdk.params import Params
-from soar_sdk.views.view_parser import ViewContext
 
 from .._asset import Asset
 
 
 class ListProjectsOutput(ActionOutput):
-    id: str = OutputField(example_values=["10207"])
-    name: str = OutputField(example_values=["Access Uplift Alerts"])
     project_key: str = OutputField(
-        cef_types=["jira project key"], example_values=["AUA"]
+        cef_types=["jira project key"],
+        example_values=["AUA"],
+        column_name="Project Key",
     )
+    name: str = OutputField(example_values=["Access Uplift Alerts"], column_name="Name")
+    id: str = OutputField(example_values=["10207"], column_name="ID")
 
 
 class ListProjectsSummaryOutput(ActionOutput):
     total_projects: int = OutputField(example_values=[5])
-
-
-def _list_projects_view(
-    context: ViewContext, results: list[ListProjectsOutput]
-) -> dict:
-    return {
-        "results": [{"data": results, "param": getattr(context, "param", {})}],
-    }
 
 
 def list_projects(

@@ -15,8 +15,6 @@ from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput, OutputField
 from soar_sdk.params import Param, Params
 
-from soar_sdk.views.view_parser import ViewContext
-
 from .._asset import Asset
 from ._outputs import AvatarurlsOutput
 
@@ -42,35 +40,36 @@ class LookupUsersSummaryOutput(ActionOutput):
 
 
 class LookupUsersOutput(ActionOutput):
+    name: str = OutputField(
+        cef_types=["user name"], example_values=["test"], column_name="Username"
+    )
+    displayName: str = OutputField(
+        cef_types=["jira user display name"],
+        example_values=["Test Name"],
+        column_name="Display Name",
+    )
     accountId: str = OutputField(
         cef_types=["jira user account id"],
         example_values=[
             "5d2ef6aa6637260c19b78dfd"  # pragma: allowlist secret
         ],
+        column_name="Account ID",
+    )
+    emailAddress: str = OutputField(
+        cef_types=["email"],
+        example_values=["test@domain.us"],
+        column_name="Email Address",
     )
     accountType: str = OutputField(example_values=["atlassian"])
     active: bool
     avatarUrls: AvatarurlsOutput | None
-    displayName: str = OutputField(
-        cef_types=["jira user display name"], example_values=["Test Name"]
-    )
-    emailAddress: str = OutputField(
-        cef_types=["email"], example_values=["test@domain.us"]
-    )
     key: str = OutputField(example_values=["test"])
     locale: str = OutputField(example_values=["en_US"])
-    name: str = OutputField(cef_types=["user name"], example_values=["test"])
     self: str = OutputField(
         cef_types=["url"],
         example_values=["http://jira.instance.ip/rest/api/2/user?username=test"],
     )
     timeZone: str = OutputField(example_values=["America/Los_Angeles"])
-
-
-def _lookup_users_view(context: ViewContext, results: list[LookupUsersOutput]) -> dict:
-    return {
-        "results": [{"data": results, "param": getattr(context, "param", {})}],
-    }
 
 
 def lookup_users(

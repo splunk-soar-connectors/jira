@@ -14,7 +14,6 @@
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput, OutputField
 from soar_sdk.params import Param, Params
-from soar_sdk.views.view_parser import ViewContext
 
 from .._asset import Asset
 from ._outputs import (
@@ -116,40 +115,43 @@ class FieldsOutput(ActionOutput):
 
 
 class CreateTicketOutput(ActionOutput):
-    assign_error: str
-    attach_error: str
+    summary: str = OutputField(column_name="Summary", example_values=["Jira QA ticket"])
     description: str | None = OutputField(
-        example_values=["Jira QA automation ticket description"]
+        column_name="Description",
+        example_values=["Jira QA automation ticket description"],
     )
-    fields: FieldsOutput
-    id: str = OutputField(example_values=["11850"])
+    id: str = OutputField(column_name="Id", example_values=["11850"])
     issue_type: str = OutputField(
-        cef_types=["jira issue type"], example_values=["Story", "Task"]
+        column_name="Type",
+        cef_types=["jira issue type"],
+        example_values=["Story", "Task"],
     )
-    json_fields_error: str
-    name: str = OutputField(cef_types=["jira ticket key"], example_values=["MAN-240"])
+    name: str = OutputField(
+        column_name="Key", cef_types=["jira ticket key"], example_values=["MAN-240"]
+    )
+    status: str = OutputField(column_name="Status", example_values=["To Do"])
     priority: str = OutputField(
-        cef_types=["jira ticket priority"], example_values=["Medium"]
+        column_name="Priority",
+        cef_types=["jira ticket priority"],
+        example_values=["Medium"],
+    )
+    resolution: str = OutputField(
+        column_name="Resolution",
+        cef_types=["jira ticket resolution"],
+        example_values=["Unresolved"],
+    )
+    reporter: str = OutputField(
+        column_name="Reporter",
+        cef_types=["jira user display name"],
+        example_values=["Test Admin"],
     )
     project_key: str = OutputField(
         cef_types=["jira project key"], example_values=["MAN"]
     )
-    reporter: str = OutputField(
-        cef_types=["jira user display name"], example_values=["Test Admin"]
-    )
-    resolution: str = OutputField(
-        cef_types=["jira ticket resolution"], example_values=["Unresolved"]
-    )
-    status: str = OutputField(example_values=["To Do"])
-    summary: str = OutputField(example_values=["Jira QA ticket"])
-
-
-def _create_ticket_view(
-    context: ViewContext, results: list[CreateTicketOutput]
-) -> dict:
-    return {
-        "results": [{"data": results, "param": getattr(context, "param", {})}],
-    }
+    assign_error: str
+    attach_error: str
+    json_fields_error: str
+    fields: FieldsOutput
 
 
 def create_ticket(

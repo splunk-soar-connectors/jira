@@ -17,7 +17,6 @@ from pathlib import Path
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput, OutputField
 from soar_sdk.params import Param, Params
-from soar_sdk.views.view_parser import ViewContext
 
 from .._asset import Asset
 
@@ -39,19 +38,20 @@ class GetAttachmentsParams(Params):
 
 
 class GetAttachmentsOutput(ActionOutput):
-    container: float = OutputField(example_values=[2446])
-    hash: str = OutputField(
-        cef_types=["md5"],
+    vault_id: str = OutputField(
+        cef_types=["vault id"],
         example_values=[
             "9c03244555e41685dc5f03ec7d9de1c6db26c318"  # pragma: allowlist secret
         ],
+        column_name="Vault ID",
     )
-    id: float = OutputField(example_values=[501])
-    message: str = OutputField(example_values=["success"])
-    size: float = OutputField(example_values=[231003])
-    succeeded: bool
-    vault_id: str = OutputField(
-        cef_types=["vault id"],
+    id: float = OutputField(example_values=[501], column_name="Attachment ID")
+    size: float = OutputField(example_values=[231003], column_name="Size (bytes)")
+    message: str = OutputField(example_values=["success"], column_name="Message")
+    succeeded: bool = OutputField(column_name="Status")
+    container: float = OutputField(example_values=[2446])
+    hash: str = OutputField(
+        cef_types=["md5"],
         example_values=[
             "9c03244555e41685dc5f03ec7d9de1c6db26c318"  # pragma: allowlist secret
         ],
@@ -60,14 +60,6 @@ class GetAttachmentsOutput(ActionOutput):
 
 def _is_safe_path(basedir, path):
     return basedir == os.path.commonpath((basedir, os.path.realpath(path)))
-
-
-def _get_attachments_view(
-    context: ViewContext, results: list[GetAttachmentsOutput]
-) -> dict:
-    return {
-        "results": [{"data": results, "param": getattr(context, "param", {})}],
-    }
 
 
 def get_attachments(

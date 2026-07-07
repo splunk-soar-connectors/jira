@@ -15,8 +15,6 @@ from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput, OutputField
 from soar_sdk.params import Param, Params
 
-from soar_sdk.views.view_parser import ViewContext
-
 from .._asset import Asset
 from ._outputs import (
     AggregateprogressOutput,
@@ -186,37 +184,43 @@ class FieldsOutput(ActionOutput):
 
 
 class ListTicketsOutput(ActionOutput):
-    description: str | None = OutputField(
-        cef_types=["url"], example_values=["This is a sample testing description"]
+    project_key: str = OutputField(
+        cef_types=["jira project key"], example_values=["PRJ"], column_name="Project ID"
     )
-    fields: FieldsOutput
-    id: str = OutputField(example_values=["11840"])
+    id: str = OutputField(example_values=["11840"], column_name="Ticket ID")
     issue_type: str = OutputField(
-        cef_types=["jira issue type"], example_values=["Sub-Task"]
+        cef_types=["jira issue type"], example_values=["Sub-Task"], column_name="Type"
     )
     name: str = OutputField(
-        cef_types=["jira ticket key"], example_values=["PHANINCIDE-317"]
+        cef_types=["jira ticket key"],
+        example_values=["PHANINCIDE-317"],
+        column_name="Key",
     )
+    status: str = OutputField(example_values=["To Do"], column_name="Status")
     priority: str = OutputField(
-        cef_types=["jira ticket priority"], example_values=["Medium"]
-    )
-    project_key: str = OutputField(
-        cef_types=["jira project key"], example_values=["PRJ"]
-    )
-    reporter: str = OutputField(
-        cef_types=["jira user display name"], example_values=["Test Admin"]
+        cef_types=["jira ticket priority"],
+        example_values=["Medium"],
+        column_name="Priority",
     )
     resolution: str = OutputField(
-        cef_types=["jira ticket resolution"], example_values=["Unresolved"]
+        cef_types=["jira ticket resolution"],
+        example_values=["Unresolved"],
+        column_name="Resolution",
     )
-    status: str = OutputField(example_values=["To Do"])
-    summary: str = OutputField(example_values=["Sub-taskofBigTask"])
-
-
-def _list_tickets_view(context: ViewContext, results: list[ListTicketsOutput]) -> dict:
-    return {
-        "results": [{"data": results, "param": getattr(context, "param", {})}],
-    }
+    reporter: str = OutputField(
+        cef_types=["jira user display name"],
+        example_values=["Test Admin"],
+        column_name="Reporter",
+    )
+    summary: str = OutputField(
+        example_values=["Sub-taskofBigTask"], column_name="Summary"
+    )
+    description: str | None = OutputField(
+        cef_types=["url"],
+        example_values=["This is a sample testing description"],
+        column_name="Description",
+    )
+    fields: FieldsOutput
 
 
 def list_tickets(

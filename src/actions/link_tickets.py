@@ -14,7 +14,6 @@
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput, OutputField
 from soar_sdk.params import Param, Params
-from soar_sdk.views.view_parser import ViewContext
 
 from .._asset import Asset
 
@@ -41,13 +40,9 @@ class LinkTicketsParams(Params):
 
 
 class LinkTicketsOutput(ActionOutput):
-    result: str = OutputField(example_values=["success", "failed"])
-
-
-def _link_tickets_view(context: ViewContext, results: list[LinkTicketsOutput]) -> dict:
-    return {
-        "results": [{"data": results, "param": getattr(context, "param", {})}],
-    }
+    result: str = OutputField(
+        column_name="Result", example_values=["success", "failed"]
+    )
 
 
 def link_tickets(

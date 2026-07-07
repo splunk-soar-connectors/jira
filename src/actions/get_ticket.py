@@ -15,8 +15,6 @@ from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput, OutputField
 from soar_sdk.params import Param, Params
 
-from soar_sdk.views.view_parser import ViewContext
-
 from .._asset import Asset
 from ._outputs import (
     AggregateprogressOutput,
@@ -143,35 +141,38 @@ class FieldsOutput(ActionOutput):
 
 
 class GetTicketOutput(ActionOutput):
+    summary: str = OutputField(column_name="Summary", example_values=["Sample summary"])
     description: str | None = OutputField(
-        example_values=["This is a sample testing description of the ticket"]
+        column_name="Description",
+        example_values=["This is a sample testing description of the ticket"],
     )
-    fields: FieldsOutput
-    id: str = OutputField(example_values=["10246"])
+    id: str = OutputField(column_name="Id", example_values=["10246"])
     issue_type: str = OutputField(
-        cef_types=["jira issue type"], example_values=["Defect"]
+        column_name="Type", cef_types=["jira issue type"], example_values=["Defect"]
     )
-    name: str = OutputField(cef_types=["jira ticket key"], example_values=["MAN-1"])
+    name: str = OutputField(
+        column_name="Key", cef_types=["jira ticket key"], example_values=["MAN-1"]
+    )
+    status: str = OutputField(column_name="Status", example_values=["Done"])
     priority: str = OutputField(
-        cef_types=["jira ticket priority"], example_values=["Medium"]
+        column_name="Priority",
+        cef_types=["jira ticket priority"],
+        example_values=["Medium"],
+    )
+    resolution: str = OutputField(
+        column_name="Resolution",
+        cef_types=["jira ticket resolution"],
+        example_values=["Done"],
+    )
+    reporter: str = OutputField(
+        column_name="Reporter",
+        cef_types=["jira user display name"],
+        example_values=["Test Admin"],
     )
     project_key: str = OutputField(
         cef_types=["jira project key"], example_values=["MAN"]
     )
-    reporter: str = OutputField(
-        cef_types=["jira user display name"], example_values=["Test Admin"]
-    )
-    resolution: str = OutputField(
-        cef_types=["jira ticket resolution"], example_values=["Done"]
-    )
-    status: str = OutputField(example_values=["Done"])
-    summary: str = OutputField(example_values=["Sample summary"])
-
-
-def _get_ticket_view(context: ViewContext, results: list[GetTicketOutput]) -> dict:
-    return {
-        "results": [{"data": results, "param": getattr(context, "param", {})}],
-    }
+    fields: FieldsOutput
 
 
 def get_ticket(
