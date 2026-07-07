@@ -32,12 +32,8 @@ from ._asset import Asset
 from .consts import (
     DEFAULT_MAX_RESULTS_PER_PAGE,
     DEFAULT_SCHEDULED_INTERVAL_INGESTION_COUNT,
-    JIRA_ERROR_CONNECTIVITY_TEST,
     JIRA_ERROR_FAILED,
-    JIRA_ERROR_SERVER_INFO,
-    JIRA_SUCCESS_CONNECTIVITY_TEST,
     JIRA_TIME_FORMAT,
-    JIRA_USING_BASE_URL,
 )
 from .helpers import get_auth, jira_request
 
@@ -686,29 +682,6 @@ def on_poll(
 
     if failed:
         raise ActionFailure(JIRA_ERROR_FAILED)
-
-
-@app.test_connectivity()
-def test_connectivity(soar: SOARClient, asset: Asset) -> None:
-    logger.info(JIRA_USING_BASE_URL.format(base_url=asset.device_url.rstrip("/")))
-
-    # Raises AssetMisconfiguration early if credentials are not configured
-    get_auth(asset)
-
-    logger.info("Connecting to Jira instance")
-
-    # GET /rest/api/2/myself — lightest authenticated endpoint; confirms URL + token
-    try:
-        myself = jira_request(asset, "GET", "rest/api/2/myself")
-    except ActionFailure as exc:
-        raise ActionFailure(
-            f"{JIRA_ERROR_CONNECTIVITY_TEST}: {JIRA_ERROR_SERVER_INFO}: {exc.message}"
-        ) from exc
-
-    display_name = myself.get("displayName") or myself.get("name") or "unknown user"
-    soar.set_message(
-        f"{JIRA_SUCCESS_CONNECTIVITY_TEST} (authenticated as: {display_name})"
-    )
 
 
 if __name__ == "__main__":

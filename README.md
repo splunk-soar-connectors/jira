@@ -313,6 +313,7 @@ The full response body is returned as a string in response_body. <br>
 [remove watcher](#action-remove-watcher) - Remove a user from an issue's watchers list <br>
 [lookup users](#action-lookup-users) - Get a list of user resources that match the specified search string <br>
 [set status](#action-set-status) - Set ticket (issue) status <br>
+[test connectivity](#action-test-connectivity) - test connectivity <br>
 [update ticket](#action-update-ticket) - Update ticket (issue) <br>
 [on poll](#action-on-poll) - Ingest Jira tickets as SOAR containers with field, comment, and attachment artifacts.
 
@@ -325,8 +326,7 @@ Three execution modes (mirrors legacy connector):
 
 - Poll Now (params.is_manual_poll()): uses params.container_count as limit; never writes state.
 - First Run (state["first_run"] == True): uses asset.first_run_max_tickets; no time filter.
-- Scheduled (ongoing): uses asset.max_tickets; adds `updated>="..."` JQL filter. <br>
-  [test connectivity](#action-test-connectivity) - test connectivity
+- Scheduled (ongoing): uses asset.max_tickets; adds `updated>="..."` JQL filter.
 
 ## action: 'add comment'
 
@@ -1651,6 +1651,28 @@ action_result.data.\*.summary | string | | Sample summary |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 
+## action: 'test connectivity'
+
+test connectivity
+
+Type: **test** <br>
+Read only: **True**
+
+Basic test for app.
+
+#### Action Parameters
+
+No parameters are required for this action
+
+#### Action Output
+
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string | | success failure |
+action_result.message | string | | |
+summary.total_objects | numeric | | 1 |
+summary.total_objects_successful | numeric | | 1 |
+
 ## action: 'update ticket'
 
 Update ticket (issue)
@@ -1956,28 +1978,6 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 #### Action Output
 
 No Output
-
-## action: 'test connectivity'
-
-test connectivity
-
-Type: **test** <br>
-Read only: **True**
-
-Basic test for app.
-
-#### Action Parameters
-
-No parameters are required for this action
-
-#### Action Output
-
-DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
---------- | ---- | -------- | --------------
-action_result.status | string | | success failure |
-action_result.message | string | | |
-summary.total_objects | numeric | | 1 |
-summary.total_objects_successful | numeric | | 1 |
 
 ______________________________________________________________________
 

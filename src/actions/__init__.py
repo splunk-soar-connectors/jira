@@ -25,6 +25,7 @@ from . import (
     remove_watcher,
     search_users,
     set_ticket_status,
+    test_connectivity,
     update_ticket,
 )
 
@@ -42,5 +43,6 @@ __all__ = [
     "remove_watcher",
     "search_users",
     "set_ticket_status",
+    "test_connectivity",
     "update_ticket",
 ]
