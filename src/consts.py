@@ -90,6 +90,10 @@ JIRA_ERROR_FETCH_CUSTOM_FIELDS = (
 JIRA_ERROR_API_INITIALIZATION = "API Initialization failed"
 JIRA_ERROR_API_TIMEOUT = "Timed out waiting for API to initialize. Please verify the asset configuration parameters"
 JIRA_ERROR_CONNECTIVITY_TEST = "Connectivity test failed"
+JIRA_CONFIG_PARAMS_REQUIRED = (
+    "Jira credentials are not configured. Please provide both the "
+    "'username' and 'password' (API token) asset configuration parameters."
+)
 JIRA_ERROR_PROJECTS_INFO = "Error getting projects info"
 JIRA_ERROR_SERVER_INFO = "Error getting server info"
 JIRA_SUCCESS_CONNECTIVITY_TEST = "Connectivity test passed"

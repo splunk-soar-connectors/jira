@@ -17,10 +17,10 @@ from typing import TYPE_CHECKING, Any
 
 import httpx
 
-from soar_sdk.auth.httpx_auth import BasicAuth
 from soar_sdk.exceptions import ActionFailure
 from soar_sdk.logging import getLogger
 
+from .auth import resolve_jira_auth
 from .consts import (
     JIRA_DEFAULT_TIMEOUT,
     JIRA_RESPONSE_ERROR_MESSAGES_KEY,
@@ -35,8 +35,12 @@ logger = getLogger()
 
 
 def get_auth(asset: Asset) -> httpx.Auth:
-    """Return BasicAuth using the asset's username and password (API token)."""
-    return BasicAuth(asset.username, asset.password)
+    """Return the Jira httpx auth. Delegates to :func:`resolve_jira_auth`.
+
+    Kept as a thin alias so existing call sites keep working; new code should
+    call ``resolve_jira_auth`` from ``src.auth`` directly.
+    """
+    return resolve_jira_auth(asset)
 
 
 def _parse_jira_error(response: httpx.Response) -> str:
