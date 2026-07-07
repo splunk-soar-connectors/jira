@@ -310,11 +310,6 @@ Use this action to call any Jira REST API endpoint not covered by the other acti
 The endpoint parameter is the path after the base device URL,
 e.g. rest/api/2/issue/PROJ-1 or rest/api/2/project.
 The full response body is returned as a string in response_body. <br>
-[remove watcher](#action-remove-watcher) - Remove a user from an issue's watchers list <br>
-[lookup users](#action-lookup-users) - Get a list of user resources that match the specified search string <br>
-[set status](#action-set-status) - Set ticket (issue) status <br>
-[test connectivity](#action-test-connectivity) - test connectivity <br>
-[update ticket](#action-update-ticket) - Update ticket (issue) <br>
 [on poll](#action-on-poll) - Ingest Jira tickets as SOAR containers with field, comment, and attachment artifacts.
 
 State is stored in `asset.ingest_state` (SDK-managed, encrypted at rest):
@@ -326,7 +321,12 @@ Three execution modes (mirrors legacy connector):
 
 - Poll Now (params.is_manual_poll()): uses params.container_count as limit; never writes state.
 - First Run (state["first_run"] == True): uses asset.first_run_max_tickets; no time filter.
-- Scheduled (ongoing): uses asset.max_tickets; adds `updated>="..."` JQL filter.
+- Scheduled (ongoing): uses asset.max_tickets; adds `updated>="..."` JQL filter. <br>
+  [remove watcher](#action-remove-watcher) - Remove a user from an issue's watchers list <br>
+  [lookup users](#action-lookup-users) - Get a list of user resources that match the specified search string <br>
+  [set status](#action-set-status) - Set ticket (issue) status <br>
+  [test connectivity](#action-test-connectivity) - test connectivity <br>
+  [update ticket](#action-update-ticket) - Update ticket (issue)
 
 ## action: 'add comment'
 
@@ -1270,6 +1270,40 @@ action_result.data.\*.response_body | string | | {"key": "value"} |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 
+## action: 'on poll'
+
+Ingest Jira tickets as SOAR containers with field, comment, and attachment artifacts.
+
+State is stored in `asset.ingest_state` (SDK-managed, encrypted at rest):
+
+- `first_run` (bool): True until the first scheduled poll completes.
+- `last_time` (int): UTC epoch seconds of the `updated` field of the last ingested issue.
+
+Three execution modes (mirrors legacy connector):
+
+- Poll Now (params.is_manual_poll()): uses params.container_count as limit; never writes state.
+- First Run (state["first_run"] == True): uses asset.first_run_max_tickets; no time filter.
+- Scheduled (ongoing): uses asset.max_tickets; adds `updated>="..."` JQL filter.
+
+Type: **ingest** <br>
+Read only: **True**
+
+Callback action for the on_poll ingest functionality
+
+#### Action Parameters
+
+PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
+--------- | -------- | ----------- | ---- | --------
+**start_time** | optional | Start of time range, in epoch time (milliseconds). | numeric | |
+**end_time** | optional | End of time range, in epoch time (milliseconds). | numeric | |
+**container_count** | optional | Maximum number of container records to query for. | numeric | |
+**artifact_count** | optional | Maximum number of artifact records to query for. | numeric | |
+**container_id** | optional | Comma-separated list of container IDs to limit the ingestion to. | string | |
+
+#### Action Output
+
+No Output
+
 ## action: 'remove watcher'
 
 Remove a user from an issue's watchers list
@@ -1944,40 +1978,6 @@ action_result.data.\*.status | string | | Done |
 action_result.data.\*.summary | string | | Sample summary |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
-
-## action: 'on poll'
-
-Ingest Jira tickets as SOAR containers with field, comment, and attachment artifacts.
-
-State is stored in `asset.ingest_state` (SDK-managed, encrypted at rest):
-
-- `first_run` (bool): True until the first scheduled poll completes.
-- `last_time` (int): UTC epoch seconds of the `updated` field of the last ingested issue.
-
-Three execution modes (mirrors legacy connector):
-
-- Poll Now (params.is_manual_poll()): uses params.container_count as limit; never writes state.
-- First Run (state["first_run"] == True): uses asset.first_run_max_tickets; no time filter.
-- Scheduled (ongoing): uses asset.max_tickets; adds `updated>="..."` JQL filter.
-
-Type: **ingest** <br>
-Read only: **True**
-
-Callback action for the on_poll ingest functionality
-
-#### Action Parameters
-
-PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
---------- | -------- | ----------- | ---- | --------
-**start_time** | optional | Start of time range, in epoch time (milliseconds). | numeric | |
-**end_time** | optional | End of time range, in epoch time (milliseconds). | numeric | |
-**container_count** | optional | Maximum number of container records to query for. | numeric | |
-**artifact_count** | optional | Maximum number of artifact records to query for. | numeric | |
-**container_id** | optional | Comma-separated list of container IDs to limit the ingestion to. | string | |
-
-#### Action Output
-
-No Output
 
 ______________________________________________________________________
 
