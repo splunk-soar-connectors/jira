@@ -16,7 +16,6 @@ from soar_sdk.action_results import ActionOutput, OutputField
 from soar_sdk.params import Params
 from soar_sdk.views.view_parser import ViewContext
 
-from .._app_ref import app
 from .._asset import Asset
 
 
@@ -32,7 +31,6 @@ class ListProjectsSummaryOutput(ActionOutput):
     total_projects: int = OutputField(example_values=[5])
 
 
-@app.view_handler(template="jira_list_projects.html")
 def _list_projects_view(
     context: ViewContext, results: list[ListProjectsOutput]
 ) -> dict:
@@ -41,12 +39,6 @@ def _list_projects_view(
     }
 
 
-@app.action(
-    description="List all projects",
-    action_type="investigate",
-    view_handler=_list_projects_view,
-    summary_type=ListProjectsSummaryOutput,
-)
 def list_projects(
     params: Params, soar: SOARClient, asset: Asset
 ) -> list[ListProjectsOutput]:

@@ -26,7 +26,6 @@ from soar_sdk.models.container import Container
 from soar_sdk.params import OnPollParams
 from soar_sdk.logging import getLogger
 
-from .._app_ref import app
 from .._asset import Asset
 from ..consts import (
     DEFAULT_SCHEDULED_INTERVAL_INGESTION_COUNT,
@@ -50,7 +49,6 @@ from .on_poll_helpers import (
 logger = getLogger()
 
 
-@app.on_poll()
 def on_poll(
     params: OnPollParams, soar: SOARClient, asset: Asset
 ) -> Iterator[Container | Artifact]:

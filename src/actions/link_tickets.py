@@ -16,7 +16,6 @@ from soar_sdk.action_results import ActionOutput, OutputField
 from soar_sdk.params import Param, Params
 from soar_sdk.views.view_parser import ViewContext
 
-from .._app_ref import app
 from .._asset import Asset
 
 
@@ -45,20 +44,12 @@ class LinkTicketsOutput(ActionOutput):
     result: str = OutputField(example_values=["success", "failed"])
 
 
-@app.view_handler(template="jira_link_tickets.html")
 def _link_tickets_view(context: ViewContext, results: list[LinkTicketsOutput]) -> dict:
     return {
         "results": [{"data": results, "param": getattr(context, "param", {})}],
     }
 
 
-@app.action(
-    description="Create a link between two separate tickets",
-    action_type="generic",
-    read_only=False,
-    verbose="If the comment is not added, comment_visibility and comment_visibility_type values will not affect the action result.",
-    view_handler=_link_tickets_view,
-)
 def link_tickets(
     params: LinkTicketsParams, soar: SOARClient, asset: Asset
 ) -> LinkTicketsOutput:

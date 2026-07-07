@@ -16,11 +16,9 @@ from soar_sdk.action_results import MakeRequestOutput
 from soar_sdk.params import MakeRequestParams
 
 
-from .._app_ref import app
 from .._asset import Asset
 
 
-@app.make_request()
 def make_request(
     params: MakeRequestParams, soar: SOARClient, asset: Asset
 ) -> MakeRequestOutput:

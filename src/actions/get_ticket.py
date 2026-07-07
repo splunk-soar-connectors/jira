@@ -17,7 +17,6 @@ from soar_sdk.params import Param, Params
 
 from soar_sdk.views.view_parser import ViewContext
 
-from .._app_ref import app
 from .._asset import Asset
 from ._outputs import (
     AggregateprogressOutput,
@@ -169,19 +168,12 @@ class GetTicketOutput(ActionOutput):
     summary: str = OutputField(example_values=["Sample summary"])
 
 
-@app.view_handler(template="jira_get_ticket.html")
 def _get_ticket_view(context: ViewContext, results: list[GetTicketOutput]) -> dict:
     return {
         "results": [{"data": results, "param": getattr(context, "param", {})}],
     }
 
 
-@app.action(
-    description="Get ticket (issue) information",
-    action_type="investigate",
-    verbose="The keys in the <b>action_result.data.*.fields</b> output section of the results can differ based on the JIRA server configuration.",
-    view_handler=_get_ticket_view,
-)
 def get_ticket(
     params: GetTicketParams, soar: SOARClient, asset: Asset
 ) -> GetTicketOutput:

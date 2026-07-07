@@ -17,7 +17,6 @@ from soar_sdk.params import Param, Params
 
 from soar_sdk.views.view_parser import ViewContext
 
-from .._app_ref import app
 from .._asset import Asset
 from ._outputs import AvatarurlsOutput
 
@@ -68,20 +67,12 @@ class LookupUsersOutput(ActionOutput):
     timeZone: str = OutputField(example_values=["America/Los_Angeles"])
 
 
-@app.view_handler(template="jira_search_users.html")
 def _lookup_users_view(context: ViewContext, results: list[LookupUsersOutput]) -> dict:
     return {
         "results": [{"data": results, "param": getattr(context, "param", {})}],
     }
 
 
-@app.action(
-    description="Get a list of user resources that match the specified search string",
-    action_type="investigate",
-    view_handler=_lookup_users_view,
-    summary_type=LookupUsersSummaryOutput,
-    verbose="This action will be used to fetch the username of user resources for Jira on-prem and account_id of user resources for Jira cloud. The default value for [max_results] action parameter is <b>1000</b>. The maximum number of users as specified by the parameter [max_results] will be fetched starting from the first.<h3>Caveats</h3>Jira Cloud is removing the username field from user profiles in Atlassian Cloud sites. They are also removing username support from their product APIs for Jira Cloud. Since it is not possible to search users using username for Jira cloud, we will use the user's display name to search users. You can use the [display_name] action parameter to search users for Jira cloud, and, [username] action parameter will be used to search users for Jira on-prem.",
-)
 def lookup_users(
     params: LookupUsersParams, soar: SOARClient, asset: Asset
 ) -> list[LookupUsersOutput]:

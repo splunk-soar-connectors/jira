@@ -17,7 +17,6 @@ from soar_sdk.params import Param, Params
 
 from soar_sdk.views.view_parser import ViewContext
 
-from .._app_ref import app
 from .._asset import Asset
 from ._outputs import (
     AggregateprogressOutput,
@@ -171,7 +170,6 @@ class UpdateTicketOutput(ActionOutput):
     summary: str = OutputField(example_values=["Sample summary"])
 
 
-@app.view_handler(template="jira_update_ticket.html")
 def _update_ticket_view(
     context: ViewContext, results: list[UpdateTicketOutput]
 ) -> dict:
@@ -180,13 +178,6 @@ def _update_ticket_view(
     }
 
 
-@app.action(
-    description="Update ticket (issue)",
-    action_type="generic",
-    read_only=False,
-    view_handler=_update_ticket_view,
-    verbose='Update an existing issue with the values specified in the <b>update_fields</b> parameter.<br>The results of the <b>get ticket</b> action may be used to obtain the <b>update_fields</b> parameters, including any custom fields present in the JIRA.</br>The JSON specified in the <b>update_fields</b> parameter requires the keys and the values specified in case-sensitive and double-quotes string format, except in the case of boolean values, which should be either <i>true</i> or <i>false</i> for example:</br>{\\"summary\\": \\"Zeus, multiple action need to be taken\\", \\"description\\": \\"A new summary was added\\"}</br></br>The App supports multiple methods for specifying the input dictionary. Please see <a href=\\"https://developer.atlassian.com/server/jira/platform/jira-rest-api-examples/#editing-an-issue-examples\\" target=\'_blank\'><b>the Atlassian documentation for the JIRA REST <i>update issue</i> API</b></a> for more information.<br>The following formats can be passed as input: <ul><li>Simple format; Create a dictionary with all the fields that need to be set:<br>{\\"summary\\": \\"Zeus detected on endpoint\\", \\"description\\": \\"Investigate further\\"}</li><li>Using the <i>update</i> key; Some issue fields support operations like <i>remove</i> and <i>add</i>, these operations can be combined to update a ticket: <br>{\\"<b>update</b>\\": {\\"components\\" : [{\\"remove\\" : {\\"name\\" : \\"secondcomponent\\"}}, {\\"add\\" : {\\"name\\" : \\"firstcomponent\\"}}]}}<br>{\\"<b>update</b>\\": {\\"comment\\": [{\\"add\\": {\\"body\\": \\"test comment update\\"}}]}} </li><li>Using the <i>fields</i> key;</br>{\\"<b>fields</b>\\":{\\"labels\\" : [\\"FIRSTLABEL\\"]}}</li></ul></br>The app supports updating custom fields; depending on the custom field type, some operations might not be available. Review the <b>jira_app</b> playbook for examples.<br><br>The <b>vault_id</b> parameter takes the vault ID of a file in the vault and attaches the file to the JIRA ticket.<br><br>This action requires that either the <b>update_fields</b> parameter or the <b>vault_id</b> parameter is filled out. The action will fail if it either unsuccessfully attempts to add the attachment to the ticket or update the fields on the ticket.<h3>Caveats</h3>Jira Cloud is removing the username field from user profiles in Atlassian Cloud sites. They are also removing username support from their product APIs for Jira Cloud. Since it is not possible to update fields related to user resources in the Jira ticket using username for Jira cloud, we will use the user\'s account_id to update fields related to user resources. Use \'lookup users\' action to find out user\'s account_id. Use \'get ticket\' action results to obtain the [update_fields] parameters. Please find out below-mentioned examples for the [update_fields] parameter which is related to user resources.<ul><li>Add assignee to the Jira ticket for Jira on-prem:<br>{\\"fields\\":{\\"assignee\\" : {\\"name\\": \\"username\\"}}}</li><li>Add assignee to the Jira ticket for Jira cloud:<br>{\\"fields\\":{\\"assignee\\" : {\\"accountId\\": \\"6d1ef6xy52z7360c267f27bb\\"}}}</li></ul>.',
-)
 def update_ticket(
     params: UpdateTicketParams, soar: SOARClient, asset: Asset
 ) -> UpdateTicketOutput:

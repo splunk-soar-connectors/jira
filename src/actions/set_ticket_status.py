@@ -17,7 +17,6 @@ from soar_sdk.params import Param, Params
 
 from soar_sdk.views.view_parser import ViewContext
 
-from .._app_ref import app
 from .._asset import Asset
 from ._outputs import (
     AssigneeOutput,
@@ -206,7 +205,6 @@ class SetStatusOutput(ActionOutput):
     summary: str = OutputField(example_values=["Sample summary"])
 
 
-@app.view_handler(template="jira_set_status_items.html")
 def _set_ticket_status_view(
     context: ViewContext, results: list[SetStatusOutput]
 ) -> dict:
@@ -215,13 +213,6 @@ def _set_ticket_status_view(
     }
 
 
-@app.action(
-    description="Set ticket (issue) status",
-    action_type="generic",
-    read_only=False,
-    view_handler=_set_ticket_status_view,
-    verbose="In JIRA, the status transition of an issue is determined by the workflow defined for the project. The app will return an error if an un-allowed status transition is attempted. In such cases, the possible statuses are returned based on the issue's current status value.<br>The same is the case for invalid resolutions. Do note that some combinations of status and resolution values might be invalid, even if they are allowed individually.<br>To get valid values to use as input for the parameters:<ul><li>For valid <b>status</b> values:<ul><li>Log in to the JIRA server from the UI</li><li>Go to http://my_jira_ip/rest/api/2/issue/<i>[jira_issue_key]</i>/transitions</li><li>The returned JSON should contain a list of transitions</li><li>The name field denotes the status that can be set using this action</li></ul></li><li>For valid <b>resolution</b> values: <ul><li>Log in to the JIRA server from the UI</li><li>Go to http://my_jira_ip/rest/api/2/resolution</li><li>The returned JSON should contain a list of resolutions</li><li>The name field in each resolution denotes the value to be used</li></ul></li></ul>.",
-)
 def set_status(
     params: SetStatusParams, soar: SOARClient, asset: Asset
 ) -> SetStatusOutput:

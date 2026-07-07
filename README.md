@@ -295,15 +295,7 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 
 ### Supported Actions
 
-[add comment](#action-add-comment) - Add a comment to the ticket (issue) <br>
-[add watcher](#action-add-watcher) - Add a user to an issue's watchers list <br>
-[create ticket](#action-create-ticket) - Create a ticket (issue) <br>
-[delete ticket](#action-delete-ticket) - Delete ticket (issue) <br>
-[get attachments](#action-get-attachments) - Gets specific attachments from a Jira Ticket (issue) <br>
-[get ticket](#action-get-ticket) - Get ticket (issue) information <br>
-[link tickets](#action-link-tickets) - Create a link between two separate tickets <br>
-[list projects](#action-list-projects) - List all projects <br>
-[list tickets](#action-list-tickets) - Get a list of tickets (issues) in a specified project <br>
+[test connectivity](#action-test-connectivity) - test connectivity <br>
 [make request](#action-make-request) - Make a custom REST API call to Jira.
 
 Use this action to call any Jira REST API endpoint not covered by the other actions.
@@ -322,11 +314,119 @@ Three execution modes (mirrors legacy connector):
 - Poll Now (params.is_manual_poll()): uses params.container_count as limit; never writes state.
 - First Run (state["first_run"] == True): uses asset.first_run_max_tickets; no time filter.
 - Scheduled (ongoing): uses asset.max_tickets; adds `updated>="..."` JQL filter. <br>
-  [remove watcher](#action-remove-watcher) - Remove a user from an issue's watchers list <br>
+  [add comment](#action-add-comment) - Add a comment to the ticket (issue) <br>
+  [add watcher](#action-add-watcher) - Add a user to an issue's watchers list <br>
+  [create ticket](#action-create-ticket) - Create a ticket (issue) <br>
+  [delete ticket](#action-delete-ticket) - Delete ticket (issue) <br>
+  [get attachments](#action-get-attachments) - Gets specific attachments from a Jira Ticket (issue) <br>
+  [get ticket](#action-get-ticket) - Get ticket (issue) information <br>
+  [link tickets](#action-link-tickets) - Create a link between two separate tickets <br>
+  [list projects](#action-list-projects) - List all projects <br>
+  [list tickets](#action-list-tickets) - Get a list of tickets (issues) in a specified project <br>
   [lookup users](#action-lookup-users) - Get a list of user resources that match the specified search string <br>
+  [remove watcher](#action-remove-watcher) - Remove a user from an issue's watchers list <br>
   [set status](#action-set-status) - Set ticket (issue) status <br>
-  [test connectivity](#action-test-connectivity) - test connectivity <br>
   [update ticket](#action-update-ticket) - Update ticket (issue)
+
+## action: 'test connectivity'
+
+test connectivity
+
+Type: **test** <br>
+Read only: **True**
+
+Basic test for app.
+
+#### Action Parameters
+
+No parameters are required for this action
+
+#### Action Output
+
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string | | success failure |
+action_result.message | string | | |
+summary.total_objects | numeric | | 1 |
+summary.total_objects_successful | numeric | | 1 |
+
+## action: 'make request'
+
+Make a custom REST API call to Jira.
+
+Use this action to call any Jira REST API endpoint not covered by the other actions.
+The endpoint parameter is the path after the base device URL,
+e.g. rest/api/2/issue/PROJ-1 or rest/api/2/project.
+The full response body is returned as a string in response_body.
+
+Type: **generic** <br>
+Read only: **False**
+
+'make request' action for the app. Used to handle arbitrary HTTP requests with the app's asset
+
+#### Action Parameters
+
+PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
+--------- | -------- | ----------- | ---- | --------
+**http_method** | required | The HTTP method to use for the request. | string | |
+**endpoint** | required | The endpoint to send the request to. | string | |
+**headers** | optional | The headers to send with the request (JSON object). An example is {'Content-Type': 'application/json'} | string | |
+**query_parameters** | optional | Parameters to append to the URL (JSON object or query string). An example is ?key=value&key2=value2 | string | |
+**body** | optional | The body to send with the request (JSON object). An example is {'key': 'value', 'key2': 'value2'} | string | |
+**timeout** | optional | The timeout for the request in seconds. | numeric | |
+**verify_ssl** | optional | Whether to verify the SSL certificate. Default is False. | boolean | |
+
+#### Action Output
+
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string | | success failure |
+action_result.message | string | | |
+action_result.parameter.http_method | string | | |
+action_result.parameter.endpoint | string | | |
+action_result.parameter.headers | string | | |
+action_result.parameter.query_parameters | string | | |
+action_result.parameter.body | string | | |
+action_result.parameter.timeout | numeric | | |
+action_result.parameter.verify_ssl | boolean | | |
+action_result.data.\*.status_code | numeric | | 200 404 500 |
+action_result.data.\*.response_body | string | | {"key": "value"} |
+summary.total_objects | numeric | | 1 |
+summary.total_objects_successful | numeric | | 1 |
+
+## action: 'on poll'
+
+Ingest Jira tickets as SOAR containers with field, comment, and attachment artifacts.
+
+State is stored in `asset.ingest_state` (SDK-managed, encrypted at rest):
+
+- `first_run` (bool): True until the first scheduled poll completes.
+- `last_time` (int): UTC epoch seconds of the `updated` field of the last ingested issue.
+
+Three execution modes (mirrors legacy connector):
+
+- Poll Now (params.is_manual_poll()): uses params.container_count as limit; never writes state.
+- First Run (state["first_run"] == True): uses asset.first_run_max_tickets; no time filter.
+- Scheduled (ongoing): uses asset.max_tickets; adds `updated>="..."` JQL filter.
+
+Type: **ingest** <br>
+Read only: **True**
+
+Callback action for the on_poll ingest functionality
+
+#### Action Parameters
+
+PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
+--------- | -------- | ----------- | ---- | --------
+**start_time** | optional | Start of time range, in epoch time (milliseconds). | numeric | |
+**end_time** | optional | End of time range, in epoch time (milliseconds). | numeric | |
+**container_count** | optional | Maximum number of container records to query for. | numeric | |
+**artifact_count** | optional | Maximum number of artifact records to query for. | numeric | |
+**container_id** | optional | Comma-separated list of container IDs to limit the ingestion to. | string | |
+
+#### Action Output
+
+No Output
 
 ## action: 'add comment'
 
@@ -1226,113 +1326,6 @@ action_result.summary.total_issues | numeric | | 10 |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 
-## action: 'make request'
-
-Make a custom REST API call to Jira.
-
-Use this action to call any Jira REST API endpoint not covered by the other actions.
-The endpoint parameter is the path after the base device URL,
-e.g. rest/api/2/issue/PROJ-1 or rest/api/2/project.
-The full response body is returned as a string in response_body.
-
-Type: **generic** <br>
-Read only: **False**
-
-'make request' action for the app. Used to handle arbitrary HTTP requests with the app's asset
-
-#### Action Parameters
-
-PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
---------- | -------- | ----------- | ---- | --------
-**http_method** | required | The HTTP method to use for the request. | string | |
-**endpoint** | required | The endpoint to send the request to. | string | |
-**headers** | optional | The headers to send with the request (JSON object). An example is {'Content-Type': 'application/json'} | string | |
-**query_parameters** | optional | Parameters to append to the URL (JSON object or query string). An example is ?key=value&key2=value2 | string | |
-**body** | optional | The body to send with the request (JSON object). An example is {'key': 'value', 'key2': 'value2'} | string | |
-**timeout** | optional | The timeout for the request in seconds. | numeric | |
-**verify_ssl** | optional | Whether to verify the SSL certificate. Default is False. | boolean | |
-
-#### Action Output
-
-DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
---------- | ---- | -------- | --------------
-action_result.status | string | | success failure |
-action_result.message | string | | |
-action_result.parameter.http_method | string | | |
-action_result.parameter.endpoint | string | | |
-action_result.parameter.headers | string | | |
-action_result.parameter.query_parameters | string | | |
-action_result.parameter.body | string | | |
-action_result.parameter.timeout | numeric | | |
-action_result.parameter.verify_ssl | boolean | | |
-action_result.data.\*.status_code | numeric | | 200 404 500 |
-action_result.data.\*.response_body | string | | {"key": "value"} |
-summary.total_objects | numeric | | 1 |
-summary.total_objects_successful | numeric | | 1 |
-
-## action: 'on poll'
-
-Ingest Jira tickets as SOAR containers with field, comment, and attachment artifacts.
-
-State is stored in `asset.ingest_state` (SDK-managed, encrypted at rest):
-
-- `first_run` (bool): True until the first scheduled poll completes.
-- `last_time` (int): UTC epoch seconds of the `updated` field of the last ingested issue.
-
-Three execution modes (mirrors legacy connector):
-
-- Poll Now (params.is_manual_poll()): uses params.container_count as limit; never writes state.
-- First Run (state["first_run"] == True): uses asset.first_run_max_tickets; no time filter.
-- Scheduled (ongoing): uses asset.max_tickets; adds `updated>="..."` JQL filter.
-
-Type: **ingest** <br>
-Read only: **True**
-
-Callback action for the on_poll ingest functionality
-
-#### Action Parameters
-
-PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
---------- | -------- | ----------- | ---- | --------
-**start_time** | optional | Start of time range, in epoch time (milliseconds). | numeric | |
-**end_time** | optional | End of time range, in epoch time (milliseconds). | numeric | |
-**container_count** | optional | Maximum number of container records to query for. | numeric | |
-**artifact_count** | optional | Maximum number of artifact records to query for. | numeric | |
-**container_id** | optional | Comma-separated list of container IDs to limit the ingestion to. | string | |
-
-#### Action Output
-
-No Output
-
-## action: 'remove watcher'
-
-Remove a user from an issue's watchers list
-
-Type: **generic** <br>
-Read only: **False**
-
-<h3>Caveats</h3>Jira Cloud is removing the username field from user profiles in Atlassian Cloud sites. They are also removing username support from their product APIs for Jira Cloud. Since it is not possible to remove a watcher using username for Jira cloud, we will use a user's account_id to remove a watcher for Jira cloud. Use 'lookup users' action to find out a user's account_id. You can use the [user_account_id] action parameter to remove a watcher from the Jira ticket for Jira cloud, and, [username] action parameter will be used to remove a watcher from the Jira ticket for Jira on-prem.
-
-#### Action Parameters
-
-PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
---------- | -------- | ----------- | ---- | --------
-**id** | required | Issue ID | string | `jira ticket key` |
-**username** | optional | Username of the user to remove from watchers list (required for Jira on-prem) | string | `user name` |
-**user_account_id** | optional | Account ID of the user to remove from the watchers list (required for Jira cloud) | string | `jira user account id` |
-
-#### Action Output
-
-DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
---------- | ---- | -------- | --------------
-action_result.status | string | | success failure |
-action_result.message | string | | |
-action_result.parameter.id | string | `jira ticket key` | |
-action_result.parameter.username | string | `user name` | |
-action_result.parameter.user_account_id | string | `jira user account id` | |
-summary.total_objects | numeric | | 1 |
-summary.total_objects_successful | numeric | | 1 |
-
 ## action: 'lookup users'
 
 Get a list of user resources that match the specified search string
@@ -1374,6 +1367,35 @@ action_result.data.\*.name | string | `user name` | test |
 action_result.data.\*.self | string | `url` | http://jira.instance.ip/rest/api/2/user?username=test |
 action_result.data.\*.timeZone | string | | America/Los_Angeles |
 action_result.summary.total_users | numeric | | 5 |
+summary.total_objects | numeric | | 1 |
+summary.total_objects_successful | numeric | | 1 |
+
+## action: 'remove watcher'
+
+Remove a user from an issue's watchers list
+
+Type: **generic** <br>
+Read only: **False**
+
+<h3>Caveats</h3>Jira Cloud is removing the username field from user profiles in Atlassian Cloud sites. They are also removing username support from their product APIs for Jira Cloud. Since it is not possible to remove a watcher using username for Jira cloud, we will use a user's account_id to remove a watcher for Jira cloud. Use 'lookup users' action to find out a user's account_id. You can use the [user_account_id] action parameter to remove a watcher from the Jira ticket for Jira cloud, and, [username] action parameter will be used to remove a watcher from the Jira ticket for Jira on-prem.
+
+#### Action Parameters
+
+PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
+--------- | -------- | ----------- | ---- | --------
+**id** | required | Issue ID | string | `jira ticket key` |
+**username** | optional | Username of the user to remove from watchers list (required for Jira on-prem) | string | `user name` |
+**user_account_id** | optional | Account ID of the user to remove from the watchers list (required for Jira cloud) | string | `jira user account id` |
+
+#### Action Output
+
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string | | success failure |
+action_result.message | string | | |
+action_result.parameter.id | string | `jira ticket key` | |
+action_result.parameter.username | string | `user name` | |
+action_result.parameter.user_account_id | string | `jira user account id` | |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 
@@ -1682,28 +1704,6 @@ action_result.data.\*.reporter | string | `jira user display name` | Test Admin 
 action_result.data.\*.resolution | string | `jira ticket resolution` | Done |
 action_result.data.\*.status | string | | Done |
 action_result.data.\*.summary | string | | Sample summary |
-summary.total_objects | numeric | | 1 |
-summary.total_objects_successful | numeric | | 1 |
-
-## action: 'test connectivity'
-
-test connectivity
-
-Type: **test** <br>
-Read only: **True**
-
-Basic test for app.
-
-#### Action Parameters
-
-No parameters are required for this action
-
-#### Action Output
-
-DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
---------- | ---- | -------- | --------------
-action_result.status | string | | success failure |
-action_result.message | string | | |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 

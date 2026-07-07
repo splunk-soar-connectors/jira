@@ -19,7 +19,6 @@ from soar_sdk.action_results import ActionOutput, OutputField
 from soar_sdk.params import Param, Params
 from soar_sdk.views.view_parser import ViewContext
 
-from .._app_ref import app
 from .._asset import Asset
 
 
@@ -63,7 +62,6 @@ def _is_safe_path(basedir, path):
     return basedir == os.path.commonpath((basedir, os.path.realpath(path)))
 
 
-@app.view_handler(template="jira_get_attachments.html")
 def _get_attachments_view(
     context: ViewContext, results: list[GetAttachmentsOutput]
 ) -> dict:
@@ -72,12 +70,6 @@ def _get_attachments_view(
     }
 
 
-@app.action(
-    description="Gets specific attachments from a Jira Ticket (issue)",
-    action_type="investigate",
-    verbose="The function will store specific attachments from a given Jira ticket inside the vault.",
-    view_handler=_get_attachments_view,
-)
 def get_attachments(
     params: GetAttachmentsParams, soar: SOARClient, asset: Asset
 ) -> list[GetAttachmentsOutput]:

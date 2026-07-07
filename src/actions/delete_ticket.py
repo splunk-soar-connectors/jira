@@ -15,7 +15,6 @@ from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput
 from soar_sdk.params import Param, Params
 
-from .._app_ref import app
 from .._asset import Asset
 
 
@@ -23,7 +22,6 @@ class DeleteTicketParams(Params):
     id: str = Param(description="Issue ID", primary=True, cef_types=["jira ticket key"])
 
 
-@app.action(description="Delete ticket (issue)", action_type="generic", read_only=False)
 def delete_ticket(
     params: DeleteTicketParams, soar: SOARClient, asset: Asset
 ) -> ActionOutput:

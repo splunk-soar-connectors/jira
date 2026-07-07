@@ -15,7 +15,6 @@ from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput
 from soar_sdk.params import Param, Params
 
-from .._app_ref import app
 from .._asset import Asset
 
 
@@ -28,11 +27,6 @@ class AddCommentParams(Params):
     )
 
 
-@app.action(
-    description="Add a comment to the ticket (issue)",
-    action_type="generic",
-    read_only=False,
-)
 def add_comment(
     params: AddCommentParams, soar: SOARClient, asset: Asset
 ) -> ActionOutput:

@@ -16,7 +16,6 @@ from soar_sdk.action_results import ActionOutput, OutputField
 from soar_sdk.params import Param, Params
 from soar_sdk.views.view_parser import ViewContext
 
-from .._app_ref import app
 from .._asset import Asset
 from ._outputs import (
     AggregateprogressOutput,
@@ -145,7 +144,6 @@ class CreateTicketOutput(ActionOutput):
     summary: str = OutputField(example_values=["Jira QA ticket"])
 
 
-@app.view_handler(template="jira_create_ticket.html")
 def _create_ticket_view(
     context: ViewContext, results: list[CreateTicketOutput]
 ) -> dict:
@@ -154,13 +152,6 @@ def _create_ticket_view(
     }
 
 
-@app.action(
-    description="Create a ticket (issue)",
-    action_type="generic",
-    read_only=False,
-    view_handler=_create_ticket_view,
-    verbose='The <b>fields</b> parameter is provided for advanced use of the JIRA API. It is passed directly to the &quot;fields&quot; attribute in the JIRA API call. Values in the <b>fields</b> parameter will take precedence over the individual parameters such as <b>summary</b>, <b>description</b>, <b>project_key</b>, <b>issue_type</b>, etc.<br><br>When using the <b>fields</b> parameter, you are required to know how a particular field is inputted. To give a few examples (might differ in your JIRA environment):<ul><li>The <b>description</b> of a ticket can be added as the first level key with a value like { \\"description\\": \\"ticket description\\" }</li><li><b>issuetype</b> needs to be set as a dictionary like { \\"issuetype\\": { \\"name\\": \\"Task\\" } }</li><li><b>priority</b> is set as { \\"priority\\": { \\"name\\": \\"Medium\\" } }</li><li>The <b>project</b> key is set like { \\"project\\": { \\"key\\": \\"SPLUNK_APP\\" } }</li></ul><br>The <b>vault_id</b> parameter takes the vault ID of a file in the vault and attaches the file to the JIRA ticket.<br><b>Assignee</b> and attachments by <b>vault_id</b> are addressed in a separate call to JIRA made after ticket creation.<br><br>The <b>project_key</b> parameter is case sensitive.<h3>Default Values</h3>Previous versions of the app set default values for <b>priority</b> and <b>issue_type</b>. This caused issues in situations where the default values used by the app were incompatible with the configured values. The app does not set default values anymore. If an optional field below is required by the JIRA environment and it is not provided, JIRA will give an error causing the action to fail.<br><br>This action will pass if a ticket is successfully created, even if it fails to assign the ticket, add an attachment to the ticket, or fill out the custom fields. These failures will be indicated in the result message.<h3>Creating a subtask</h3>The following <b>fields</b> parameter value can be used to create a sub-task, the key is to use the correct <b>issuetype</b>.<pre>{\\"fields\\":{\\"project\\":{\\"key\\":\\"AP\\"},\\"parent\\":{\\"key\\":\\"AP-231\\"},\\"summary\\":\\"Sub-taskofAP-231\\",\\"description\\":\\"Don\'tforgettodothistoo.\\",\\"issuetype\\":{\\"name\\":\\"Sub-Task\\"}}}</pre><h3>Caveats</h3>Jira Cloud is removing the username field from user profiles in Atlassian Cloud sites. They are also removing username support from their product APIs for Jira Cloud. Since it is not possible to add an assignee to the Jira ticket using a username for the Jira cloud, we will use the user\'s account_id to add the assignee. Use \'lookup users\' action to find out a user\'s account_id. You can use the [assignee_account_id] action parameter to add an assignee to the Jira ticket for the Jira cloud, and, [assignee] action parameter will be used to add an assignee to the Jira ticket for Jira on-prem.',
-)
 def create_ticket(
     params: CreateTicketParams, soar: SOARClient, asset: Asset
 ) -> CreateTicketOutput:

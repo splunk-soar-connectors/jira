@@ -15,7 +15,6 @@ from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput
 from soar_sdk.params import Param, Params
 
-from .._app_ref import app
 from .._asset import Asset
 
 
@@ -33,12 +32,6 @@ class RemoveWatcherParams(Params):
     )
 
 
-@app.action(
-    description="Remove a user from an issue's watchers list",
-    action_type="generic",
-    read_only=False,
-    verbose="<h3>Caveats</h3>Jira Cloud is removing the username field from user profiles in Atlassian Cloud sites. They are also removing username support from their product APIs for Jira Cloud. Since it is not possible to remove a watcher using username for Jira cloud, we will use a user's account_id to remove a watcher for Jira cloud. Use 'lookup users' action to find out a user's account_id. You can use the [user_account_id] action parameter to remove a watcher from the Jira ticket for Jira cloud, and, [username] action parameter will be used to remove a watcher from the Jira ticket for Jira on-prem.",
-)
 def remove_watcher(
     params: RemoveWatcherParams, soar: SOARClient, asset: Asset
 ) -> ActionOutput:

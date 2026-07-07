@@ -13,12 +13,10 @@
 # limitations under the License.
 from soar_sdk.abstract import SOARClient
 
-from .._app_ref import app
 from .._asset import Asset
 
 
-@app.test_connectivity()
-def test_connectivity(soar: SOARClient, asset: Asset) -> None:
+def run_test_connectivity(soar: SOARClient, asset: Asset) -> None:
     from soar_sdk.exceptions import ActionFailure
     from soar_sdk.logging import getLogger
 

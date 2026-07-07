@@ -17,7 +17,6 @@ from soar_sdk.params import Param, Params
 
 from soar_sdk.views.view_parser import ViewContext
 
-from .._app_ref import app
 from .._asset import Asset
 from ._outputs import (
     AggregateprogressOutput,
@@ -214,20 +213,12 @@ class ListTicketsOutput(ActionOutput):
     summary: str = OutputField(example_values=["Sub-taskofBigTask"])
 
 
-@app.view_handler(template="jira_list_tickets.html")
 def _list_tickets_view(context: ViewContext, results: list[ListTicketsOutput]) -> dict:
     return {
         "results": [{"data": results, "param": getattr(context, "param", {})}],
     }
 
 
-@app.action(
-    description="Get a list of tickets (issues) in a specified project",
-    action_type="investigate",
-    verbose="The default value for the parameter <b>'start_index'</b> is <b>0</b> and for <b>'max_results'</b> is <b>1000</b>. The maximum number of tickets as specified by the parameter <b>'max_results'</b> will be fetched starting from the index specified by the parameter <b>'start_index'</b>.",
-    view_handler=_list_tickets_view,
-    summary_type=ListTicketsSummaryOutput,
-)
 def list_tickets(
     params: ListTicketsParams, soar: SOARClient, asset: Asset
 ) -> list[ListTicketsOutput]:
