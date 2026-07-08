@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from pydantic import Field
+
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput, OutputField
 from soar_sdk.params import Param, Params
@@ -143,7 +145,7 @@ class FieldsOutput(ActionOutput):
     aggregatetimeoriginalestimate: str | None
     aggregatetimespent: str | None
     assignee: AssigneeOutput | None
-    attachment: list[_AttachmentOutput]
+    attachment: list[_AttachmentOutput] = Field(default_factory=list)
     comment: _CommentOutput | None
     created: str | None = OutputField(example_values=["2018-09-23T19:40:35.000-0700"])
     creator: CreatorOutput | None
@@ -152,7 +154,7 @@ class FieldsOutput(ActionOutput):
     )
     duedate: str | None
     environment: str | None
-    issuelinks: list[IssuelinksOutput]
+    issuelinks: list[IssuelinksOutput] = Field(default_factory=list)
     issuetype: IssuetypeOutput | None
     lastViewed: str | None = OutputField(
         example_values=["2018-09-23T22:28:12.754-0700"]
@@ -171,7 +173,7 @@ class FieldsOutput(ActionOutput):
     statuscategorychangedate: str | None = OutputField(
         example_values=["2019-07-22T22:43:07.771-0700"]
     )
-    subtasks: list[SubtasksOutput]
+    subtasks: list[SubtasksOutput] = Field(default_factory=list)
     summary: str | None = OutputField(example_values=["Sub-taskofBigTask"])
     timeestimate: str | None
     timeoriginalestimate: str | None

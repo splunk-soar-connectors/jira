@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from pydantic import Field
+
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput, OutputField
 from soar_sdk.params import Param, Params
@@ -98,9 +100,9 @@ class FieldsOutput(ActionOutput):
     aggregatetimeoriginalestimate: int | None
     aggregatetimespent: int | None
     assignee: AssigneeOutput | None
-    attachment: list[AttachmentOutput]
+    attachment: list[AttachmentOutput] = Field(default_factory=list)
     comment: CommentOutput | None
-    components: list[ComponentsOutput]
+    components: list[ComponentsOutput] = Field(default_factory=list)
     created: str | None = OutputField(example_values=["2016-03-13T13:22:08.254-0700"])
     creator: CreatorOutput | None
     description: str | None = OutputField(
@@ -108,10 +110,10 @@ class FieldsOutput(ActionOutput):
     )
     duedate: str | None
     environment: str | None = OutputField(example_values=["above ground"])
-    fixVersions: list[FixversionsOutput]
-    issuelinks: list[IssuelinksOutput]
+    fixVersions: list[FixversionsOutput] = Field(default_factory=list)
+    issuelinks: list[IssuelinksOutput] = Field(default_factory=list)
     issuetype: IssuetypeOutput | None
-    labels: list[str]
+    labels: list[str] = Field(default_factory=list)
     lastViewed: str | None = OutputField(
         example_values=["2018-09-20T23:54:50.643-0700"]
     )
@@ -133,7 +135,7 @@ class FieldsOutput(ActionOutput):
     timeoriginalestimate: int | None
     timespent: int | None
     updated: str | None = OutputField(example_values=["2018-09-25T06:21:27.802-0700"])
-    versions: list[VersionsOutput]
+    versions: list[VersionsOutput] = Field(default_factory=list)
     votes: VotesOutput | None
     watches: WatchesOutput | None
     worklog: WorklogOutput | None

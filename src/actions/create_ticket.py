@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from pydantic import Field
+
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput, OutputField
 from soar_sdk.params import Param, Params
@@ -79,7 +81,7 @@ class FieldsOutput(ActionOutput):
     aggregatetimeoriginalestimate: str | None
     aggregatetimespent: str | None
     assignee: AssigneeOutput | None
-    attachment: list[AttachmentOutput]
+    attachment: list[AttachmentOutput] = Field(default_factory=list)
     comment: CommentOutput | None
     created: str | None = OutputField(example_values=["2018-09-25T06:31:58.854-0700"])
     creator: CreatorOutput | None
