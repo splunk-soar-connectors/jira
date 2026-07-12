@@ -11,14 +11,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from pydantic import Field
 
 from soar_sdk.abstract import SOARClient
-from soar_sdk.action_results import ActionOutput, OutputField
+from soar_sdk.action_results import (
+    ActionOutput,
+    OutputField,
+)
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
 from ._outputs import (
+    JiraPermissiveOutput,
     AggregateprogressOutput,
     AssigneeOutput,
     AttachmentOutput,
@@ -47,7 +50,7 @@ class GetTicketParams(Params):
     )
 
 
-class InwardissueOutput(ActionOutput):
+class InwardissueOutput(JiraPermissiveOutput):
     fields: LinkedissuefieldsOutput | None
     id: str = OutputField(example_values=["21237"])
     key: str = OutputField(example_values=["SPOL-133"])
@@ -56,7 +59,7 @@ class InwardissueOutput(ActionOutput):
     )
 
 
-class OutwardissueOutput(ActionOutput):
+class OutwardissueOutput(JiraPermissiveOutput):
     fields: LinkedissuefieldsOutput | None
     id: str = OutputField(example_values=["11849"])
     key: str = OutputField(cef_types=["jira ticket key"], example_values=["ZEP-14"])
@@ -66,7 +69,7 @@ class OutwardissueOutput(ActionOutput):
     )
 
 
-class TypeOutput(ActionOutput):
+class TypeOutput(JiraPermissiveOutput):
     id: str = OutputField(example_values=["10000"])
     inward: str = OutputField(example_values=["is blocked by"])
     name: str = OutputField(example_values=["Blocks"])
@@ -77,7 +80,7 @@ class TypeOutput(ActionOutput):
     )
 
 
-class IssuelinksOutput(ActionOutput):
+class IssuelinksOutput(JiraPermissiveOutput):
     id: str = OutputField(example_values=["10615"])
     inwardIssue: InwardissueOutput | None
     outwardIssue: OutwardissueOutput | None
@@ -88,7 +91,7 @@ class IssuelinksOutput(ActionOutput):
     type: TypeOutput
 
 
-class FieldsOutput(ActionOutput):
+class FieldsOutput(JiraPermissiveOutput):
     Epic_Link: str | None = OutputField(alias="Epic Link")
     Sprint: str | None = OutputField(
         example_values=[
@@ -100,9 +103,9 @@ class FieldsOutput(ActionOutput):
     aggregatetimeoriginalestimate: int | None
     aggregatetimespent: int | None
     assignee: AssigneeOutput | None
-    attachment: list[AttachmentOutput] = Field(default_factory=list)
+    attachment: list[AttachmentOutput]
     comment: CommentOutput | None
-    components: list[ComponentsOutput] = Field(default_factory=list)
+    components: list[ComponentsOutput]
     created: str | None = OutputField(example_values=["2016-03-13T13:22:08.254-0700"])
     creator: CreatorOutput | None
     description: str | None = OutputField(
@@ -110,10 +113,10 @@ class FieldsOutput(ActionOutput):
     )
     duedate: str | None
     environment: str | None = OutputField(example_values=["above ground"])
-    fixVersions: list[FixversionsOutput] = Field(default_factory=list)
-    issuelinks: list[IssuelinksOutput] = Field(default_factory=list)
+    fixVersions: list[FixversionsOutput]
+    issuelinks: list[IssuelinksOutput]
     issuetype: IssuetypeOutput | None
-    labels: list[str] = Field(default_factory=list)
+    labels: list[str]
     lastViewed: str | None = OutputField(
         example_values=["2018-09-20T23:54:50.643-0700"]
     )
@@ -135,7 +138,7 @@ class FieldsOutput(ActionOutput):
     timeoriginalestimate: int | None
     timespent: int | None
     updated: str | None = OutputField(example_values=["2018-09-25T06:21:27.802-0700"])
-    versions: list[VersionsOutput] = Field(default_factory=list)
+    versions: list[VersionsOutput]
     votes: VotesOutput | None
     watches: WatchesOutput | None
     worklog: WorklogOutput | None
@@ -180,7 +183,12 @@ class GetTicketOutput(ActionOutput):
 def get_ticket(
     params: GetTicketParams, soar: SOARClient, asset: Asset
 ) -> GetTicketOutput:
-    from ..helpers import description_to_str, jira_request, sanitize_fields_dict
+    from ..helpers import (
+        description_to_str,
+        get_custom_field_map,
+        jira_request,
+        sanitize_fields_dict,
+    )
 
     def _name(obj):
         if isinstance(obj, dict):
@@ -189,6 +197,7 @@ def get_ticket(
 
     issue = jira_request(asset, "GET", f"rest/api/2/issue/{params.id}")
     raw_fields = issue["fields"]
+    custom_field_map = get_custom_field_map(asset)
 
     soar.set_message("The ticket has been retrieved successfully")
     return GetTicketOutput(
@@ -202,5 +211,5 @@ def get_ticket(
         reporter=_name(raw_fields.get("reporter")) or "",
         status=_name(raw_fields.get("status")) or "",
         resolution=_name(raw_fields.get("resolution")) or "Unresolved",
-        fields=sanitize_fields_dict(raw_fields),
+        fields=sanitize_fields_dict(raw_fields, custom_field_map),
     )

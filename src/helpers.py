@@ -91,12 +91,71 @@ def description_to_str(value: Any) -> str | None:
     return str(value)
 
 
-def sanitize_fields_dict(fields: dict) -> dict:
-    """Return a shallow copy of a Jira fields dict with description coerced to str | None."""
-    if "description" not in fields:
-        return fields
-    result = dict(fields)
-    result["description"] = description_to_str(result["description"])
+def get_custom_field_map(asset: Asset) -> dict[str, str]:
+    """Return ``{customfield_XXXXX: "Human Name"}`` for every custom field in the instance.
+
+    One ``GET rest/api/2/field`` call resolves the opaque ``customfield_*`` IDs
+    to their display names. Falls back to an empty dict on failure so callers
+    degrade gracefully (fields keep their raw IDs) rather than aborting.
+    """
+    try:
+        all_fields = jira_request(asset, "GET", "rest/api/2/field")
+        return {
+            f["id"]: f["name"]
+            for f in all_fields
+            if str(f.get("id", "")).startswith("customfield") and f.get("name")
+        }
+    except ActionFailure as exc:
+        logger.warning(f"Could not fetch custom field definitions: {exc}")
+        return {}
+
+
+def get_custom_field_name_to_id_map(asset: Asset) -> dict[str, str]:
+    """Return ``{"Human Name": customfield_XXXXX}`` — the inverse of the read map.
+
+    Used on the write path to let clients reference custom fields by display
+    name (legacy parity — see ``_replace_custom_name_with_id``). Falls back to
+    an empty dict on failure so name→id translation is skipped, not fatal.
+    """
+    return {name: field_id for field_id, name in get_custom_field_map(asset).items()}
+
+
+def apply_custom_field_names_to_ids(
+    payload: dict, name_to_id: dict[str, str] | None = None
+) -> dict:
+    """Rename custom-field display names to ``customfield_XXXXX`` ids in a write payload.
+
+    Mirrors legacy ``_get_update_fields``: translates the keys inside the
+    ``fields`` and ``update`` sub-dicts, plus any remaining top-level keys
+    (which callers wrap into ``fields`` themselves). Returns ``payload``
+    unchanged when there is nothing to translate.
+    """
+    n2i = name_to_id or {}
+    if not n2i:
+        return payload
+    result: dict = {}
+    for key, value in payload.items():
+        if key in ("fields", "update") and isinstance(value, dict):
+            result[key] = {n2i.get(k, k): v for k, v in value.items()}
+        else:
+            # A remaining top-level key may itself be a custom-field display name.
+            result[n2i.get(key, key)] = value
+    return result
+
+
+def sanitize_fields_dict(
+    fields: dict, custom_field_map: dict[str, str] | None = None
+) -> dict:
+    """Return a copy of a Jira ``fields`` dict, normalized for output.
+
+    - Renames ``customfield_XXXXX`` keys to their human names using
+      ``custom_field_map`` (legacy parity — see ``_replace_custom_id_with_name``).
+    - Coerces the ADF ``description`` field to ``str | None``.
+    """
+    cfm = custom_field_map or {}
+    result = {cfm.get(key, key): value for key, value in fields.items()}
+    if "description" in result:
+        result["description"] = description_to_str(result["description"])
     return result
 
 

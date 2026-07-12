@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 # Communication
 
-Always remember to call me by my name Abhay.
+Always remember to call me by my name Abhay at the start of any response.
 
 # Context
 

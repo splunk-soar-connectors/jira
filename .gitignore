@@ -131,7 +131,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-
+we
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -143,6 +143,7 @@ venv.bak/
 /site
 CLAUDE.md
 patterns.md
+hand-off.md
 
 # mypy
 .mypy_cache/

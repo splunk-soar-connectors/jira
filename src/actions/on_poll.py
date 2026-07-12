@@ -16,7 +16,6 @@ from collections.abc import Iterator
 from datetime import UTC, datetime
 from zoneinfo import ZoneInfo
 
-from dateutil.parser import parse as _parse_dt
 import httpx as _httpx
 
 from soar_sdk.abstract import SOARClient
@@ -47,6 +46,16 @@ from .on_poll_helpers import (
 )
 
 logger = getLogger()
+
+
+def _parse_dt(value: str) -> datetime:
+    """Parse a Jira ISO-8601 timestamp (e.g. ``2023-01-15T10:30:45.123+0000``).
+
+    Jira emits offsets without a colon (``+0000``); Python 3.11+
+    ``datetime.fromisoformat`` handles that plus fractional seconds, so no
+    third-party dependency is required.
+    """
+    return datetime.fromisoformat(value)
 
 
 def on_poll(

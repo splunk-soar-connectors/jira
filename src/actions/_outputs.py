@@ -11,13 +11,44 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from soar_sdk.action_results import ActionOutput, OutputField
+from pydantic import ValidationError
+
+from soar_sdk.action_results import ActionOutput, OutputField, PermissiveActionOutput
+from soar_sdk.logging import getLogger
+
+_logger = getLogger()
+
+
+class JiraPermissiveOutput(PermissiveActionOutput):
+    """Permissive output whose ``__init__`` tolerates a ``self`` data key.
+
+    The SDK's ``PermissiveActionOutput.__init__(self, **data)`` names its
+    instance parameter ``self``. Nearly every Jira REST object carries a
+    ``"self"`` key (its own API URL), so ``Model(**jira_obj)`` collides with
+    ``TypeError: got multiple values for argument 'self'``. We make ``self``
+    positional-only and route to ``ActionOutput.__init__`` (plain pydantic,
+    which handles a ``self`` *field* fine) while keeping the permissive
+    warn-instead-of-raise behavior and the raw-data passthrough.
+    """
+
+    def __init__(self, /, **data: object) -> None:
+        try:
+            ActionOutput.__init__(self, **data)
+        except ValidationError as exc:
+            _logger.warning(f"Ignoring validation error:\n {exc.with_traceback(None)}")
+        self._permissive_raw = data
 
 
 # Shared Output Classes
+#
+# These model sub-objects of the Jira issue "fields" blob. That blob is
+# unbounded — it carries arbitrary ``customfield_*`` keys and provider-specific
+# extras that vary per instance — so these use ``JiraPermissiveOutput``: never
+# drop a field the client sent, and warn (not crash) on unexpected shapes.
+# Top-level action outputs stay strict ``ActionOutput`` (see each action file).
 
 
-class AvatarurlsOutput(ActionOutput):
+class AvatarurlsOutput(JiraPermissiveOutput):
     n16x16: str = OutputField(
         cef_types=["url"],
         example_values=[
@@ -48,7 +79,7 @@ class AvatarurlsOutput(ActionOutput):
     )
 
 
-class AssigneeOutput(ActionOutput):
+class AssigneeOutput(JiraPermissiveOutput):
     accountId: str = OutputField(
         cef_types=["jira user account id"],
         example_values=[
@@ -75,7 +106,7 @@ class AssigneeOutput(ActionOutput):
     timeZone: str | None
 
 
-class AuthorOutput(ActionOutput):
+class AuthorOutput(JiraPermissiveOutput):
     active: bool
     avatarUrls: AvatarurlsOutput | None
     displayName: str = OutputField(
@@ -93,7 +124,7 @@ class AuthorOutput(ActionOutput):
     timeZone: str | None = OutputField(example_values=["UTC"])
 
 
-class UpdateauthorOutput(ActionOutput):
+class UpdateauthorOutput(JiraPermissiveOutput):
     active: bool
     avatarUrls: AvatarurlsOutput | None
     displayName: str = OutputField(
@@ -111,7 +142,7 @@ class UpdateauthorOutput(ActionOutput):
     timeZone: str | None = OutputField(example_values=["UTC"])
 
 
-class AttachmentauthorOutput(ActionOutput):
+class AttachmentauthorOutput(JiraPermissiveOutput):
     accountId: str | None = OutputField(
         cef_types=["jira user account id"],
         example_values=["557058:c4593bd2-4853-4a5e-a9ed-278ca5f17dce"],
@@ -134,7 +165,7 @@ class AttachmentauthorOutput(ActionOutput):
     timeZone: str | None = OutputField(example_values=["UTC"])
 
 
-class AttachmentOutput(ActionOutput):
+class AttachmentOutput(JiraPermissiveOutput):
     author: AttachmentauthorOutput
     content: str = OutputField(
         cef_types=["url"],
@@ -159,12 +190,12 @@ class AttachmentOutput(ActionOutput):
     )
 
 
-class VisibilityOutput(ActionOutput):
+class VisibilityOutput(JiraPermissiveOutput):
     type: str = OutputField(example_values=["group", "role"])
     value: str = OutputField(example_values=["jira-software-users"])
 
 
-class CommentsOutput(ActionOutput):
+class CommentsOutput(JiraPermissiveOutput):
     author: AuthorOutput
     body: str = OutputField(
         example_values=["This is a sample testing body for the comment"]
@@ -180,14 +211,14 @@ class CommentsOutput(ActionOutput):
     visibility: VisibilityOutput | None
 
 
-class CommentOutput(ActionOutput):
+class CommentOutput(JiraPermissiveOutput):
     comments: list[CommentsOutput]
     maxResults: float = OutputField(example_values=[7])
     startAt: float = OutputField(example_values=[0])
     total: float = OutputField(example_values=[7])
 
 
-class ComponentsOutput(ActionOutput):
+class ComponentsOutput(JiraPermissiveOutput):
     id: str = OutputField(example_values=["10104"])
     name: str = OutputField(example_values=["comp_test1"])
     self: str = OutputField(
@@ -196,7 +227,7 @@ class ComponentsOutput(ActionOutput):
     )
 
 
-class CreatorOutput(ActionOutput):
+class CreatorOutput(JiraPermissiveOutput):
     accountId: str = OutputField(
         cef_types=["jira user account id"],
         example_values=["557058:c4593bd2-4853-4a5e-a9ed-278ca5f17dce"],
@@ -219,7 +250,7 @@ class CreatorOutput(ActionOutput):
     timeZone: str | None = OutputField(example_values=["UTC"])
 
 
-class FixversionsOutput(ActionOutput):
+class FixversionsOutput(JiraPermissiveOutput):
     archived: bool
     id: str = OutputField(example_values=["10000"])
     name: str = OutputField(example_values=["1.0"])
@@ -230,7 +261,7 @@ class FixversionsOutput(ActionOutput):
     )
 
 
-class IssuetypeOutput(ActionOutput):
+class IssuetypeOutput(JiraPermissiveOutput):
     avatarId: float = OutputField(example_values=[10303])
     description: str = OutputField(
         example_values=[
@@ -252,7 +283,7 @@ class IssuetypeOutput(ActionOutput):
     subtask: bool = OutputField(example_values=[False, True])
 
 
-class PriorityOutput(ActionOutput):
+class PriorityOutput(JiraPermissiveOutput):
     iconUrl: str = OutputField(
         cef_types=["url"],
         example_values=["http://jira.instance.ip/images/icons/priorities/medium.svg"],
@@ -267,17 +298,17 @@ class PriorityOutput(ActionOutput):
     )
 
 
-class AggregateprogressOutput(ActionOutput):
+class AggregateprogressOutput(JiraPermissiveOutput):
     progress: float = OutputField(example_values=[0])
     total: float = OutputField(example_values=[0])
 
 
-class ProgressOutput(ActionOutput):
+class ProgressOutput(JiraPermissiveOutput):
     progress: float = OutputField(example_values=[0])
     total: float = OutputField(example_values=[0])
 
 
-class ProjectcategoryOutput(ActionOutput):
+class ProjectcategoryOutput(JiraPermissiveOutput):
     description: str = OutputField(example_values=["test"])
     id: str = OutputField(example_values=["10000"])
     name: str = OutputField(example_values=["QA-Team"])
@@ -288,7 +319,7 @@ class ProjectcategoryOutput(ActionOutput):
     )
 
 
-class ProjectOutput(ActionOutput):
+class ProjectOutput(JiraPermissiveOutput):
     avatarUrls: AvatarurlsOutput
     id: str = OutputField(example_values=["10100"])
     key: str = OutputField(cef_types=["jira project key"], example_values=["MAN"])
@@ -302,7 +333,7 @@ class ProjectOutput(ActionOutput):
     simplified: bool = OutputField(example_values=[False, True])
 
 
-class ReporterOutput(ActionOutput):
+class ReporterOutput(JiraPermissiveOutput):
     accountType: str = OutputField(example_values=["atlassian"])
     active: bool = OutputField(example_values=[False, True])
     avatarUrls: AvatarurlsOutput | None
@@ -321,7 +352,7 @@ class ReporterOutput(ActionOutput):
     timeZone: str | None = OutputField(example_values=["UTC"])
 
 
-class ResolutionOutput(ActionOutput):
+class ResolutionOutput(JiraPermissiveOutput):
     description: str = OutputField(
         example_values=["Work has been completed on this issue"]
     )
@@ -335,7 +366,7 @@ class ResolutionOutput(ActionOutput):
     )
 
 
-class StatuscategoryOutput(ActionOutput):
+class StatuscategoryOutput(JiraPermissiveOutput):
     colorName: str = OutputField(example_values=["green"])
     id: float = OutputField(example_values=[3])
     key: str = OutputField(example_values=["done"])
@@ -346,7 +377,7 @@ class StatuscategoryOutput(ActionOutput):
     )
 
 
-class StatusOutput(ActionOutput):
+class StatusOutput(JiraPermissiveOutput):
     description: str = OutputField(
         example_values=["This is a sample testing description"]
     )
@@ -363,7 +394,7 @@ class StatusOutput(ActionOutput):
     statusCategory: StatuscategoryOutput
 
 
-class TypeOutput(ActionOutput):
+class TypeOutput(JiraPermissiveOutput):
     id: str = OutputField(example_values=["10000"])
     inward: str = OutputField(example_values=["is blocked by"])
     name: str = OutputField(example_values=["Blocks"])
@@ -374,7 +405,7 @@ class TypeOutput(ActionOutput):
     )
 
 
-class VersionsOutput(ActionOutput):
+class VersionsOutput(JiraPermissiveOutput):
     archived: bool
     id: str = OutputField(example_values=["10000"])
     name: str = OutputField(example_values=["1.0"])
@@ -385,7 +416,7 @@ class VersionsOutput(ActionOutput):
     )
 
 
-class VotesOutput(ActionOutput):
+class VotesOutput(JiraPermissiveOutput):
     hasVoted: bool = OutputField(example_values=[False, True])
     self: str = OutputField(
         cef_types=["url"],
@@ -394,7 +425,7 @@ class VotesOutput(ActionOutput):
     votes: float = OutputField(example_values=[0])
 
 
-class WatchesOutput(ActionOutput):
+class WatchesOutput(JiraPermissiveOutput):
     isWatching: bool = OutputField(example_values=[False, True])
     self: str = OutputField(
         cef_types=["url"],
@@ -403,20 +434,20 @@ class WatchesOutput(ActionOutput):
     watchCount: float = OutputField(example_values=[1])
 
 
-class WorklogOutput(ActionOutput):
+class WorklogOutput(JiraPermissiveOutput):
     maxResults: float = OutputField(example_values=[20])
     startAt: float = OutputField(example_values=[0])
     total: float = OutputField(example_values=[0])
 
 
-class TimetrackingOutput(ActionOutput):
+class TimetrackingOutput(JiraPermissiveOutput):
     remainingEstimate: str = OutputField(example_values=["0m"])
     remainingEstimateSeconds: float = OutputField(example_values=[0])
     timeSpent: str = OutputField(example_values=["2d 4h"])
     timeSpentSeconds: float = OutputField(example_values=[72000])
 
 
-class WorklogsOutput(ActionOutput):
+class WorklogsOutput(JiraPermissiveOutput):
     author: AuthorOutput | None
     comment: str | None
     created: str | None = OutputField(example_values=["2021-12-06T06:35:45.703+0000"])
@@ -432,7 +463,7 @@ class WorklogsOutput(ActionOutput):
     updated: str | None = OutputField(example_values=["2021-12-06T06:35:45.703+0000"])
 
 
-class LinkedissuefieldsOutput(ActionOutput):
+class LinkedissuefieldsOutput(JiraPermissiveOutput):
     """Nested `fields` object on linked issues (inwardIssue / outwardIssue /
     parent / subtasks). Legacy exposes issuetype, priority, status and summary."""
 
@@ -455,6 +486,7 @@ __all__ = [
     "CreatorOutput",
     "FixversionsOutput",
     "IssuetypeOutput",
+    "JiraPermissiveOutput",
     "LinkedissuefieldsOutput",
     "PriorityOutput",
     "ProgressOutput",

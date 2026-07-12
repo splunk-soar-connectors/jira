@@ -20,7 +20,7 @@ from soar_sdk.logging import getLogger
 
 from .._asset import Asset
 from ..consts import DEFAULT_MAX_RESULTS_PER_PAGE
-from ..helpers import jira_request
+from ..helpers import get_custom_field_map, jira_request
 
 logger = getLogger()
 
@@ -121,20 +121,11 @@ def _paginate_issues(asset: Asset, jql: str, limit: int) -> list[dict]:
 def _get_global_custom_field_map(asset: Asset) -> dict[str, str]:
     """Return {customfield_XXXXX: "Human Name"} for all custom fields in the Jira instance.
 
-    Calls `GET rest/api/2/field` once per poll run regardless of how many issues
-    or projects are being ingested. Falls back to an empty dict on failure so
-    custom field resolution is silently skipped rather than aborting the poll.
+    Thin alias over :func:`src.helpers.get_custom_field_map`; kept so the poll
+    call site reads naturally. Resolves IDs once per poll run and falls back to
+    an empty dict on failure (custom field resolution is skipped, not fatal).
     """
-    try:
-        all_fields = jira_request(asset, "GET", "rest/api/2/field")
-        return {
-            f["id"]: f["name"]
-            for f in all_fields
-            if str(f.get("id", "")).startswith("customfield") and f.get("name")
-        }
-    except ActionFailure as exc:
-        logger.warning(f"Could not fetch global custom field definitions: {exc}")
-        return {}
+    return get_custom_field_map(asset)
 
 
 def _fetch_all_comments(asset: Asset, issue_key: str, comment_data: dict) -> list[dict]:

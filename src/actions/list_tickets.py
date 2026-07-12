@@ -11,14 +11,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from pydantic import Field
 
 from soar_sdk.abstract import SOARClient
-from soar_sdk.action_results import ActionOutput, OutputField
+from soar_sdk.action_results import (
+    ActionOutput,
+    OutputField,
+)
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
 from ._outputs import (
+    JiraPermissiveOutput,
     AggregateprogressOutput,
     AssigneeOutput,
     CreatorOutput,
@@ -53,7 +56,7 @@ class ListTicketsParams(Params):
 
 
 # list_tickets: lightweight AttachmentOutput (only accountId/accountType from app.py)
-class _AttachmentAuthorOutput(ActionOutput):
+class _AttachmentAuthorOutput(JiraPermissiveOutput):
     accountId: str = OutputField(
         cef_types=["jira user account id"],
         example_values=["557058:c4593bd2-4853-4a5e-a9ed-278ca5f17dce"],
@@ -61,28 +64,28 @@ class _AttachmentAuthorOutput(ActionOutput):
     accountType: str = OutputField(example_values=["atlassian"])
 
 
-class _AttachmentOutput(ActionOutput):
+class _AttachmentOutput(JiraPermissiveOutput):
     author: _AttachmentAuthorOutput | None
 
 
 # list_tickets: CommentsOutput only has visibility
-class _VisibilityOutput(ActionOutput):
+class _VisibilityOutput(JiraPermissiveOutput):
     type: str = OutputField(example_values=["group", "role"])
     value: str = OutputField(example_values=["jira-software-users"])
 
 
-class _CommentsOutput(ActionOutput):
+class _CommentsOutput(JiraPermissiveOutput):
     visibility: _VisibilityOutput | None
 
 
-class _CommentOutput(ActionOutput):
+class _CommentOutput(JiraPermissiveOutput):
     comments: list[_CommentsOutput]
     maxResults: float
     startAt: float
     total: float
 
 
-class TypeOutput(ActionOutput):
+class TypeOutput(JiraPermissiveOutput):
     id: str = OutputField(example_values=["10000"])
     inward: str = OutputField(example_values=["is blocked by"])
     name: str = OutputField(example_values=["Blocks"])
@@ -93,7 +96,7 @@ class TypeOutput(ActionOutput):
     )
 
 
-class OutwardissueOutput(ActionOutput):
+class OutwardissueOutput(JiraPermissiveOutput):
     fields: LinkedissuefieldsOutput | None
     id: str = OutputField(example_values=["11849"])
     key: str = OutputField(cef_types=["jira ticket key"], example_values=["ZEP-14"])
@@ -103,7 +106,7 @@ class OutwardissueOutput(ActionOutput):
     )
 
 
-class IssuelinksOutput(ActionOutput):
+class IssuelinksOutput(JiraPermissiveOutput):
     id: str = OutputField(example_values=["10615"])
     outwardIssue: OutwardissueOutput | None
     self: str = OutputField(
@@ -113,7 +116,7 @@ class IssuelinksOutput(ActionOutput):
     type: TypeOutput
 
 
-class ParentOutput(ActionOutput):
+class ParentOutput(JiraPermissiveOutput):
     fields: LinkedissuefieldsOutput | None
     id: str = OutputField(example_values=["11811"])
     key: str = OutputField(example_values=["PHANINCIDE-315"])
@@ -123,7 +126,7 @@ class ParentOutput(ActionOutput):
     )
 
 
-class SubtasksOutput(ActionOutput):
+class SubtasksOutput(JiraPermissiveOutput):
     fields: LinkedissuefieldsOutput | None
     id: str = OutputField(example_values=["11839"])
     key: str = OutputField(example_values=["PHANINCIDE-316"])
@@ -133,19 +136,19 @@ class SubtasksOutput(ActionOutput):
     )
 
 
-class _WorklogOutput(ActionOutput):
+class _WorklogOutput(JiraPermissiveOutput):
     maxResults: float
     startAt: float
     total: float
 
 
-class FieldsOutput(ActionOutput):
+class FieldsOutput(JiraPermissiveOutput):
     aggregateprogress: AggregateprogressOutput | None
     aggregatetimeestimate: str | None
     aggregatetimeoriginalestimate: str | None
     aggregatetimespent: str | None
     assignee: AssigneeOutput | None
-    attachment: list[_AttachmentOutput] = Field(default_factory=list)
+    attachment: list[_AttachmentOutput]
     comment: _CommentOutput | None
     created: str | None = OutputField(example_values=["2018-09-23T19:40:35.000-0700"])
     creator: CreatorOutput | None
@@ -154,7 +157,7 @@ class FieldsOutput(ActionOutput):
     )
     duedate: str | None
     environment: str | None
-    issuelinks: list[IssuelinksOutput] = Field(default_factory=list)
+    issuelinks: list[IssuelinksOutput]
     issuetype: IssuetypeOutput | None
     lastViewed: str | None = OutputField(
         example_values=["2018-09-23T22:28:12.754-0700"]
@@ -173,7 +176,7 @@ class FieldsOutput(ActionOutput):
     statuscategorychangedate: str | None = OutputField(
         example_values=["2019-07-22T22:43:07.771-0700"]
     )
-    subtasks: list[SubtasksOutput] = Field(default_factory=list)
+    subtasks: list[SubtasksOutput]
     summary: str | None = OutputField(example_values=["Sub-taskofBigTask"])
     timeestimate: str | None
     timeoriginalestimate: str | None
@@ -230,7 +233,12 @@ def list_tickets(
 ) -> list[ListTicketsOutput]:
     from soar_sdk.exceptions import ActionFailure
     from soar_sdk.logging import getLogger
-    from ..helpers import description_to_str, jira_request, sanitize_fields_dict
+    from ..helpers import (
+        description_to_str,
+        get_custom_field_map,
+        jira_request,
+        sanitize_fields_dict,
+    )
     from ..consts import (
         JIRA_ERROR_LIST_TICKETS_FAILED,
         JIRA_ERROR_NEGATIVE_INPUT,
@@ -296,6 +304,7 @@ def list_tickets(
         starts_at += len(page_issues)
 
     results: list[ListTicketsOutput] = []
+    custom_field_map = get_custom_field_map(asset)
 
     for issue in issues:
         fields = issue.get("fields") or {}
@@ -311,7 +320,7 @@ def list_tickets(
                 reporter=(fields.get("reporter") or {}).get("displayName", ""),
                 status=(fields.get("status") or {}).get("name", ""),
                 resolution=(fields.get("resolution") or {}).get("name") or "Unresolved",
-                fields=sanitize_fields_dict(fields),
+                fields=sanitize_fields_dict(fields, custom_field_map),
             )
         )
     soar.set_summary(ListTicketsSummaryOutput(total_issues=len(results)))

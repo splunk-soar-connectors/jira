@@ -11,14 +11,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from pydantic import Field
 
 from soar_sdk.abstract import SOARClient
-from soar_sdk.action_results import ActionOutput, OutputField
+from soar_sdk.action_results import (
+    ActionOutput,
+    OutputField,
+)
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
 from ._outputs import (
+    JiraPermissiveOutput,
     AggregateprogressOutput,
     AssigneeOutput,
     AttachmentOutput,
@@ -71,7 +74,7 @@ class CreateTicketParams(Params):
 
 
 # create_ticket FieldsOutput — no components/fixVersions/issuelinks/labels/versions
-class FieldsOutput(ActionOutput):
+class FieldsOutput(JiraPermissiveOutput):
     Epic_Link: str | None = OutputField(alias="Epic Link")
     Epic_Name: str | None = OutputField(example_values=["Test epic"], alias="Epic Name")
     Severity: str | None
@@ -81,7 +84,7 @@ class FieldsOutput(ActionOutput):
     aggregatetimeoriginalestimate: str | None
     aggregatetimespent: str | None
     assignee: AssigneeOutput | None
-    attachment: list[AttachmentOutput] = Field(default_factory=list)
+    attachment: list[AttachmentOutput]
     comment: CommentOutput | None
     created: str | None = OutputField(example_values=["2018-09-25T06:31:58.854-0700"])
     creator: CreatorOutput | None
@@ -175,7 +178,14 @@ def create_ticket(
     )
     from soar_sdk.logging import getLogger
 
-    from ..helpers import description_to_str, jira_request, sanitize_fields_dict
+    from ..helpers import (
+        apply_custom_field_names_to_ids,
+        description_to_str,
+        get_custom_field_map,
+        get_custom_field_name_to_id_map,
+        jira_request,
+        sanitize_fields_dict,
+    )
 
     logger = getLogger()
 
@@ -211,6 +221,11 @@ def create_ticket(
         fields["issuetype"] = {"name": params.issue_type}
     if params.priority and "priority" not in fields:
         fields["priority"] = {"name": params.priority}
+
+    # Legacy parity: translate custom-field display names → customfield_XXXXX ids
+    fields = apply_custom_field_names_to_ids(
+        {"fields": fields}, get_custom_field_name_to_id_map(asset)
+    )["fields"]
 
     # --- Create the issue ---
     logger.info("Creating Jira ticket")
@@ -275,6 +290,7 @@ def create_ticket(
         raise ActionFailure(f"{JIRA_ERROR_GET_TICKET}: {exc}") from exc
 
     raw_fields = issue.get("fields", {})
+    custom_field_map = get_custom_field_map(asset)
 
     def _name(obj):
         if isinstance(obj, dict):
@@ -303,7 +319,7 @@ def create_ticket(
         reporter=_name(raw_fields.get("reporter")) or "",
         status=_name(raw_fields.get("status")) or "",
         resolution=resolution,
-        fields=sanitize_fields_dict(raw_fields),
+        fields=sanitize_fields_dict(raw_fields, custom_field_map),
         assign_error=assign_error,
         attach_error=attach_error,
         json_fields_error=json_fields_error,
