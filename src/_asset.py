@@ -23,11 +23,18 @@ class Asset(BaseAsset):
     verify_server_cert: bool | None = AssetField(
         description="Verify server certificate", default=False
     )
-    username: str = AssetField(
-        description="Jira Cloud email address (or on-prem username) for Basic Auth"
+    client_id: str | None = AssetField(
+        description="OAuth 2.0 client ID for a service account. Takes priority over username/password."
     )
-    password: str = AssetField(
-        description="Jira Cloud API token (or on-prem password) for Basic Auth",
+    client_secret: str | None = AssetField(
+        description="OAuth 2.0 client secret, used with client_id.",
+        sensitive=True,
+    )
+    username: str | None = AssetField(
+        description="Jira email or on-prem username for Basic Auth. Not needed if using OAuth."
+    )
+    password: str | None = AssetField(
+        description="Jira API token or on-prem password for Basic Auth. Not needed if using OAuth.",
         sensitive=True,
     )
     project_key: str | None = AssetField(
@@ -46,11 +53,6 @@ class Asset(BaseAsset):
         description="JSON formatted list of names of custom fields (case-sensitive) to be ingested"
     )
     timezone: ZoneInfo | None = AssetField(
-        description=(
-            "Jira instance timezone used to format the JQL 'updated>=' filter during ingestion. "
-            "Leave blank to auto-detect from the Jira server (recommended). "
-            "Set only if the auto-detected value is wrong. "
-            "Must be a valid IANA timezone string, e.g. 'America/New_York'."
-        ),
+        description="Jira instance timezone (IANA, e.g. 'America/New_York'). Leave blank to auto-detect.",
         default=None,
     )

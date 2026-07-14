@@ -284,14 +284,16 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
 **device_url** | required | string | Device URL including the port, e.g. https://myjira.enterprise.com:8080 |
 **verify_server_cert** | optional | boolean | Verify server certificate |
-**username** | required | string | Jira Cloud email address (or on-prem username) for Basic Auth |
-**password** | required | password | Jira Cloud API token (or on-prem password) for Basic Auth |
+**client_id** | optional | string | OAuth 2.0 client ID for a service account. Takes priority over username/password. |
+**client_secret** | optional | password | OAuth 2.0 client secret, used with client_id. |
+**username** | optional | string | Jira email or on-prem username for Basic Auth. Not needed if using OAuth. |
+**password** | optional | password | Jira API token or on-prem password for Basic Auth. Not needed if using OAuth. |
 **project_key** | optional | string | Project key to ingest tickets (issues) from |
 **query** | optional | string | Additional parameters to query for during ingestion in JQL |
 **first_run_max_tickets** | optional | numeric | Maximum tickets (issues) to poll first time |
 **max_tickets** | optional | numeric | Maximum tickets (issues) for scheduled polling |
 **custom_fields** | optional | string | JSON formatted list of names of custom fields (case-sensitive) to be ingested |
-**timezone** | optional | timezone | Jira instance timezone used to format the JQL 'updated>=' filter during ingestion. Leave blank to auto-detect from the Jira server (recommended). Set only if the auto-detected value is wrong. Must be a valid IANA timezone string, e.g. 'America/New_York'. |
+**timezone** | optional | timezone | Jira instance timezone (IANA, e.g. 'America/New_York'). Leave blank to auto-detect. |
 
 ### Supported Actions
 

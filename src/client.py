@@ -26,7 +26,7 @@ import httpx
 from soar_sdk.exceptions import ActionFailure
 from soar_sdk.logging import getLogger
 
-from .auth import resolve_jira_auth
+from .auth import resolve_jira_auth, resolve_jira_base_url
 from .consts import JIRA_DEFAULT_TIMEOUT, JIRA_USING_BASE_URL
 
 if TYPE_CHECKING:
@@ -54,7 +54,7 @@ def call_jira(
     Raises ``ActionFailure`` if credentials are unconfigured or the network
     request itself fails; does not raise on non-2xx status codes.
     """
-    base_url = asset.device_url.rstrip("/")
+    base_url = resolve_jira_base_url(asset)
     url = f"{base_url}/{endpoint.lstrip('/')}"
     logger.info(JIRA_USING_BASE_URL.format(base_url=base_url))
 
