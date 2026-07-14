@@ -85,12 +85,10 @@ def lookup_users(
 
     logger = getLogger()
 
-    # Validate: exactly one of username or display_name must be provided
     has_username = bool(params.username)
     has_display_name = bool(params.display_name)
 
     if has_username == has_display_name:
-        # Both provided or neither provided
         raise ActionFailure(JIRA_SEARCH_USERS_ERROR)
 
     # Cloud only supports display_name; reject username-only on cloud
@@ -98,7 +96,6 @@ def lookup_users(
     if is_cloud and has_username and not has_display_name:
         raise ActionFailure(JIRA_SEARCH_USERS_ERROR)
 
-    # Cloud-only: use whichever non-None param is provided as the search query
     query = params.display_name if has_display_name else params.username
 
     max_results = int(params.max_results) if params.max_results is not None else 1000

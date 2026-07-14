@@ -74,19 +74,16 @@ def on_poll(
     """
     state = asset.ingest_state
 
-    # --- Load cursor ---
     # `first_run` defaults True so a missing key = treat as first run.
     # `last_time` is UTC epoch int; 0 means "no previous run".
     first_run: bool = state.get("first_run", True)
     last_time: int = int(state.get("last_time") or 0)
 
-    # Ensure non-negative (guard against corrupted state)
     if last_time < 0:
         last_time = 0
 
     is_manual = params.is_manual_poll()
 
-    # --- Resolve ticket limit ---
     if is_manual:
         # Poll Now: SOAR passes the user-supplied count; fall back to 100
         limit = int(
@@ -97,22 +94,17 @@ def on_poll(
     else:
         limit = int(asset.max_tickets or DEFAULT_SCHEDULED_INTERVAL_INGESTION_COUNT)
 
-    # --- Resolve Jira server timezone ---
-    # Used only to convert the UTC cursor epoch → Jira-local string for the JQL filter.
-    # On first run or Poll Now there is no time filter, so the API call is skipped.
+    # Only needed to convert the UTC cursor epoch → Jira-local string for the
+    # JQL filter; skipped entirely on first run / Poll Now (no time filter).
     jira_tz: ZoneInfo | None = None
     if not is_manual and not first_run and last_time > 0:
         jira_tz = _resolve_timezone(asset)
 
-    # --- Build JQL time filter string ---
-    # Legacy connector subtracts 60 s from last_time to handle Jira's minute-level
-    # granularity — without this, tickets updated in the same minute as the cursor
-    # are silently skipped.
+    # -60s overlap: Jira's `updated` filter has minute-level granularity, so
+    # without this, tickets updated in the same minute as the cursor are skipped.
     last_time_str: str | None = None
     if jira_tz is not None and last_time > 0:
-        adjusted = max(
-            0, last_time - 60
-        )  # -60 s overlap to avoid minute-boundary misses
+        adjusted = max(0, last_time - 60)
         dt_utc = datetime.fromtimestamp(adjusted, tz=UTC)
         dt_jira = dt_utc.astimezone(jira_tz)
         last_time_str = dt_jira.strftime(JIRA_TIME_FORMAT)
@@ -120,13 +112,11 @@ def on_poll(
             f"Querying Jira for issues updated >= {last_time_str} ({jira_tz.key})"
         )
 
-    # --- Build JQL ---
     jql = _build_jql(
         asset, last_time_str, is_first_run=first_run, is_manual_poll=is_manual
     )
     logger.info(f"JQL: {jql}")
 
-    # --- Parse custom_fields config ---
     # asset.custom_fields is a JSON-formatted list: '["Sprint", "Epic Link"]'
     custom_fields_list: list[str] = []
     if asset.custom_fields:
@@ -137,12 +127,8 @@ def on_poll(
         except Exception as exc:
             logger.warning(f"Could not parse custom_fields config: {exc}")
 
-    # --- Fetch global custom field map (one call for the entire poll run) ---
-    # `GET rest/api/2/field` returns all field definitions instance-wide.
-    # This replaces the legacy per-issue editmeta call and our earlier per-project cache.
     cf_map = _get_global_custom_field_map(asset) if custom_fields_list else {}
 
-    # --- Paginate: full issues returned directly, no per-issue re-fetch needed ---
     try:
         issues = _paginate_issues(asset, jql, limit)
     except ActionFailure as exc:
@@ -151,12 +137,11 @@ def on_poll(
     logger.info(f"Total issues fetched: {len(issues)}")
 
     if not issues:
-        # Nothing to ingest — still flip first_run and write state on scheduled runs
         if not is_manual:
             state["first_run"] = False
         return
 
-    last_updated_utc: int = last_time  # will be updated as we process issues
+    last_updated_utc: int = last_time
 
     failed = 0
 
@@ -168,14 +153,11 @@ def on_poll(
         fields = issue.get("fields") or {}
         issue_updated_str: str = fields.get("updated", "")
 
-        # Convert issue's `updated` to UTC epoch for cursor tracking
         try:
             issue_updated_utc = int(_parse_dt(issue_updated_str).timestamp())
         except Exception:
             issue_updated_utc = last_updated_utc
 
-        # --- Check if container already exists in SOAR ---
-        # SDK provides soar.get() for direct SOAR REST access.
         asset_id = soar.get_asset_id()
         existing_response = soar.get(
             "rest/container",
@@ -193,26 +175,19 @@ def on_poll(
         )
 
         if container_id is None:
-            # ----------------------------------------------------------------
-            # NEW container path
-            # ----------------------------------------------------------------
-            # Yield a Container — the SDK decorator calls save_container and
-            # assigns container_id; all subsequent Artifacts (until the next
-            # Container yield) are attached to it.
-
+            # The SDK decorator calls save_container and assigns container_id;
+            # all subsequent Artifacts (until the next Container yield) attach to it.
             # SDK sets the label from ingest config automatically when container_label is omitted.
             yield Container(
                 name=issue_key,
                 description=fields.get("summary") or "",
                 source_data_identifier=issue_key,
-                data=issue,  # full raw Jira JSON stored on the container
+                data=issue,
             )
 
-            # Attachment artifacts (new container — no dedup needed)
             for attachment in fields.get("attachment") or []:
                 try:
                     art = _build_attachment_artifact(attachment)
-                    # Download into vault
                     content_url = attachment.get("content", "")
                     if content_url:
                         with _httpx.Client(
@@ -234,7 +209,6 @@ def on_poll(
                         f"Failed to ingest attachment for {issue_key}: {exc}"
                     )
 
-            # Comment artifacts (new container — no dedup needed)
             # _fetch_all_comments handles the case where search/jql truncated the list
             for comment in _fetch_all_comments(
                 asset, issue_key, fields.get("comment") or {}
@@ -246,7 +220,6 @@ def on_poll(
                         f"Failed to build comment artifact for {issue_key}: {exc}"
                     )
 
-            # Primary ticket-fields artifact
             try:
                 yield _build_fields_artifact(issue, cf_map, custom_fields_list)
             except Exception as exc:
@@ -256,16 +229,11 @@ def on_poll(
                 failed += 1
 
         else:
-            # ----------------------------------------------------------------
-            # UPDATE path — container already exists
-            # ----------------------------------------------------------------
-            # Update the container's raw data and description via SOAR REST.
             soar.post(
                 f"rest/container/{container_id}",
                 json={"data": issue, "description": fields.get("summary") or ""},
             )
 
-            # Batch-load existing artifact SDIs for this container (one REST call)
             existing_sdis = _get_existing_artifact_sdis(soar, container_id)
             existing_cef_map = _get_artifact_cef_map(soar, container_id)
 
@@ -300,7 +268,6 @@ def on_poll(
                         f"Failed to ingest attachment for {issue_key}: {exc}"
                     )
 
-            # Comments — deduplicate; create new artifact only if new or edited
             # _fetch_all_comments handles truncation from search/jql *all response
             for comment in _fetch_all_comments(
                 asset, issue_key, fields.get("comment") or {}
@@ -308,15 +275,11 @@ def on_poll(
                 comment_sdi = str(comment.get("id", ""))
                 existing_cef = existing_cef_map.get(comment_sdi)
 
-                if existing_cef is None:
-                    # New comment — always create
-                    pass
-                else:
+                if existing_cef is not None:
                     if is_manual:
                         # Poll Now always re-creates to show current state (legacy behaviour)
                         pass
                     else:
-                        # Scheduled: only create if comment was edited since last ingest
                         # Compare UTC timestamps to avoid timezone representation drift
                         try:
                             current_utc = int(
@@ -341,7 +304,7 @@ def on_poll(
                         f"Failed to build comment artifact for {issue_key}: {exc}"
                     )
 
-            # Ticket-fields artifact (always update — same SDI = issue key overwrites previous)
+            # Same SDI (issue key) overwrites the previous fields artifact
             try:
                 fields_art = _build_fields_artifact(issue, cf_map, custom_fields_list)
                 fields_art.container_id = container_id
@@ -352,15 +315,12 @@ def on_poll(
                 )
                 failed += 1
 
-            # Yield accumulated artifacts for this container
             for art in artifact_batch:
                 yield art
 
-        # Track the most recent `updated` timestamp seen across all issues
         if issue_updated_utc > last_updated_utc:
             last_updated_utc = issue_updated_utc
 
-    # --- Persist state (scheduled runs only) ---
     if not is_manual:
         if issues and last_updated_utc > 0:
             # Store as UTC epoch int — unambiguous, no time.mktime(local timetuple) drift

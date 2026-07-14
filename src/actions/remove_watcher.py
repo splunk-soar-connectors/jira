@@ -53,7 +53,6 @@ def remove_watcher(
             "user_account_id is required for Jira Cloud. Use 'lookup users' to find the account ID."
         )
 
-    # Fetch current watchers
     watchers_response = jira_request(
         asset, "GET", f"rest/api/2/issue/{params.id}/watchers"
     )

@@ -209,17 +209,14 @@ def update_ticket(
 
     logger = getLogger()
 
-    # Step 1: Require at least one of update_fields or vault_id
     if not params.update_fields and not params.vault_id:
         raise ActionFailure(JIRA_ERROR_UPDATE_NO_PARAM)
 
-    # Step 2: Verify ticket exists
     try:
         jira_request(asset, "GET", f"rest/api/2/issue/{params.id}")
     except ActionFailure as exc:
         raise ActionFailure(f"Unable to find ticket info: {exc}") from exc
 
-    # Step 3: Update fields if provided
     if params.update_fields:
         try:
             fields = _json.loads(params.update_fields)
@@ -241,7 +238,6 @@ def update_ticket(
         logger.info(JIRA_SUCCESS_TICKET_UPDATED)
         soar.set_message(JIRA_SUCCESS_TICKET_UPDATED)
 
-    # Step 4: Attach vault file if provided
     if params.vault_id:
         attachments = soar.vault.get_attachment(vault_id=params.vault_id)
         if not attachments:
@@ -270,7 +266,6 @@ def update_ticket(
         except Exception as exc:
             raise ActionFailure(JIRA_ERROR_ATTACH_FAILED.format(str(exc))) from exc
 
-    # Step 5: Re-query ticket to build full output
     try:
         issue = jira_request(asset, "GET", f"rest/api/2/issue/{params.id}")
     except ActionFailure as exc:
@@ -284,7 +279,6 @@ def update_ticket(
             return obj.get("name") or obj.get("displayName")
         return None
 
-    # Step 6: Build and return output
     return UpdateTicketOutput(
         id=issue.get("id", ""),
         name=issue.get("key", ""),

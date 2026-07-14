@@ -60,7 +60,6 @@ class SetStatusParams(Params):
     time_spent: str | None = Param(description="Time Spent to Log")
 
 
-# set_status has percent in both AggregateprogressOutput and ProgressOutput
 class AggregateprogressOutput(JiraPermissiveOutput):
     percent: float = OutputField(example_values=[100])
     progress: float = OutputField(example_values=[0])
@@ -73,7 +72,6 @@ class ProgressOutput(JiraPermissiveOutput):
     total: float = OutputField(example_values=[0])
 
 
-# set_status ProjectOutput omits projectCategory and projectTypeKey/simplified
 class ProjectOutput(JiraPermissiveOutput):
     avatarUrls: AvatarurlsOutput | None
     id: str = OutputField(example_values=["10100"])
@@ -242,7 +240,6 @@ def set_status(
             return obj.get("name") or obj.get("displayName")
         return None
 
-    # Step 1: Verify ticket exists
     try:
         jira_request(asset, "GET", f"rest/api/2/issue/{params.id}")
     except ActionFailure as exc:
@@ -250,7 +247,6 @@ def set_status(
             f"Unable to find ticket info. Please make sure the issue exists: {exc}"
         ) from exc
 
-    # Step 2: Apply update_fields if provided
     if params.update_fields:
         try:
             fields = json_mod.loads(params.update_fields)
@@ -272,7 +268,6 @@ def set_status(
 
         jira_request(asset, "PUT", f"rest/api/2/issue/{params.id}", json=body)
 
-    # Step 3: Get available transitions and find the matching one
     transitions_resp = jira_request(
         asset, "GET", f"rest/api/2/issue/{params.id}/transitions"
     )
@@ -289,7 +284,6 @@ def set_status(
             + ", ".join(t["name"] for t in transitions)
         )
 
-    # Step 4: Build transition body (with optional resolution)
     if params.resolution:
         resolutions_resp = jira_request(asset, "GET", "rest/api/2/resolution")
         resolutions = resolutions_resp if isinstance(resolutions_resp, list) else []
@@ -312,7 +306,6 @@ def set_status(
     else:
         transition_body = {"transition": {"id": transition_id}}
 
-    # Step 5: Log time spent if provided
     if params.time_spent:
         jira_request(
             asset,
@@ -321,12 +314,11 @@ def set_status(
             json={"timeSpent": params.time_spent},
         )
 
-    # Step 6: Perform the transition
     jira_request(
         asset, "POST", f"rest/api/2/issue/{params.id}/transitions", json=transition_body
     )
 
-    # Step 7: Add comment (soft failure — comment on a closed ticket may be rejected)
+    # Soft failure — comment on a closed ticket may be rejected
     if params.comment:
         try:
             jira_request(
@@ -338,12 +330,10 @@ def set_status(
         except ActionFailure as exc:
             logger.warning(f"Failed to add comment after status transition: {exc}")
 
-    # Step 8: Re-query ticket for final state
     issue = jira_request(asset, "GET", f"rest/api/2/issue/{params.id}")
     raw_fields = issue["fields"]
     custom_field_map = get_custom_field_map(asset)
 
-    # Step 9: Build and return output
     soar.set_message("The status is updated successfully")
     return SetStatusOutput(
         id=issue["id"],

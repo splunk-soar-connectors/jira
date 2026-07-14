@@ -37,7 +37,6 @@ def _resolve_timezone(asset: Asset) -> ZoneInfo:
         logger.info(f"Using configured timezone: {asset.timezone.key}")
         return asset.timezone
 
-    # Auto-detect from Jira server
     try:
         info = jira_request(asset, "GET", "rest/api/2/serverInfo")
         tz_name: str = info.get("serverTimeZone") or "UTC"
@@ -142,7 +141,6 @@ def _fetch_all_comments(asset: Asset, issue_key: str, comment_data: dict) -> lis
     if total <= len(comments):
         return comments
 
-    # Need more — paginate the comment endpoint
     start_at = len(comments)
     while start_at < total:
         try:
@@ -315,7 +313,6 @@ def _build_fields_artifact(
     cef["description"] = fields.get("description")
     cef["issue_type"] = _name(fields.get("issuetype"))
 
-    # Custom fields: remap customfield_XXXXX → human name, then pick requested ones
     if custom_fields_list and custom_field_map:
         renamed: dict = {}
         for raw_key, value in fields.items():

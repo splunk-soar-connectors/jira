@@ -75,7 +75,6 @@ def get_attachments(
 
     logger = getLogger()
 
-    # Validate: must have either retrieve_all=True or a non-empty extension_filter
     retrieve_all = params.retrieve_all if params.retrieve_all is not None else False
     extension_filter = params.extension_filter or ""
 
@@ -84,7 +83,6 @@ def get_attachments(
             "Please select retrieve all or pass in a list of extensions"
         )
 
-    # Build allowed extensions list (e.g. "pdf,png" -> [".pdf", ".png"])
     allowed_extensions: list[str] = []
     if extension_filter.strip():
         allowed_extensions = [
@@ -93,7 +91,6 @@ def get_attachments(
             if ext.strip()
         ]
 
-    # Fetch issue with only attachment fields
     ticket_key = params.id
     issue = jira_request(
         asset, "GET", f"rest/api/2/issue/{ticket_key}?fields=attachment"
@@ -103,7 +100,6 @@ def get_attachments(
 
     if not attachments:
         logger.info(f"No attachments found on issue {ticket_key}")
-        # Return a single result indicating no attachments
         return [
             GetAttachmentsOutput(
                 container=float(params.container_id),
@@ -128,27 +124,23 @@ def get_attachments(
         attachment_id = float(attachment.get("id", 0))
         attachment_size = float(attachment.get("size", 0))
 
-        # Strip spaces from filename
         filename = "".join(filename.split())
 
         if not filename:
             logger.warning("Skipping attachment with empty filename")
             continue
 
-        # Check extension filter
         if allowed_extensions:
             ext = Path(filename).suffix
             if ext.lower() not in [e.lower() for e in allowed_extensions]:
                 logger.info(f"Skipping {filename}: extension not in filter")
                 continue
 
-        # Build full path and check for path traversal
         full_path = str(Path(vault_tmp_dir) / filename)
         if not _is_safe_path(vault_tmp_dir, full_path):
             logger.error(f"{JIRA_ERROR_INVALID_FILE_PATH}: {filename}")
             continue
 
-        # Download attachment binary content
         try:
             with httpx.Client(verify=verify, follow_redirects=True) as client:
                 resp = client.get(
@@ -166,11 +158,9 @@ def get_attachments(
                 f"Failed to download attachment '{filename}': {exc}"
             ) from exc
 
-        # Write to vault tmp dir
         with open(full_path, "wb") as f:
             f.write(content)
 
-        # Add to vault
         vault_id = soar.vault.add_attachment(
             container_id=int(params.container_id),
             file_location=full_path,

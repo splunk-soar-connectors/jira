@@ -39,15 +39,6 @@ class JiraPermissiveOutput(PermissiveActionOutput):
         self._permissive_raw = data
 
 
-# Shared Output Classes
-#
-# These model sub-objects of the Jira issue "fields" blob. That blob is
-# unbounded — it carries arbitrary ``customfield_*`` keys and provider-specific
-# extras that vary per instance — so these use ``JiraPermissiveOutput``: never
-# drop a field the client sent, and warn (not crash) on unexpected shapes.
-# Top-level action outputs stay strict ``ActionOutput`` (see each action file).
-
-
 class AvatarurlsOutput(JiraPermissiveOutput):
     n16x16: str = OutputField(
         cef_types=["url"],

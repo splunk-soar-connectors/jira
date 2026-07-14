@@ -267,7 +267,6 @@ def list_tickets(
             + "Please provide either project_key or JQL Query.Both Fields can not be empty"
         )
 
-    # When Both JQL and Project Key are present
     if jql_query and project_key:
         jql = f"project={project_key} and {jql_query}"
     elif project_key:

@@ -73,7 +73,6 @@ class CreateTicketParams(Params):
     )
 
 
-# create_ticket FieldsOutput — no components/fixVersions/issuelinks/labels/versions
 class FieldsOutput(JiraPermissiveOutput):
     Epic_Link: str | None = OutputField(alias="Epic Link")
     Epic_Name: str | None = OutputField(example_values=["Test epic"], alias="Epic Name")
@@ -189,11 +188,9 @@ def create_ticket(
 
     logger = getLogger()
 
-    # Validate: only one of assignee / assignee_account_id may be set
     if params.assignee and params.assignee_account_id:
         raise ActionFailure(JIRA_ASSIGNEE_ERROR)
 
-    # --- Build fields dict ---
     fields: dict = {}
     json_fields_error = ""
 
@@ -210,7 +207,6 @@ def create_ticket(
                 raise ActionFailure(JIRA_ERROR_INPUT_FIELDS_NOT_THE_ONLY_ONE)
             fields = fields["fields"]
 
-    # Individual params fill in only if not already in fields
     if params.project_key and "project" not in fields:
         fields["project"] = {"key": params.project_key}
     if params.summary and "summary" not in fields:
@@ -227,7 +223,6 @@ def create_ticket(
         {"fields": fields}, get_custom_field_name_to_id_map(asset)
     )["fields"]
 
-    # --- Create the issue ---
     logger.info("Creating Jira ticket")
     new_issue = jira_request(asset, "POST", "rest/api/2/issue", json={"fields": fields})
     issue_key = new_issue.get("key")
@@ -237,7 +232,6 @@ def create_ticket(
     assign_error = ""
     attach_error = ""
 
-    # --- Assign (Jira Cloud only — accountId) ---
     if params.assignee_account_id:
         try:
             jira_request(
@@ -252,7 +246,6 @@ def create_ticket(
             )
             logger.warning(assign_error)
 
-    # --- Attach vault file ---
     if params.vault_id:
         try:
             attachments = soar.vault.get_attachment(vault_id=params.vault_id)
@@ -283,7 +276,6 @@ def create_ticket(
             attach_error = JIRA_ERROR_ATTACH_FAILED.format(str(exc))
             logger.warning(attach_error)
 
-    # --- Re-query ticket to build full output ---
     try:
         issue = jira_request(asset, "GET", f"rest/api/2/issue/{issue_key}")
     except ActionFailure as exc:

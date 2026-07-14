@@ -37,8 +37,6 @@ def add_comment(
 
     logger = getLogger()
 
-    # Verify if the ticket exists or not by fetching the ticket
-
     try:
         jira_request(
             asset=asset, method="GET", endpoint=f"rest/api/2/issue/{params.id}"

@@ -52,7 +52,6 @@ def link_tickets(
 
     from ..helpers import jira_request
 
-    # Resolve link type case-insensitively against the instance's available types
     link_types_resp = jira_request(asset, "GET", "rest/api/2/issueLinkType")
     available = link_types_resp.get("issueLinkTypes") or []
     canonical_name: str | None = None

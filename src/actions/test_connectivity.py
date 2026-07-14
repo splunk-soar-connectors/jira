@@ -50,7 +50,6 @@ def run_test_connectivity(soar: SOARClient, asset: Asset) -> None:
 
     body_snippet = (response.text or "")[:500]
 
-    # --- Interpret ---
     if response.history:
         raise ActionFailure(
             f"{JIRA_ERROR_CONNECTIVITY_TEST}: request was redirected "

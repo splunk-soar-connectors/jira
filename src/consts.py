@@ -1,5 +1,3 @@
-# File: jira_consts.py  # noqa: ERA001
-#
 # Copyright (c) 2016-2026 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
