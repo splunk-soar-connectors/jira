@@ -9,11 +9,6 @@
 - **JIRA Cloud List Tickets Behavior Change**: Previously, if you provided an invalid project ID or query in the "list tickets" action, it would fail with an error. Now for JIRA Cloud instances, it will pass and return 0 tickets instead of failing. This provides better error handling and prevents workflow interruption.
 - **JIRA Server Behavior**: For JIRA Server instances, the behavior remains unchanged - invalid project ID or query will still fail as before.
 
-## JIRA
-
-This app uses the python JIRA module, which is licensed under the BSD License (BSD), Copyright (c)
-2001-2022. Python Software Foundation
-
 ## oauthlib
 
 This app uses the python oauthlib module, which is licensed under the OSI Approved, BSD License
@@ -72,6 +67,8 @@ information to assist in debugging.
     value.
   - Get Attachments - Added a new action. The action will store specific attachments from a
     given Jira ticket inside the vault.
+  - Make Request - Added a new action. This action allows playbooks to call any Jira REST API
+    endpoint directly using any HTTP method, with optional headers, query parameters, and body.
 
 **Authentication steps for JIRA Cloud**
 
@@ -126,41 +123,6 @@ information to assist in debugging.
   - For security reasons it isn't possible to view the token after closing the creation dialog;
     if necessary, create a new token.
   - For any invalid PAT value, the test_connectivity will pass as per the API behaviour.
-
-**Authentication via Service Account (Jira Cloud)**
-
-- Service accounts are non-human accounts designed for application integrations and automation in
-  Atlassian Cloud. They use scoped API tokens that require specific URL formats.
-
-- **Service Account Auto-Detection**
-
-  - The app automatically detects service account authentication when the username ends with
-    `@serviceaccount.atlassian.com`
-  - When detected, the app automatically disables session validation to avoid calling the
-    deprecated `/rest/auth/1/session` endpoint
-
-- Creating a Service Account
-
-  - Go to [admin.atlassian.com](https://admin.atlassian.com)
-  - Navigate to **Directory** > **Service accounts**
-  - Click **Create service account** and follow the setup wizard
-  - After creating the service account, create an **API token** with appropriate scopes
-
-- Finding Your Cloud ID
-
-  - Navigate to `https://your-site.atlassian.net/_edge/tenant_info` in your
-    browser
-  - The response will contain your Cloud ID: `{"cloudId":"your-cloud-id-here"}`
-  - Alternatively, go to `admin.atlassian.com` and look for the string after `/s/` in the URL
-
-- Configuring SOAR for Service Accounts
-
-  1. Find your Cloud ID using one of the methods above
-  1. Set **Device URL** to: `https://api.atlassian.com/ex/jira/{cloudId}` (replace {cloudId} with
-     your actual Cloud ID, e.g., `https://api.atlassian.com/ex/jira/0c4c2bff-89b3-46a1-bc44-ea648483e109`)
-  1. Set **Username** to your service account email (e.g., `bot@serviceaccount.atlassian.com`)
-  1. Set **Password** to the service account API token
-  1. Run **Test Connectivity** to verify the configuration
 
 **The functioning of On Poll**
 
@@ -289,21 +251,10 @@ information to assist in debugging.
   method does.
 - Test connectivity may fail due to invalid credentials, such as accidentally using the user's
   email address as the authentication login instead of the user's login name.
-- While adding an attachment to the Jira ticket using 'Update ticket' action, if the filename
-  contains Unicode characters, the action is getting failed with the 500 Internal Server Error
-  because of the Jira SDK issue. Due to this, action behaves differently with the various Splunk
-  SOAR platforms. As a result, we have deployed the below-mentioned workflow which will ensure a
-  minimal change in the filename and minimal/no data loss.
-  1. For the first time we try to add an attachment to the Jira ticket with the same name as the
-     filename, if it may get successful, then it will add an attachment with the same name
-  1. But if it fails, then, we will check whether there are Unicode characters or not in the
-     filename, if it has, there are highly possible chances that Jira SDK might get throws an
-     exception due to these Unicode characters.
-  1. And in such a case, we removed those non-ASCII Unicode characters from the filename and add
-     prefix FILENAME_ASCII to the filename. And, we again try to add an attachment with a newly
-     created name to the Jira ticket.
-  1. If it passes, then it's okay and if it doesn't, then, there might be some other genuine
-     issue rather than the SDK issue and we fail the action by rethrowing the same error.
+- While adding an attachment to the Jira ticket using 'Update ticket' or 'Create ticket' actions,
+  if the filename contains Unicode characters, the app will automatically strip non-ASCII characters
+  and prefix the filename with `FILENAME_ASCII_` before uploading. This avoids a 500 Internal
+  Server Error from the Jira API when Unicode filenames are used.
 
 ## Port Information
 

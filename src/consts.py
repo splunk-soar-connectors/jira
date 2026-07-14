@@ -1,4 +1,4 @@
-# File: jira_consts.py
+# File: jira_consts.py  # noqa: ERA001
 #
 # Copyright (c) 2016-2026 Splunk Inc.
 #
@@ -80,12 +80,21 @@ JIRA_ASSIGNEE_ERROR = (
     "For JIRA on-prem, use 'assignee' action parameter, and, for JIRA cloud, use 'assignee_account_id' action parameter"
 )
 JIRA_INVALID_LIMIT = "Please provide non-zero positive integer in limit"
-JIRA_ERROR_STATE_FILE_CORRUPT_ERROR = "Error occurred while loading the state file due to its unexpected format.\
+JIRA_ERROR_STATE_FILE_CORRUPT_ERROR = (
+    "Error occurred while loading the state file due to its unexpected format.\
      Resetting the state file with the default format. Please try again."
-JIRA_ERROR_FETCH_CUSTOM_FIELDS = "Error occurred while fetching the custom fields metadata"
+)
+JIRA_ERROR_FETCH_CUSTOM_FIELDS = (
+    "Error occurred while fetching the custom fields metadata"
+)
 JIRA_ERROR_API_INITIALIZATION = "API Initialization failed"
 JIRA_ERROR_API_TIMEOUT = "Timed out waiting for API to initialize. Please verify the asset configuration parameters"
 JIRA_ERROR_CONNECTIVITY_TEST = "Connectivity test failed"
+JIRA_CONFIG_PARAMS_REQUIRED = (
+    "Jira credentials are not configured. Please provide either "
+    "'client_id' and 'client_secret' (OAuth service account), or both "
+    "'username' and 'password' (API token) asset configuration parameters."
+)
 JIRA_ERROR_PROJECTS_INFO = "Error getting projects info"
 JIRA_ERROR_SERVER_INFO = "Error getting server info"
 JIRA_SUCCESS_CONNECTIVITY_TEST = "Connectivity test passed"
@@ -101,10 +110,16 @@ JIRA_ERROR_FILE_NOT_IN_VAULT = "Could not find specified vault ID in vault"
 JIRA_ERROR_ATTACH_FAILED = "Adding attachment failed. {0}"
 JIRA_ERROR_LIST_TICKETS_FAILED = "Failed to get ticket listing"
 JIRA_ERROR_GET_TICKET = "Failed to get ticket info"
-JIRA_ERROR_FIELDS_JSON_PARSE = "Unable to parse the '{field_name}' parameter into a dictionary"
-JIRA_ERROR_ISSUE_VALID_TRANSITIONS = "Input status does not seem to be a valid status that can be set for this issue"
+JIRA_ERROR_FIELDS_JSON_PARSE = (
+    "Unable to parse the '{field_name}' parameter into a dictionary"
+)
+JIRA_ERROR_ISSUE_VALID_TRANSITIONS = (
+    "Input status does not seem to be a valid status that can be set for this issue"
+)
 JIRA_ERROR_ISSUE_VALID_RESOLUTION = "Input resolution does not seem to be valid"
-JIRA_ERROR_UPDATE_NO_PARAM = "Either the Vault ID or the JSON field must be filled out to perform this action"
+JIRA_ERROR_UPDATE_NO_PARAM = (
+    "Either the Vault ID or the JSON field must be filled out to perform this action"
+)
 JIRA_ERROR_UPDATE_FAILED = "Unable to update the ticket with the given JSON"
 JIRA_ERROR_COMMENT_SET_STATUS_FAILED = (
     "Comment could not be added successfully due to either permissions or configuration issue "
@@ -119,11 +134,24 @@ JIRA_ERROR_INPUT_FIELDS_NOT_THE_ONLY_ONE = (
 )
 JIRA_ERROR_FAILED = "Some tickets had issues during ingestion, see logs for the details"
 JIRA_ERROR_NEGATIVE_INPUT = "'start_index' cannot be a negative value"
-JIRA_LIMIT_VALIDATION_ALLOW_ZERO_MESSAGE = "Please provide zero or positive integer value in the {parameter} parameter"
+JIRA_LIMIT_VALIDATION_ALLOW_ZERO_MESSAGE = (
+    "Please provide zero or positive integer value in the {parameter} parameter"
+)
 JIRA_LIMIT_VALIDATION_MESSAGE = "Please provide a valid non-zero positive integer value in the {parameter} parameter"
 
 JIRA_CREATED_TICKET = "Created ticket"
 JIRA_USING_BASE_URL = "Using URL: {base_url}"
+
+JIRA_SERVICE_ACCOUNT_USERNAME_SUFFIX = "@serviceaccount.atlassian.com"
+JIRA_TENANT_INFO_ENDPOINT = "_edge/tenant_info"
+JIRA_CLOUD_GATEWAY_URL_TEMPLATE = "https://api.atlassian.com/ex/jira/{cloud_id}"
+JIRA_ERROR_CLOUD_ID_LOOKUP_FAILED = (
+    "Failed to resolve the Atlassian cloud ID for this service account: {error}"
+)
+JIRA_OAUTH_TOKEN_ENDPOINT = "https://auth.atlassian.com/oauth/token"  # noqa: S105
+JIRA_ERROR_OAUTH_TOKEN_FETCH_FAILED = (
+    "Failed to obtain an OAuth access token for this service account: {error}"  # noqa: S105
+)
 
 DEFAULT_MAX_RESULTS_PER_PAGE = 100
 DEFAULT_MAX_VALUE = 1000
