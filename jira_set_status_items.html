@@ -96,7 +96,7 @@
                 <td>Id</td>
                 <td>
                   <a href="javascript:;"
-                     onclick="context_menu(this, [{'contains': ['jira ticket key'], 'value':'{{ result.param.id }}' }], 0, {{ container.id }}, null, false);">
+                     onclick="context_menu(this, [{'contains': ['jira ticket key'], 'value':'{{ result.param.id|escapejs }}' }], 0, {{ container.id }}, null, false);">
                     {{ result.param.id }}
                     &nbsp;
                     <span class="fa fa-caret-down" style="font-size: smaller;"></span>
@@ -159,7 +159,7 @@
                   <td class="widget-td">{{ item.id }}</td>
                   <td class="widget-td">
                     <a href="javascript:;"
-                       onclick="context_menu(this, [{'contains': ['jira issue type'], 'value':'{{ item.issue_type }}' }], 0, {{ container.id }}, null, false);">
+                       onclick="context_menu(this, [{'contains': ['jira issue type'], 'value':'{{ item.issue_type|escapejs }}' }], 0, {{ container.id }}, null, false);">
                       {{ item.issue_type }}
                       &nbsp;
                       <span class="fa fa-caret-down" style="font-size: smaller;"></span>
@@ -167,7 +167,7 @@
                   </td>
                   <td class="widget-td">
                     <a href="javascript:;"
-                       onclick="context_menu(this, [{'contains': ['jira ticket key'], 'value':'{{ item.name }}' }], 0, {{ container.id }}, null, false);">
+                       onclick="context_menu(this, [{'contains': ['jira ticket key'], 'value':'{{ item.name|escapejs }}' }], 0, {{ container.id }}, null, false);">
                       {{ item.name }}
                       &nbsp;
                       <span class="fa fa-caret-down" style="font-size: smaller;"></span>
@@ -176,7 +176,7 @@
                   <td class="widget-td">{{ item.status }}</td>
                   <td class="widget-td">
                     <a href="javascript:;"
-                       onclick="context_menu(this, [{'contains': ['jira ticket priority'], 'value':'{{ item.priority }}' }], 0, {{ container.id }}, null, false);">
+                       onclick="context_menu(this, [{'contains': ['jira ticket priority'], 'value':'{{ item.priority|escapejs }}' }], 0, {{ container.id }}, null, false);">
                       {{ item.priority }}
                       &nbsp;
                       <span class="fa fa-caret-down" style="font-size: smaller;"></span>
@@ -184,7 +184,7 @@
                   </td>
                   <td class="widget-td">
                     <a href="javascript:;"
-                       onclick="context_menu(this, [{'contains': ['jira ticket resolution'], 'value':'{{ item.resolution }}' }], 0, {{ container.id }}, null, false);">
+                       onclick="context_menu(this, [{'contains': ['jira ticket resolution'], 'value':'{{ item.resolution|escapejs }}' }], 0, {{ container.id }}, null, false);">
                       {{ item.resolution }}
                       &nbsp;
                       <span class="fa fa-caret-down" style="font-size: smaller;"></span>
@@ -192,7 +192,7 @@
                   </td>
                   <td class="widget-td">
                     <a href="javascript:;"
-                       onclick="context_menu(this, [{'contains': ['jira user display name'], 'value':'{{ item.reporter }}' }], 0, {{ container.id }}, null, false);">
+                       onclick="context_menu(this, [{'contains': ['jira user display name'], 'value':'{{ item.reporter|escapejs }}' }], 0, {{ container.id }}, null, false);">
                       {{ item.reporter }}
                       &nbsp;
                       <span class="fa fa-caret-down" style="font-size: smaller;"></span>

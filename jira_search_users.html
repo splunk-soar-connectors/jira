@@ -112,7 +112,7 @@
               <td>
                 <a class="no-word-wrap"
                    href="javascript:;"
-                   onclick="context_menu(this, [{'contains': ['user name'], 'value':'{{ result.param.username }}' }], 0, {{ container.id }}, null, false);">
+                   onclick="context_menu(this, [{'contains': ['user name'], 'value':'{{ result.param.username|escapejs }}' }], 0, {{ container.id }}, null, false);">
                   {{ result.param.username }}
                   &nbsp;
                   <span class="fa fa-caret-down" style="font-size: smaller;"></span>
@@ -126,7 +126,7 @@
               <td>
                 <a class="no-word-wrap"
                    href="javascript:;"
-                   onclick="context_menu(this, [{'contains': ['jira user display name'], 'value':'{{ result.param.display_name }}' }], 0, {{ container.id }}, null, false);">
+                   onclick="context_menu(this, [{'contains': ['jira user display name'], 'value':'{{ result.param.display_name|escapejs }}' }], 0, {{ container.id }}, null, false);">
                   {{ result.param.display_name }}
                   &nbsp;
                   <span class="fa fa-caret-down" style="font-size: smaller;"></span>
@@ -159,7 +159,7 @@
                     <td>
                       <a class="no-word-wrap"
                          href="javascript:;"
-                         onclick="context_menu(this, [{'contains': ['user name'], 'value':'{{ data.name }}' }], 0, {{ container.id }}, null, false);">
+                         onclick="context_menu(this, [{'contains': ['user name'], 'value':'{{ data.name|escapejs }}' }], 0, {{ container.id }}, null, false);">
                         {{ data.name }}
                         &nbsp;
                         <span class="fa fa-caret-down" style="font-size: smaller;"></span>
@@ -173,7 +173,7 @@
                     <td>
                       <a class="no-word-wrap"
                          href="javascript:;"
-                         onclick="context_menu(this, [{'contains': ['jira user display name'], 'value':'{{ data.displayName }}' }], 0, {{ container.id }}, null, false);">
+                         onclick="context_menu(this, [{'contains': ['jira user display name'], 'value':'{{ data.displayName|escapejs }}' }], 0, {{ container.id }}, null, false);">
                         {{ data.displayName }}
                         &nbsp;
                         <span class="fa fa-caret-down" style="font-size: smaller;"></span>
@@ -187,7 +187,7 @@
                     <td>
                       <a class="no-word-wrap"
                          href="javascript:;"
-                         onclick="context_menu(this, [{'contains': ['jira user account id'], 'value':'{{ data.accountId }}' }], 0, {{ container.id }}, null, false);">
+                         onclick="context_menu(this, [{'contains': ['jira user account id'], 'value':'{{ data.accountId|escapejs }}' }], 0, {{ container.id }}, null, false);">
                         {{ data.accountId }}
                         &nbsp;
                         <span class="fa fa-caret-down" style="font-size: smaller;"></span>
@@ -200,7 +200,7 @@
                   <td>
                     <a class="no-word-wrap"
                        href="javascript:;"
-                       onclick="context_menu(this, [{'contains': ['email'], 'value':'{{ data.emailAddress }}' }], 0, {{ container.id }}, null, false);">
+                       onclick="context_menu(this, [{'contains': ['email'], 'value':'{{ data.emailAddress|escapejs }}' }], 0, {{ container.id }}, null, false);">
                       {{ data.emailAddress }}
                       &nbsp;
                       <span class="fa fa-caret-down" style="font-size: smaller;"></span>

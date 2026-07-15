@@ -38,7 +38,7 @@
             "data_type": "boolean",
             "order": 1,
             "description": "Verify server certificate",
-            "default": false
+            "default": true
         },
         "username": {
             "data_type": "string",
