@@ -1,1 +1,2 @@
 **Unreleased**
+* fix: respect verify_server_cert setting in REST API calls
