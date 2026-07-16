@@ -38,9 +38,9 @@ from .on_poll_helpers import (
     _build_fields_artifact,
     _build_jql,
     _fetch_all_comments,
-    _get_artifact_cef_map,
-    _get_existing_artifact_sdis,
+    _get_existing_artifact,
     _get_global_custom_field_map,
+    _migrate_legacy_ingest_state,
     _paginate_issues,
     _resolve_timezone,
 )
@@ -73,6 +73,7 @@ def on_poll(
       - Scheduled (ongoing): uses asset.max_tickets; adds `updated>="..."` JQL filter.
     """
     state = asset.ingest_state
+    _migrate_legacy_ingest_state(asset)
 
     # `first_run` defaults True so a missing key = treat as first run.
     # `last_time` is UTC epoch int; 0 means "no previous run".
@@ -234,15 +235,12 @@ def on_poll(
                 json={"data": issue, "description": fields.get("summary") or ""},
             )
 
-            existing_sdis = _get_existing_artifact_sdis(soar, container_id)
-            existing_cef_map = _get_artifact_cef_map(soar, container_id)
-
             artifact_batch: list[Artifact] = []
 
             # Attachments — skip if already ingested (Jira attachment IDs are stable)
             for attachment in fields.get("attachment") or []:
                 attachment_sdi = str(attachment.get("id", ""))
-                if attachment_sdi in existing_sdis:
+                if _get_existing_artifact(soar, container_id, attachment_sdi):
                     continue
                 try:
                     art = _build_attachment_artifact(attachment)
@@ -273,9 +271,12 @@ def on_poll(
                 asset, issue_key, fields.get("comment") or {}
             ):
                 comment_sdi = str(comment.get("id", ""))
-                existing_cef = existing_cef_map.get(comment_sdi)
+                existing_artifact = _get_existing_artifact(
+                    soar, container_id, comment_sdi
+                )
+                existing_cef = (existing_artifact or {}).get("cef") or {}
 
-                if existing_cef is not None:
+                if existing_artifact is not None:
                     if is_manual:
                         # Poll Now always re-creates to show current state (legacy behaviour)
                         pass

@@ -25,6 +25,33 @@ from ..helpers import get_custom_field_map, jira_request
 logger = getLogger()
 
 
+def _migrate_legacy_ingest_state(asset: Asset) -> None:
+    """Seed SDK ingest state from the pre-SDK connector's flat checkpoint keys.
+
+    The legacy BaseConnector app stored `first_run` and `last_time` as top-level
+    keys in the asset state file. The SDK keeps ingestion checkpoints in a
+    separate encrypted partition of that same file, so upgrading in place would
+    otherwise find that partition empty and re-ingest everything from scratch.
+    `last_time` is a UTC epoch int on both sides (legacy's host-tz round-trip via
+    time.mktime cancels itself out), so it's copied as-is with no conversion.
+    Guarded by needs_* so this only ever fills a gap, never overwrites a
+    checkpoint the SDK partition already has.
+    """
+    state = asset.ingest_state
+    needs_first_run = "first_run" not in state
+    needs_last_time = "last_time" not in state
+    if not (needs_first_run or needs_last_time):
+        return
+
+    legacy_state = state.backend.load_state() or {}
+
+    if needs_first_run and "first_run" in legacy_state:
+        state["first_run"] = legacy_state["first_run"]
+
+    if needs_last_time and (legacy_last_time := legacy_state.get("last_time")):
+        state["last_time"] = legacy_last_time
+
+
 def _resolve_timezone(asset: Asset) -> ZoneInfo:
     """Return the Jira server timezone.
 
@@ -167,52 +194,35 @@ def _fetch_all_comments(asset: Asset, issue_key: str, comment_data: dict) -> lis
     return comments
 
 
-def _get_existing_artifact_sdis(soar: SOARClient, container_id: int) -> set[str]:
-    """Return the set of source_data_identifiers for all artifacts in a container.
+def _get_existing_artifact(
+    soar: SOARClient, container_id: int, sdi: str
+) -> dict | None:
+    """Return the most recent artifact matching this source_data_identifier, or None.
 
-    Used for deduplication: one SOAR REST call per container instead of one per artifact.
+    Mirrors legacy's per-item ``_get_artifact_id`` lookup: one bounded, targeted
+    REST call per artifact rather than one unbounded bulk fetch per container.
+    Individually isolated (try/except) so a single slow/failed lookup only
+    risks a duplicate artifact, not an aborted poll run.
     """
-    response = soar.get(
-        "rest/artifact",
-        params={
-            "_filter_container_id": container_id,
-            "page_size": 0,  # 0 = return all
-            "fields": "source_data_identifier,cef",
-        },
-    )
+    try:
+        response = soar.get(
+            "rest/artifact",
+            params={
+                "_filter_source_data_identifier": f'"{sdi}"',
+                "_filter_container_id": container_id,
+                "sort": "id",
+                "order": "desc",
+                "page_size": 1,
+                "fields": "source_data_identifier,cef",
+            },
+        )
+    except Exception as exc:
+        logger.warning(f"Artifact lookup failed for sdi={sdi!r}: {exc}")
+        return None
     if not response.is_success:
-        return set()
-    data = response.json()
-    return {
-        str(a.get("source_data_identifier", ""))
-        for a in data.get("data", [])
-        if a.get("source_data_identifier")
-    }
-
-
-def _get_artifact_cef_map(soar: SOARClient, container_id: int) -> dict[str, dict]:
-    """Return {source_data_identifier: cef_dict} for all artifacts in a container.
-
-    Used to check comment edit timestamps without N individual REST calls.
-    """
-    response = soar.get(
-        "rest/artifact",
-        params={
-            "_filter_container_id": container_id,
-            "page_size": 0,
-            "sort": "id",
-            "order": "desc",  # most recent first so first match wins on duplicate SDIs
-            "fields": "source_data_identifier,cef",
-        },
-    )
-    if not response.is_success:
-        return {}
-    cef_map: dict[str, dict] = {}
-    for a in response.json().get("data", []):
-        sdi = str(a.get("source_data_identifier", ""))
-        if sdi and sdi not in cef_map:  # keep the most recently created version
-            cef_map[sdi] = a.get("cef") or {}
-    return cef_map
+        return None
+    data = response.json().get("data", [])
+    return data[0] if data else None
 
 
 def _build_attachment_artifact(attachment: dict) -> Artifact:
