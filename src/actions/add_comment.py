@@ -23,7 +23,7 @@ class AddCommentParams(Params):
     comment: str = Param(description="Comment to add")
     internal: bool | None = Param(
         description="Whether comment should be internal only or not in Jira Service Desk (if the value is not provided, it will internally be treated as 'false')",
-        default=True,
+        default=False,
     )
 
 

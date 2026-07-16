@@ -29,7 +29,7 @@ class GetAttachmentsParams(Params):
     )
     retrieve_all: bool | None = Param(
         description="If this is set to true all attachments will be retrieved from the issue (if the value is not provided, it will internally be treated as 'false')",
-        default=True,
+        default=False,
     )
     container_id: str = Param(description="The Container ID to associate the file with")
     extension_filter: str | None = Param(

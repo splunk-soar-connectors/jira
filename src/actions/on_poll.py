@@ -29,6 +29,7 @@ from .._asset import Asset
 from ..consts import (
     DEFAULT_SCHEDULED_INTERVAL_INGESTION_COUNT,
     JIRA_ERROR_FAILED,
+    JIRA_LIMIT_VALIDATION_MESSAGE,
     JIRA_TIME_FORMAT,
 )
 from ..helpers import get_auth
@@ -90,10 +91,18 @@ def on_poll(
         limit = int(
             params.container_count or DEFAULT_SCHEDULED_INTERVAL_INGESTION_COUNT
         )
+        limit_param_name = "container_count"
     elif first_run:
         limit = int(asset.first_run_max_tickets or 1000)
+        limit_param_name = "first_run_max_tickets"
     else:
         limit = int(asset.max_tickets or DEFAULT_SCHEDULED_INTERVAL_INGESTION_COUNT)
+        limit_param_name = "max_tickets"
+
+    if limit <= 0:
+        raise ActionFailure(
+            JIRA_LIMIT_VALIDATION_MESSAGE.format(parameter=limit_param_name)
+        )
 
     # Only needed to convert the UTC cursor epoch → Jira-local string for the
     # JQL filter; skipped entirely on first run / Poll Now (no time filter).
@@ -176,19 +185,34 @@ def on_poll(
         )
 
         if container_id is None:
-            # The SDK decorator calls save_container and assigns container_id;
-            # all subsequent Artifacts (until the next Container yield) attach to it.
-            # SDK sets the label from ingest config automatically when container_label is omitted.
-            yield Container(
+            # Keep a handle to the yielded Container: the decorator calls
+            # save_container() and backfills `.container_id` on this same object
+            # once the generator is resumed, so we can read the real ID back below.
+            new_container = Container(
                 name=issue_key,
                 description=fields.get("summary") or "",
                 source_data_identifier=issue_key,
                 data=issue,
             )
+            yield new_container
+            container_id = (
+                int(new_container.container_id)
+                if new_container.container_id is not None
+                else None
+            )
+
+            if container_id is None:
+                logger.warning(
+                    f"Failed to create container for {issue_key}; skipping its artifacts"
+                )
+                if issue_updated_utc > last_updated_utc:
+                    last_updated_utc = issue_updated_utc
+                continue
 
             for attachment in fields.get("attachment") or []:
                 try:
                     art = _build_attachment_artifact(attachment)
+                    art.container_id = container_id
                     content_url = attachment.get("content", "")
                     if content_url:
                         with _httpx.Client(
@@ -199,7 +223,7 @@ def on_poll(
                             )
                         if dl.is_success:
                             vault_id = soar.vault.create_attachment(
-                                container_id=0,  # SDK fills real ID after Container save
+                                container_id=container_id,
                                 file_content=dl.content,
                                 file_name=attachment.get("filename", "attachment"),
                             )
@@ -215,14 +239,18 @@ def on_poll(
                 asset, issue_key, fields.get("comment") or {}
             ):
                 try:
-                    yield _build_comment_artifact(comment)
+                    art = _build_comment_artifact(comment)
+                    art.container_id = container_id
+                    yield art
                 except Exception as exc:
                     logger.warning(
                         f"Failed to build comment artifact for {issue_key}: {exc}"
                     )
 
             try:
-                yield _build_fields_artifact(issue, cf_map, custom_fields_list)
+                fields_art = _build_fields_artifact(issue, cf_map, custom_fields_list)
+                fields_art.container_id = container_id
+                yield fields_art
             except Exception as exc:
                 logger.warning(
                     f"Failed to build fields artifact for {issue_key}: {exc}"

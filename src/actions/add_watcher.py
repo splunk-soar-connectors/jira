@@ -47,32 +47,32 @@ def add_watcher(
     if bool(params.username) == bool(params.user_account_id):
         raise ActionFailure(JIRA_WATCHERS_ERROR)
 
-    # Cloud-only: user_account_id is required
-    if params.username and not params.user_account_id:
-        raise ActionFailure(
-            "user_account_id is required for Jira Cloud. Use 'lookup users' to find the account ID."
-        )
+    # username -> on-prem (matched by "name"); user_account_id -> cloud (matched by "accountId")
+    user = params.username or params.user_account_id
 
     watchers_response = jira_request(
         asset, "GET", f"rest/api/2/issue/{params.id}/watchers"
     )
-    existing_account_ids = {
-        w.get("accountId") for w in watchers_response.get("watchers", [])
+    existing_watchers = watchers_response.get("watchers", [])
+    existing_identifiers = {
+        w.get("name") if params.username else w.get("accountId")
+        for w in existing_watchers
     }
 
-    if params.user_account_id in existing_account_ids:
+    if user in existing_identifiers:
         logger.info("user already in watchers list")
         soar.set_message(
             f"User is already in the watchers list of the issue ID: {params.id}"
         )
         return ActionOutput()
 
-    # POST the accountId as a JSON string body (what Jira Cloud expects)
+    # Jira's watchers POST body is just the identifier as a JSON string —
+    # a username for on-prem, an accountId for cloud.
     jira_request(
         asset,
         "POST",
         f"rest/api/2/issue/{params.id}/watchers",
-        json=params.user_account_id,
+        json=user,
     )
 
     soar.set_message(

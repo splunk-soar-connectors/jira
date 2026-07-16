@@ -47,11 +47,8 @@ def remove_watcher(
     if bool(params.username) == bool(params.user_account_id):
         raise ActionFailure(JIRA_WATCHERS_ERROR)
 
-    # Cloud-only: user_account_id is required
-    if params.username and not params.user_account_id:
-        raise ActionFailure(
-            "user_account_id is required for Jira Cloud. Use 'lookup users' to find the account ID."
-        )
+    # username -> on-prem (matched by "name"); user_account_id -> cloud (matched by "accountId")
+    user = params.username or params.user_account_id
 
     watchers_response = jira_request(
         asset, "GET", f"rest/api/2/issue/{params.id}/watchers"
@@ -61,9 +58,12 @@ def remove_watcher(
     if not existing_watchers:
         raise ActionFailure(f"No watchers found in the issue ID: {params.id}")
 
-    existing_account_ids = {w.get("accountId") for w in existing_watchers}
+    existing_identifiers = {
+        w.get("name") if params.username else w.get("accountId")
+        for w in existing_watchers
+    }
 
-    if params.user_account_id not in existing_account_ids:
+    if user not in existing_identifiers:
         logger.info("user not in watchers list")
         soar.set_message(
             f"User is not in the watchers list of the issue ID: {params.id}"
@@ -74,7 +74,9 @@ def remove_watcher(
         asset,
         "DELETE",
         f"rest/api/2/issue/{params.id}/watchers",
-        params={"accountId": params.user_account_id},
+        params={"username": params.username}
+        if params.username
+        else {"accountId": params.user_account_id},
     )
 
     soar.set_message(

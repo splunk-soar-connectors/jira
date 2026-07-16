@@ -21,7 +21,7 @@ class Asset(BaseAsset):
         description="Device URL including the port, e.g. https://myjira.enterprise.com:8080"
     )
     verify_server_cert: bool | None = AssetField(
-        description="Verify server certificate", default=False
+        description="Verify server certificate", default=True
     )
     client_id: str | None = AssetField(
         description="OAuth 2.0 client ID for a service account. Takes priority over username/password."
