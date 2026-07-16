@@ -54,10 +54,15 @@ def add_watcher(
         asset, "GET", f"rest/api/2/issue/{params.id}/watchers"
     )
     existing_watchers = watchers_response.get("watchers", [])
-    existing_identifiers = {
-        w.get("name") if params.username else w.get("accountId")
-        for w in existing_watchers
-    }
+
+    # Jira Cloud watcher entries have no "name" key, and pre-accountId on-prem
+    # instances have no "accountId" key — a KeyError here means the caller
+    # passed the wrong identifier type for this deployment (legacy behaviour).
+    identifier_key = "name" if params.username else "accountId"
+    try:
+        existing_identifiers = {w[identifier_key] for w in existing_watchers}
+    except KeyError as exc:
+        raise ActionFailure(JIRA_WATCHERS_ERROR) from exc
 
     if user in existing_identifiers:
         logger.info("user already in watchers list")
