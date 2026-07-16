@@ -38,7 +38,7 @@
             "data_type": "boolean",
             "order": 1,
             "description": "Verify server certificate",
-            "default": false
+            "default": true
         },
         "username": {
             "data_type": "string",
@@ -10684,7 +10684,7 @@
             },
             {
                 "module": "packaging",
-                "input_file": "wheels/py3/packaging-26.0-py3-none-any.whl"
+                "input_file": "wheels/py3/packaging-26.2-py3-none-any.whl"
             },
             {
                 "module": "pbr",
@@ -10708,7 +10708,7 @@
             },
             {
                 "module": "typing_extensions",
-                "input_file": "wheels/py3/typing_extensions-4.15.0-py3-none-any.whl"
+                "input_file": "wheels/py3/typing_extensions-4.16.0-py3-none-any.whl"
             }
         ]
     },
@@ -10732,7 +10732,7 @@
             },
             {
                 "module": "packaging",
-                "input_file": "wheels/py3/packaging-26.0-py3-none-any.whl"
+                "input_file": "wheels/py3/packaging-26.2-py3-none-any.whl"
             },
             {
                 "module": "pbr",
@@ -10752,11 +10752,11 @@
             },
             {
                 "module": "setuptools",
-                "input_file": "wheels/py3/setuptools-82.0.1-py3-none-any.whl"
+                "input_file": "wheels/py3/setuptools-83.0.0-py3-none-any.whl"
             },
             {
                 "module": "typing_extensions",
-                "input_file": "wheels/py3/typing_extensions-4.15.0-py3-none-any.whl"
+                "input_file": "wheels/py3/typing_extensions-4.16.0-py3-none-any.whl"
             }
         ]
     }

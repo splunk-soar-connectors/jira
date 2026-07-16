@@ -1,1 +1,8 @@
 **Unreleased**
+
+* Enabled TLS certificate verification by default.
+* Rejected malformed Jira issue keys before constructing API requests.
+* Encoded polling lookups and limited existing-container searches to the configured asset.
+* Corrected user pagination so every result page is requested.
+* Advanced ingestion checkpoints only after issue artifacts were saved successfully.
+* Escaped dynamic values rendered in Jira action widgets.

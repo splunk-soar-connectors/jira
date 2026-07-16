@@ -16,6 +16,7 @@
 #
 import json
 import os
+import re
 import signal
 import sys
 import tempfile
@@ -76,7 +77,7 @@ class JiraConnector(phantom.BaseConnector):
         self._host = self._base_url[self._base_url.find("//") + 2 :]
         self._timezone = config.get(JIRA_JSON_TIMEZONE, JIRA_JSON_DEFAULT_TIMEZONE)
 
-        self._verify_cert = config.get(phantom.APP_JSON_VERIFY, False)
+        self._verify_cert = config.get(phantom.APP_JSON_VERIFY, True)
         self._username = config.get(phantom.APP_JSON_USERNAME)
         self._password = config[phantom.APP_JSON_PASSWORD]
 
@@ -1167,7 +1168,8 @@ class JiraConnector(phantom.BaseConnector):
             if len(users) < DEFAULT_MAX_RESULTS_PER_PAGE:
                 break
 
-            param.update({"startAt": start_index + DEFAULT_MAX_RESULTS_PER_PAGE})
+            start_index += DEFAULT_MAX_RESULTS_PER_PAGE
+            param.update({"startAt": start_index})
 
         return users_list
 
@@ -1464,6 +1466,8 @@ class JiraConnector(phantom.BaseConnector):
             return action_result.get_status()
 
         issue_id = param[JIRA_JSON_ID]
+        if not re.fullmatch(r"[A-Z][A-Z0-9_]*-[1-9][0-9]*", str(issue_id), flags=re.ASCII | re.IGNORECASE):
+            return action_result.set_status(phantom.APP_ERROR, "Please provide a valid Jira issue key")
 
         ret_val = self._set_issue_data(issue_id, action_result)
 
@@ -1487,10 +1491,14 @@ class JiraConnector(phantom.BaseConnector):
         return action_result.set_status(phantom.APP_SUCCESS, message)
 
     def _get_container_id(self, issue_key):
-        url = f'{self.get_phantom_base_url()}rest/container?_filter_source_data_identifier="{issue_key}"&_filter_asset={self.get_asset_id()}'
+        url = f"{self.get_phantom_base_url()}rest/container"
+        params = {
+            "_filter_source_data_identifier": json.dumps(str(issue_key)),
+            "_filter_asset": self.get_asset_id(),
+        }
 
         try:
-            r = requests.get(url, verify=False)  # nosemgrep
+            r = requests.get(url, params=params, verify=False)  # nosemgrep
             resp_json = r.json()
         except Exception as e:
             self.debug_print("Unable to query JIRA ticket container: ", e)
@@ -1509,10 +1517,16 @@ class JiraConnector(phantom.BaseConnector):
         return container_id
 
     def _get_artifact_id(self, sdi, container_id, full_artifact=False):
-        url = f'{self.get_phantom_base_url()}rest/artifact?_filter_source_data_identifier="{sdi}"&_filter_container_id={container_id}&sort=id&order=desc'
+        url = f"{self.get_phantom_base_url()}rest/artifact"
+        params = {
+            "_filter_source_data_identifier": json.dumps(str(sdi)),
+            "_filter_container_id": container_id,
+            "sort": "id",
+            "order": "desc",
+        }
 
         try:
-            r = requests.get(url, verify=False)  # nosemgrep
+            r = requests.get(url, params=params, verify=False)  # nosemgrep
             resp_json = r.json()
         except Exception as e:
             self.debug_print("Unable to query JIRA artifact: ", e)
@@ -2473,11 +2487,14 @@ class JiraConnector(phantom.BaseConnector):
         failed = 0
         for issue in issues:
             issue_key = issue["key"] if isinstance(issue, dict) else issue.key
-            if not self._save_issue(self._jira.issue(issue_key), last_time, action_result):
+            if phantom.is_fail(self._save_issue(self._jira.issue(issue_key), last_time, action_result)):
                 failed += 1
 
+        if failed:
+            return action_result.set_status(phantom.APP_ERROR, JIRA_ERROR_FAILED)
+
         if not self.is_poll_now() and issues:
-            last_fetched_issue_key = issues[-1]["key"] if isinstance(issue, dict) else issues[-1].key
+            last_fetched_issue_key = issues[-1]["key"] if isinstance(issues[-1], dict) else issues[-1].key
             last_fetched_issue = self._jira.issue(last_fetched_issue_key)
             last_time_jira_server_tz_specific = parse(last_fetched_issue.fields.updated)
             last_time_phantom_server_tz_specific = last_time_jira_server_tz_specific.astimezone(dateutil.tz.tzlocal())
@@ -2502,9 +2519,6 @@ class JiraConnector(phantom.BaseConnector):
             self.save_state(state)
         else:
             self._save_state(state)
-
-        if failed:
-            return action_result.set_status(phantom.APP_ERROR, JIRA_ERROR_FAILED)
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
