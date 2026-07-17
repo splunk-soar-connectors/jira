@@ -1424,9 +1424,9 @@
             "action": "get attachments",
             "description": "Gets specific attachments from a Jira Ticket (issue)",
             "verbose": "The function will store specific attachments from a given Jira ticket inside the vault.",
-            "type": "investigate",
+            "type": "generic",
             "identifier": "get_attachments",
-            "read_only": true,
+            "read_only": false,
             "parameters": {
                 "id": {
                     "description": "The key of the Jira issue",
