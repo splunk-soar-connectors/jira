@@ -251,12 +251,18 @@ class JiraConnector(phantom.BaseConnector):
         try:
             if self._username:
                 r = request_func(
-                    url, auth=(self._username, self._password), params=params, headers=headers, data=data, timeout=JIRA_DEFAULT_TIMEOUT
+                    url,
+                    auth=(self._username, self._password),
+                    params=params,
+                    headers=headers,
+                    data=data,
+                    timeout=JIRA_DEFAULT_TIMEOUT,
+                    verify=self._verify_cert,
                 )
             else:
                 self.debug_print("Updating headers with Bearer token authorization")
                 headers.update({"Authorization": f"Bearer {self._password}"})
-                r = request_func(url, params=params, headers=headers, data=data, timeout=JIRA_DEFAULT_TIMEOUT)
+                r = request_func(url, params=params, headers=headers, data=data, timeout=JIRA_DEFAULT_TIMEOUT, verify=self._verify_cert)
         except Exception as e:
             error_text = self._get_error_message_from_exception(e)
             return action_result.set_status(phantom.APP_ERROR, f"Error connecting to server. {error_text}"), resp_json
