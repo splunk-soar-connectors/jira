@@ -84,6 +84,7 @@ def register_actions(app: App) -> App:
         action=get_attachments,
         description="Gets specific attachments from a Jira Ticket (issue)",
         action_type="generic",
+        read_only=False,
         render_as="table",
         verbose="The function will store specific attachments from a given Jira ticket inside the vault.",
     )
