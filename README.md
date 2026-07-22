@@ -728,7 +728,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Gets specific attachments from a Jira Ticket (issue)
 
-Type: **investigate** <br>
+Type: **generic** <br>
 Read only: **True**
 
 The function will store specific attachments from a given Jira ticket inside the vault.

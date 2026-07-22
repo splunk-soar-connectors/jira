@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+
 """SDK-native auth resolution for the Jira app.
 
 Jira normally authenticates with HTTP Basic Auth: the username (Jira Cloud
@@ -53,6 +55,7 @@ from .consts import (
     JIRA_SERVICE_ACCOUNT_USERNAME_SUFFIX,
     JIRA_TENANT_INFO_ENDPOINT,
 )
+
 
 if TYPE_CHECKING:
     from ._asset import Asset
