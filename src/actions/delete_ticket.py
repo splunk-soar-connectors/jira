@@ -13,9 +13,13 @@
 # limitations under the License.
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput
+from soar_sdk.exceptions import ActionFailure
+from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
+from ..consts import JIRA_SUCCESS_TICKET_DELETED
+from ..helpers import jira_request
 
 
 class DeleteTicketParams(Params):
@@ -25,12 +29,6 @@ class DeleteTicketParams(Params):
 def delete_ticket(
     params: DeleteTicketParams, soar: SOARClient, asset: Asset
 ) -> ActionOutput:
-    from soar_sdk.exceptions import ActionFailure
-    from soar_sdk.logging import getLogger
-
-    from ..consts import JIRA_SUCCESS_TICKET_DELETED
-    from ..helpers import jira_request
-
     logger = getLogger()
 
     try:

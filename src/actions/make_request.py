@@ -11,12 +11,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import json as _json
+
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import MakeRequestOutput
+from soar_sdk.exceptions import ActionFailure
+from soar_sdk.logging import getLogger
 from soar_sdk.params import MakeRequestParams
 
 
 from .._asset import Asset
+from ..client import call_jira
 
 
 def make_request(
@@ -29,13 +34,6 @@ def make_request(
     e.g. rest/api/2/issue/PROJ-1 or rest/api/2/project.
     The full response body is returned as a string in response_body.
     """
-    import json as _json
-
-    from soar_sdk.exceptions import ActionFailure
-    from soar_sdk.logging import getLogger
-
-    from ..client import call_jira
-
     logger = getLogger()
 
     body_dict = None

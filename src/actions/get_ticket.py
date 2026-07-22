@@ -12,14 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import re
+
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import (
     ActionOutput,
     OutputField,
 )
+from soar_sdk.exceptions import ActionFailure
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
+from ..consts import JIRA_ERROR_INVALID_ISSUE_KEY
+from ..helpers import (
+    description_to_str,
+    get_custom_field_map,
+    jira_request,
+    sanitize_fields_dict,
+)
 from ._outputs import (
     JiraPermissiveOutput,
     AggregateprogressOutput,
@@ -183,17 +193,15 @@ class GetTicketOutput(ActionOutput):
 def get_ticket(
     params: GetTicketParams, soar: SOARClient, asset: Asset
 ) -> GetTicketOutput:
-    from ..helpers import (
-        description_to_str,
-        get_custom_field_map,
-        jira_request,
-        sanitize_fields_dict,
-    )
-
     def _name(obj):
         if isinstance(obj, dict):
             return obj.get("name") or obj.get("displayName")
         return None
+
+    if not re.fullmatch(
+        r"[A-Z][A-Z0-9_]*-[1-9][0-9]*", params.id, flags=re.ASCII | re.IGNORECASE
+    ):
+        raise ActionFailure(JIRA_ERROR_INVALID_ISSUE_KEY)
 
     issue = jira_request(asset, "GET", f"rest/api/2/issue/{params.id}")
     raw_fields = issue["fields"]

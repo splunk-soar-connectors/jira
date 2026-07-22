@@ -13,6 +13,7 @@
 # limitations under the License.
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING, Any
 
 import httpx
@@ -62,8 +63,6 @@ def _parse_jira_error(response: httpx.Response) -> str:
 
     if "xml" in content_type or (response.text or "").lstrip().startswith("<"):
         # Strip XML tags to extract the readable message
-        import re
-
         text = re.sub(r"<[^>]+>", " ", response.text or "").split()
         # Drop numeric status code tokens, rejoin
         readable = " ".join(t for t in text if not t.isdigit())

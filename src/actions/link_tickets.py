@@ -13,9 +13,11 @@
 # limitations under the License.
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput, OutputField
+from soar_sdk.exceptions import ActionFailure
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
+from ..helpers import jira_request
 
 
 class LinkTicketsParams(Params):
@@ -48,10 +50,6 @@ class LinkTicketsOutput(ActionOutput):
 def link_tickets(
     params: LinkTicketsParams, soar: SOARClient, asset: Asset
 ) -> LinkTicketsOutput:
-    from soar_sdk.exceptions import ActionFailure
-
-    from ..helpers import jira_request
-
     link_types_resp = jira_request(asset, "GET", "rest/api/2/issueLinkType")
     available = link_types_resp.get("issueLinkTypes") or []
     canonical_name: str | None = None

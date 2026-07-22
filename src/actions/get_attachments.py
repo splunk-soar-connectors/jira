@@ -14,11 +14,17 @@
 import os
 from pathlib import Path
 
+import httpx
+
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput, OutputField
+from soar_sdk.exceptions import ActionFailure
+from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
+from ..consts import JIRA_ERROR_INVALID_FILE_PATH
+from ..helpers import get_auth, jira_request
 
 
 class GetAttachmentsParams(Params):
@@ -65,14 +71,6 @@ def _is_safe_path(basedir, path):
 def get_attachments(
     params: GetAttachmentsParams, soar: SOARClient, asset: Asset
 ) -> list[GetAttachmentsOutput]:
-    import httpx
-
-    from soar_sdk.exceptions import ActionFailure
-    from soar_sdk.logging import getLogger
-
-    from ..consts import JIRA_ERROR_INVALID_FILE_PATH
-    from ..helpers import get_auth, jira_request
-
     logger = getLogger()
 
     retrieve_all = params.retrieve_all if params.retrieve_all is not None else False

@@ -12,14 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json as _json
+
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import (
     ActionOutput,
     OutputField,
 )
+from soar_sdk.exceptions import ActionFailure
+from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
+from ..consts import (
+    JIRA_ERROR_ATTACH_FAILED,
+    JIRA_ERROR_FIELDS_JSON_PARSE,
+    JIRA_ERROR_FILE_NOT_IN_VAULT,
+    JIRA_ERROR_GET_TICKET,
+    JIRA_ERROR_UPDATE_NO_PARAM,
+    JIRA_SUCCESS_TICKET_UPDATED,
+)
+from ..helpers import (
+    apply_custom_field_names_to_ids,
+    description_to_str,
+    get_custom_field_map,
+    get_custom_field_name_to_id_map,
+    jira_request,
+    sanitize_fields_dict,
+)
 from ._outputs import (
     JiraPermissiveOutput,
     AggregateprogressOutput,
@@ -185,28 +205,6 @@ class UpdateTicketOutput(ActionOutput):
 def update_ticket(
     params: UpdateTicketParams, soar: SOARClient, asset: Asset
 ) -> UpdateTicketOutput:
-    import json as _json
-
-    from soar_sdk.exceptions import ActionFailure
-    from soar_sdk.logging import getLogger
-
-    from ..consts import (
-        JIRA_ERROR_ATTACH_FAILED,
-        JIRA_ERROR_FIELDS_JSON_PARSE,
-        JIRA_ERROR_FILE_NOT_IN_VAULT,
-        JIRA_ERROR_GET_TICKET,
-        JIRA_ERROR_UPDATE_NO_PARAM,
-        JIRA_SUCCESS_TICKET_UPDATED,
-    )
-    from ..helpers import (
-        apply_custom_field_names_to_ids,
-        description_to_str,
-        get_custom_field_map,
-        get_custom_field_name_to_id_map,
-        jira_request,
-        sanitize_fields_dict,
-    )
-
     logger = getLogger()
 
     if not params.update_fields and not params.vault_id:

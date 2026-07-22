@@ -13,9 +13,12 @@
 # limitations under the License.
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput
+from soar_sdk.exceptions import ActionFailure
+from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
+from ..helpers import jira_request
 
 
 class AddCommentParams(Params):
@@ -30,11 +33,6 @@ class AddCommentParams(Params):
 def add_comment(
     params: AddCommentParams, soar: SOARClient, asset: Asset
 ) -> ActionOutput:
-    from soar_sdk.exceptions import ActionFailure
-    from soar_sdk.logging import getLogger
-
-    from ..helpers import jira_request
-
     logger = getLogger()
 
     try:

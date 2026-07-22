@@ -12,24 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from soar_sdk.abstract import SOARClient
+from soar_sdk.exceptions import ActionFailure
+from soar_sdk.logging import getLogger
 
 from .._asset import Asset
+from ..auth import resolve_jira_base_url
+from ..client import call_jira
+from ..consts import (
+    JIRA_ERROR_CONNECTIVITY_TEST,
+    JIRA_ERROR_SERVER_INFO,
+    JIRA_SUCCESS_CONNECTIVITY_TEST,
+    JIRA_USING_BASE_URL,
+)
+from ..helpers import get_auth
 
 
 def run_test_connectivity(soar: SOARClient, asset: Asset) -> None:
-    from soar_sdk.exceptions import ActionFailure
-    from soar_sdk.logging import getLogger
-
-    from ..auth import resolve_jira_base_url
-    from ..client import call_jira
-    from ..consts import (
-        JIRA_ERROR_CONNECTIVITY_TEST,
-        JIRA_ERROR_SERVER_INFO,
-        JIRA_SUCCESS_CONNECTIVITY_TEST,
-        JIRA_USING_BASE_URL,
-    )
-    from ..helpers import get_auth
-
     logger = getLogger()
 
     # Raises AssetMisconfiguration early if credentials are not configured

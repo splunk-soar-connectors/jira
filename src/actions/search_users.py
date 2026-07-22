@@ -13,9 +13,16 @@
 # limitations under the License.
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput, OutputField
+from soar_sdk.exceptions import ActionFailure
+from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
+from ..consts import (
+    JIRA_SEARCH_USERS_ERROR,
+    JIRA_LIMIT_VALIDATION_MESSAGE,
+)
+from ..helpers import jira_request
 from ._outputs import AvatarurlsOutput
 
 
@@ -75,14 +82,6 @@ class LookupUsersOutput(ActionOutput):
 def lookup_users(
     params: LookupUsersParams, soar: SOARClient, asset: Asset
 ) -> list[LookupUsersOutput]:
-    from soar_sdk.exceptions import ActionFailure
-    from soar_sdk.logging import getLogger
-    from ..helpers import jira_request
-    from ..consts import (
-        JIRA_SEARCH_USERS_ERROR,
-        JIRA_LIMIT_VALIDATION_MESSAGE,
-    )
-
     logger = getLogger()
 
     has_username = bool(params.username)

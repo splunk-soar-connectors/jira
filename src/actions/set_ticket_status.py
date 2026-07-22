@@ -12,14 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json as json_mod
+
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import (
     ActionOutput,
     OutputField,
 )
+from soar_sdk.exceptions import ActionFailure
+from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
+from ..consts import JIRA_ERROR_FIELDS_JSON_PARSE
+from ..helpers import (
+    apply_custom_field_names_to_ids,
+    description_to_str,
+    get_custom_field_map,
+    get_custom_field_name_to_id_map,
+    jira_request,
+    sanitize_fields_dict,
+)
 from ._outputs import (
     JiraPermissiveOutput,
     AssigneeOutput,
@@ -218,21 +231,6 @@ class SetStatusOutput(ActionOutput):
 def set_status(
     params: SetStatusParams, soar: SOARClient, asset: Asset
 ) -> SetStatusOutput:
-    import json as json_mod
-
-    from soar_sdk.exceptions import ActionFailure
-    from soar_sdk.logging import getLogger
-
-    from ..consts import JIRA_ERROR_FIELDS_JSON_PARSE
-    from ..helpers import (
-        apply_custom_field_names_to_ids,
-        description_to_str,
-        get_custom_field_map,
-        get_custom_field_name_to_id_map,
-        jira_request,
-        sanitize_fields_dict,
-    )
-
     logger = getLogger()
 
     def _name(obj):

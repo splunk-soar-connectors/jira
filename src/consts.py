@@ -108,6 +108,7 @@ JIRA_ERROR_FILE_NOT_IN_VAULT = "Could not find specified vault ID in vault"
 JIRA_ERROR_ATTACH_FAILED = "Adding attachment failed. {0}"
 JIRA_ERROR_LIST_TICKETS_FAILED = "Failed to get ticket listing"
 JIRA_ERROR_GET_TICKET = "Failed to get ticket info"
+JIRA_ERROR_INVALID_ISSUE_KEY = "Please provide a valid Jira issue key"
 JIRA_ERROR_FIELDS_JSON_PARSE = (
     "Unable to parse the '{field_name}' parameter into a dictionary"
 )

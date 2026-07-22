@@ -17,9 +17,23 @@ from soar_sdk.action_results import (
     ActionOutput,
     OutputField,
 )
+from soar_sdk.exceptions import ActionFailure
+from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
+from ..consts import (
+    DEFAULT_MAX_VALUE,
+    JIRA_ERROR_LIST_TICKETS_FAILED,
+    JIRA_ERROR_NEGATIVE_INPUT,
+    JIRA_TOTAL_ISSUES,
+)
+from ..helpers import (
+    description_to_str,
+    get_custom_field_map,
+    jira_request,
+    sanitize_fields_dict,
+)
 from ._outputs import (
     JiraPermissiveOutput,
     AggregateprogressOutput,
@@ -231,24 +245,9 @@ class ListTicketsOutput(ActionOutput):
 def list_tickets(
     params: ListTicketsParams, soar: SOARClient, asset: Asset
 ) -> list[ListTicketsOutput]:
-    from soar_sdk.exceptions import ActionFailure
-    from soar_sdk.logging import getLogger
-    from ..helpers import (
-        description_to_str,
-        get_custom_field_map,
-        jira_request,
-        sanitize_fields_dict,
-    )
-    from ..consts import (
-        JIRA_ERROR_LIST_TICKETS_FAILED,
-        JIRA_ERROR_NEGATIVE_INPUT,
-        JIRA_TOTAL_ISSUES,
-    )
-
     logger = getLogger()
 
     project_key = params.project_key
-    from ..consts import DEFAULT_MAX_VALUE
 
     start_index = int(params.start_index) if params.start_index is not None else 0
     max_results = (

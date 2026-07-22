@@ -13,9 +13,13 @@
 # limitations under the License.
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput, OutputField
+from soar_sdk.exceptions import ActionFailure
+from soar_sdk.logging import getLogger
 from soar_sdk.params import Params
 
 from .._asset import Asset
+from ..consts import JIRA_ERROR_PROJECTS_INFO, JIRA_TOTAL_PROJECTS
+from ..helpers import jira_request
 
 
 class ListProjectsOutput(ActionOutput):
@@ -35,12 +39,6 @@ class ListProjectsSummaryOutput(ActionOutput):
 def list_projects(
     params: Params, soar: SOARClient, asset: Asset
 ) -> list[ListProjectsOutput]:
-    from soar_sdk.exceptions import ActionFailure
-    from soar_sdk.logging import getLogger
-
-    from ..consts import JIRA_ERROR_PROJECTS_INFO, JIRA_TOTAL_PROJECTS
-    from ..helpers import jira_request
-
     logger = getLogger()
 
     try:
