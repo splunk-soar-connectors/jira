@@ -649,6 +649,9 @@ class JiraConnector(phantom.BaseConnector):
         kwargs = {}
 
         issue_id = param[JIRA_JSON_ID]
+        if not self._is_valid_issue_key(issue_id):
+            return action_result.set_status(phantom.APP_ERROR, "Please provide a valid Jira issue key or numeric issue ID")
+
         param_update_fields = param.get(JIRA_JSON_UPDATE_FIELDS, "")
         time_spent = param.get(JIRA_JSON_TIMESPENT, "")
 
@@ -818,6 +821,8 @@ class JiraConnector(phantom.BaseConnector):
             return action_result.get_status()
 
         issue_id = param[JIRA_JSON_ID]
+        if not self._is_valid_issue_key(issue_id):
+            return action_result.set_status(phantom.APP_ERROR, "Please provide a valid Jira issue key or numeric issue ID")
 
         attachment = param.get(JIRA_JSON_ATTACHMENT, "")
         param_update_fields = param.get(JIRA_JSON_UPDATE_FIELDS, "")
@@ -895,6 +900,8 @@ class JiraConnector(phantom.BaseConnector):
             return action_result.get_status()
 
         issue_id = param[JIRA_JSON_ID]
+        if not self._is_valid_issue_key(issue_id):
+            return action_result.set_status(phantom.APP_ERROR, "Please provide a valid Jira issue key or numeric issue ID")
 
         try:
             issue = self._jira.issue(issue_id)
@@ -1274,6 +1281,8 @@ class JiraConnector(phantom.BaseConnector):
             return action_result.get_status()
 
         issue_id = param[JIRA_JSON_ID]
+        if not self._is_valid_issue_key(issue_id):
+            return action_result.set_status(phantom.APP_ERROR, "Please provide a valid Jira issue key or numeric issue ID")
 
         body = param[JIRA_JSON_COMMENT]
 
@@ -1460,7 +1469,7 @@ class JiraConnector(phantom.BaseConnector):
 
     @staticmethod
     def _is_valid_issue_key(issue_key):
-        return bool(re.fullmatch(r"[A-Z][A-Z0-9_]*-[1-9][0-9]*", str(issue_key), flags=re.ASCII | re.IGNORECASE))
+        return bool(re.fullmatch(r"(?:[A-Z][A-Z0-9_]*-[1-9][0-9]*|[1-9][0-9]*)", str(issue_key), flags=re.ASCII | re.IGNORECASE))
 
     def _get_ticket(self, param):
         action_result = self.add_action_result(phantom.ActionResult(dict(param)))
@@ -1477,7 +1486,7 @@ class JiraConnector(phantom.BaseConnector):
 
         issue_id = param[JIRA_JSON_ID]
         if not self._is_valid_issue_key(issue_id):
-            return action_result.set_status(phantom.APP_ERROR, "Please provide a valid Jira issue key")
+            return action_result.set_status(phantom.APP_ERROR, "Please provide a valid Jira issue key or numeric issue ID")
 
         ret_val = self._set_issue_data(issue_id, action_result)
 
@@ -1954,6 +1963,9 @@ class JiraConnector(phantom.BaseConnector):
 
         from_issue = param[JIRA_JSON_FROM_ID]
         to_issue = param[JIRA_JSON_TO_ID]
+        if not self._is_valid_issue_key(from_issue) or not self._is_valid_issue_key(to_issue):
+            return action_result.set_status(phantom.APP_ERROR, "Please provide valid Jira issue keys or numeric issue IDs for both tickets")
+
         link_type = param[JIRA_JSON_LINK_TYPE]
 
         comment_body = param.get(JIRA_JSON_COMMENT, "")
@@ -1991,6 +2003,9 @@ class JiraConnector(phantom.BaseConnector):
             return action_result.get_status()
 
         issue_id = param[JIRA_JSON_ISSUE_ID]
+        if not self._is_valid_issue_key(issue_id):
+            return action_result.set_status(phantom.APP_ERROR, "Please provide a valid Jira issue key or numeric issue ID")
+
         username = param.get(JIRA_JSON_WATCHER)
         account_id = param.get(JIRA_JSON_USER_ACCOUNT_ID)
 
@@ -2057,6 +2072,9 @@ class JiraConnector(phantom.BaseConnector):
             return action_result.get_status()
 
         issue_id = param[JIRA_JSON_ISSUE_ID]
+        if not self._is_valid_issue_key(issue_id):
+            return action_result.set_status(phantom.APP_ERROR, "Please provide a valid Jira issue key or numeric issue ID")
+
         username = param.get(JIRA_JSON_WATCHER)
         account_id = param.get(JIRA_JSON_USER_ACCOUNT_ID)
 
@@ -2125,7 +2143,7 @@ class JiraConnector(phantom.BaseConnector):
 
         ticket_key = param["id"]
         if not self._is_valid_issue_key(ticket_key):
-            return action_result.set_status(phantom.APP_ERROR, "Please provide a valid Jira issue key")
+            return action_result.set_status(phantom.APP_ERROR, "Please provide a valid Jira issue key or numeric issue ID")
 
         container_id = param["container_id"]
         extension_filter = param.get("extension_filter", "")
