@@ -1458,6 +1458,10 @@ class JiraConnector(phantom.BaseConnector):
 
         return self._parse_issue_data_unified(issue, action_result)
 
+    @staticmethod
+    def _is_valid_issue_key(issue_key):
+        return bool(re.fullmatch(r"[A-Z][A-Z0-9_]*-[1-9][0-9]*", str(issue_key), flags=re.ASCII | re.IGNORECASE))
+
     def _get_ticket(self, param):
         action_result = self.add_action_result(phantom.ActionResult(dict(param)))
 
@@ -1472,7 +1476,7 @@ class JiraConnector(phantom.BaseConnector):
             return action_result.get_status()
 
         issue_id = param[JIRA_JSON_ID]
-        if not re.fullmatch(r"[A-Z][A-Z0-9_]*-[1-9][0-9]*", str(issue_id), flags=re.ASCII | re.IGNORECASE):
+        if not self._is_valid_issue_key(issue_id):
             return action_result.set_status(phantom.APP_ERROR, "Please provide a valid Jira issue key")
 
         ret_val = self._set_issue_data(issue_id, action_result)
@@ -2120,6 +2124,9 @@ class JiraConnector(phantom.BaseConnector):
             return action_result.get_status()
 
         ticket_key = param["id"]
+        if not self._is_valid_issue_key(ticket_key):
+            return action_result.set_status(phantom.APP_ERROR, "Please provide a valid Jira issue key")
+
         container_id = param["container_id"]
         extension_filter = param.get("extension_filter", "")
         get_all_attachments = param.get("retrieve_all", False)
