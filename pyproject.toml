@@ -25,6 +25,7 @@ max-complexity = 28
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
+known-third-party = ["jira"]
 lines-after-imports = 2
 
 [tool.ruff.format]

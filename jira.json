@@ -10667,10 +10667,6 @@
     "pip39_dependencies": {
         "wheel": [
             {
-                "module": "PyJWT",
-                "input_file": "wheels/py3/PyJWT-2.10.1-py3-none-any.whl"
-            },
-            {
                 "module": "defusedxml",
                 "input_file": "wheels/shared/defusedxml-0.7.1-py2.py3-none-any.whl"
             },
@@ -10684,11 +10680,15 @@
             },
             {
                 "module": "packaging",
-                "input_file": "wheels/py3/packaging-26.2-py3-none-any.whl"
+                "input_file": "wheels/py3/packaging-26.3-py3-none-any.whl"
             },
             {
                 "module": "pbr",
                 "input_file": "wheels/shared/pbr-7.0.1-py2.py3-none-any.whl"
+            },
+            {
+                "module": "pyjwt",
+                "input_file": "wheels/py3/pyjwt-2.13.0-py3-none-any.whl"
             },
             {
                 "module": "pytz",
@@ -10715,10 +10715,6 @@
     "pip313_dependencies": {
         "wheel": [
             {
-                "module": "PyJWT",
-                "input_file": "wheels/py3/PyJWT-2.10.1-py3-none-any.whl"
-            },
-            {
                 "module": "defusedxml",
                 "input_file": "wheels/shared/defusedxml-0.7.1-py2.py3-none-any.whl"
             },
@@ -10732,11 +10728,15 @@
             },
             {
                 "module": "packaging",
-                "input_file": "wheels/py3/packaging-26.2-py3-none-any.whl"
+                "input_file": "wheels/py3/packaging-26.3-py3-none-any.whl"
             },
             {
                 "module": "pbr",
                 "input_file": "wheels/shared/pbr-7.0.1-py2.py3-none-any.whl"
+            },
+            {
+                "module": "pyjwt",
+                "input_file": "wheels/py3/pyjwt-2.13.0-py3-none-any.whl"
             },
             {
                 "module": "pytz",
@@ -10752,7 +10752,7 @@
             },
             {
                 "module": "setuptools",
-                "input_file": "wheels/py3/setuptools-83.0.0-py3-none-any.whl"
+                "input_file": "wheels/py3/setuptools-84.0.0-py3-none-any.whl"
             },
             {
                 "module": "typing_extensions",
