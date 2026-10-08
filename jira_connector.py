@@ -2204,6 +2204,28 @@ class JiraConnector(phantom.BaseConnector):
             error_text = f"Unable to get attachments. {error_message}"
             return action_result.set_status(phantom.APP_ERROR, error_text)
 
+    def _log_ingestion_diagnostic(self, stage, *, message=None, response=None, **details):
+        """Log bounded metadata without issue payloads, URLs, or raw service errors."""
+        try:
+            record = {"diagnostic_build": "SOARHELP-7221-3", "stage": stage, "asset_id": self.get_asset_id(), **details}
+            if isinstance(message, str):
+                record["message_length"] = len(message)
+                record["message_hints"] = [
+                    hint for hint in ("duplicate", "permission", "invalid", "not found", "timeout") if hint in message.lower()
+                ]
+            if response is not None:
+                record["response_type"] = type(response).__name__
+                rows = response if isinstance(response, list) else [response]
+                record["response_count"] = len(rows)
+                for key in ("success", "failed", "duplicate"):
+                    record[f"response_{key}_count"] = sum(1 for row in rows if isinstance(row, dict) and row.get(key) is True)
+            diagnostic = f"Jira ingestion diagnostic: {json.dumps(record, sort_keys=True)}"
+            self.save_progress(diagnostic)
+            self.debug_print(diagnostic)
+        except Exception:
+            # Diagnostics must not change the outcome of an ingestion operation.
+            pass
+
     def _update_container(self, issue, container_id, last_time, action_result):
         update_json = {}
         update_json["data"] = issue.raw
@@ -2215,6 +2237,7 @@ class JiraConnector(phantom.BaseConnector):
             r = requests.post(url, data=json.dumps(update_json), verify=False)  # nosemgrep
             resp_json = r.json()
         except Exception as e:
+            self._log_ingestion_diagnostic("update_container", issue_key=issue.key, container_id=container_id, exception_type=type(e).__name__)
             error_text = self._get_error_message_from_exception(e)
             self.debug_print("Error while updating the container. ", error_text)
             action_result.set_status(
@@ -2223,6 +2246,9 @@ class JiraConnector(phantom.BaseConnector):
             return phantom.APP_ERROR
 
         if r.status_code != 200 or resp_json.get("failed"):
+            self._log_ingestion_diagnostic(
+                "update_container", issue_key=issue.key, container_id=container_id, http_status=r.status_code, response=resp_json
+            )
             self.debug_print("Error while updating the container. Error is: ", resp_json.get("failed"))
             action_result.set_status(
                 phantom.APP_ERROR,
@@ -2240,6 +2266,7 @@ class JiraConnector(phantom.BaseConnector):
                     ret_val = self._handle_attachment(attachment, container_id, artifact_list, action_result)
 
                     if phantom.is_fail(ret_val):
+                        self._log_ingestion_diagnostic("attachment", issue_key=issue.key, container_id=container_id, return_value=ret_val)
                         self.debug_print(f"Issue key: {issue.key}. {action_result.get_message()}")
                         self.save_progress(f"Issue key: {issue.key}. {action_result.get_message()}")
                         return phantom.APP_ERROR
@@ -2256,6 +2283,7 @@ class JiraConnector(phantom.BaseConnector):
                     )
 
                     if phantom.is_fail(ret_val):
+                        self._log_ingestion_diagnostic("comment", issue_key=issue.key, container_id=container_id, return_value=ret_val)
                         self.debug_print(f"Issue key: {issue.key}. {action_result.get_message()}")
                         self.save_progress(f"Issue key: {issue.key}. {action_result.get_message()}")
                         return phantom.APP_ERROR
@@ -2291,6 +2319,7 @@ class JiraConnector(phantom.BaseConnector):
                     )
 
                     if phantom.is_fail(ret_val):
+                        self._log_ingestion_diagnostic("comment", issue_key=issue.key, container_id=container_id, return_value=ret_val)
                         self.debug_print(f"Issue key: {issue.key}. {action_result.get_message()}")
                         self.save_progress(f"Issue key: {issue.key}. {action_result.get_message()}")
                         return phantom.APP_ERROR
@@ -2301,6 +2330,7 @@ class JiraConnector(phantom.BaseConnector):
         artifact_json = self._build_fields_artifact(issue, container_id, action_result)
 
         if artifact_json is None:
+            self._log_ingestion_diagnostic("fields_artifact", issue_key=issue.key, container_id=container_id)
             return phantom.APP_ERROR
 
         artifact_json["name"] = "{}_{}".format("ticket fields", issue.fields.updated)
@@ -2311,6 +2341,9 @@ class JiraConnector(phantom.BaseConnector):
             ret_val, message, _resp = self.save_artifacts(artifact_list)
 
             if not ret_val:
+                self._log_ingestion_diagnostic(
+                    "save_artifacts", issue_key=issue.key, container_id=container_id, return_value=ret_val, message=message, response=_resp
+                )
                 self.debug_print("Error saving the artifact: ", message)
                 action_result.set_status(phantom.APP_ERROR, "Error occurred while saving the artifact. Error message: {0}", message)
                 return phantom.APP_ERROR
@@ -2341,6 +2374,7 @@ class JiraConnector(phantom.BaseConnector):
         ret_val, message, container_id = self.save_container(container_json)
 
         if not ret_val:
+            self._log_ingestion_diagnostic("save_container", issue_key=issue.key, return_value=ret_val, message=message)
             self.debug_print(f"Failed to save container. Error: {message}")
             return phantom.APP_ERROR
 
@@ -2352,6 +2386,7 @@ class JiraConnector(phantom.BaseConnector):
                 ret_val = self._handle_attachment(attachment, container_id, artifact_list, action_result)
 
                 if phantom.is_fail(ret_val):
+                    self._log_ingestion_diagnostic("attachment", issue_key=issue.key, container_id=container_id, return_value=ret_val)
                     self.debug_print(f"Issue key: {issue.key}. {action_result.get_message()}")
                     self.save_progress(f"Issue key: {issue.key}. {action_result.get_message()}")
                     return phantom.APP_ERROR
@@ -2364,6 +2399,7 @@ class JiraConnector(phantom.BaseConnector):
                 ret_val = self._handle_comment(comment, container_id, "{}_{}".format("comment", comment.updated), artifact_list, action_result)
 
                 if phantom.is_fail(ret_val):
+                    self._log_ingestion_diagnostic("comment", issue_key=issue.key, container_id=container_id, return_value=ret_val)
                     self.debug_print(f"Issue key: {issue.key}. {action_result.get_message()}")
                     self.save_progress(f"Issue key: {issue.key}. {action_result.get_message()}")
                     return phantom.APP_ERROR
@@ -2374,6 +2410,7 @@ class JiraConnector(phantom.BaseConnector):
         artifact_json = self._build_fields_artifact(issue, container_id, action_result)
 
         if artifact_json is None:
+            self._log_ingestion_diagnostic("fields_artifact", issue_key=issue.key, container_id=container_id)
             return phantom.APP_ERROR
 
         artifact_json["name"] = "{}_{}".format("ticket fields", issue.fields.updated)
@@ -2383,6 +2420,9 @@ class JiraConnector(phantom.BaseConnector):
         ret_val, _message, _resp = self.save_artifacts(artifact_list)
 
         if not ret_val:
+            self._log_ingestion_diagnostic(
+                "save_artifacts", issue_key=issue.key, container_id=container_id, return_value=ret_val, message=_message, response=_resp
+            )
             return phantom.APP_ERROR
 
         return phantom.APP_SUCCESS
@@ -2502,9 +2542,17 @@ class JiraConnector(phantom.BaseConnector):
             self.save_progress("Error occurred while logging the value of JQL query, continuing the on poll execution")
 
         # Query for issues
+        self._log_ingestion_diagnostic(
+            "poll_started",
+            poll_now=self.is_poll_now(),
+            first_run=bool(state.get("first_run", True)),
+            checkpoint=int(state.get("last_time") or 0),
+            max_tickets=max_tickets,
+        )
         issues = self._paginator(query, action_result, limit=max_tickets, fields=True)
 
         if issues is None:
+            self._log_ingestion_diagnostic("query_failed", checkpoint_saved=False)
             return action_result.get_status()
 
         try:
@@ -2518,10 +2566,21 @@ class JiraConnector(phantom.BaseConnector):
         failed = 0
         for issue in issues:
             issue_key = issue["key"] if isinstance(issue, dict) else issue.key
-            if phantom.is_fail(self._save_issue(self._jira.issue(issue_key), last_time, action_result)):
+            try:
+                jira_issue = self._jira.issue(issue_key)
+            except Exception as e:
+                self._log_ingestion_diagnostic("fetch_issue", issue_key=issue_key, exception_type=type(e).__name__)
+                raise
+            try:
+                ret_val = self._save_issue(jira_issue, last_time, action_result)
+            except Exception as e:
+                self._log_ingestion_diagnostic("process_issue", issue_key=issue_key, exception_type=type(e).__name__)
+                raise
+            if phantom.is_fail(ret_val):
                 failed += 1
 
         if failed:
+            self._log_ingestion_diagnostic("batch_failed", fetched=len(issues), failed=failed, checkpoint_saved=False)
             return action_result.set_status(phantom.APP_ERROR, JIRA_ERROR_FAILED)
 
         if not self.is_poll_now() and issues:
@@ -2551,6 +2610,7 @@ class JiraConnector(phantom.BaseConnector):
         else:
             self._save_state(state)
 
+        self._log_ingestion_diagnostic("state_saved", checkpoint=state.get("last_time"), poll_now=self.is_poll_now())
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _validate_integers(self, action_result, parameter, key, allow_zero=False):
