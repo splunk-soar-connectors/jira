@@ -20,28 +20,29 @@ from soar_sdk.action_results import (
     OutputField,
 )
 from soar_sdk.exceptions import ActionFailure
-from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
+from ..client import JiraClient
 from ..consts import (
     JIRA_ERROR_ATTACH_FAILED,
     JIRA_ERROR_FIELDS_JSON_PARSE,
-    JIRA_ERROR_FILE_NOT_IN_VAULT,
     JIRA_ERROR_GET_TICKET,
     JIRA_ERROR_UPDATE_NO_PARAM,
     JIRA_SUCCESS_TICKET_UPDATED,
 )
 from ..helpers import (
     apply_custom_field_names_to_ids,
+    apply_issue_updates,
+    upload_vault_attachment,
     description_to_str,
     get_custom_field_map,
     get_custom_field_name_to_id_map,
-    jira_request,
     sanitize_fields_dict,
 )
 from ._outputs import (
     JiraPermissiveOutput,
+    LegacyIssueFieldsOutput,
     AggregateprogressOutput,
     AssigneeOutput,
     AttachmentOutput,
@@ -113,7 +114,16 @@ class IssuelinksOutput(JiraPermissiveOutput):
     type: TypeOutput
 
 
-class FieldsOutput(JiraPermissiveOutput):
+class FieldsOutput(LegacyIssueFieldsOutput):
+    legacy_string_fields = (
+        "aggregatetimeestimate",
+        "aggregatetimeoriginalestimate",
+        "aggregatetimespent",
+        "timeestimate",
+        "timeoriginalestimate",
+        "timespent",
+    )
+
     Epic_Link: str | None = OutputField(alias="Epic Link")
     Sprint: str | None = OutputField(
         example_values=[
@@ -205,14 +215,13 @@ class UpdateTicketOutput(ActionOutput):
 def update_ticket(
     params: UpdateTicketParams, soar: SOARClient, asset: Asset
 ) -> UpdateTicketOutput:
-    logger = getLogger()
-
     if not params.update_fields and not params.vault_id:
         raise ActionFailure(JIRA_ERROR_UPDATE_NO_PARAM)
 
+    client = JiraClient(asset)
     try:
-        jira_request(asset, "GET", f"rest/api/2/issue/{params.id}")
-    except ActionFailure as exc:
+        client.issue(params.id)
+    except Exception as exc:
         raise ActionFailure(f"Unable to find ticket info: {exc}") from exc
 
     if params.update_fields:
@@ -223,54 +232,37 @@ def update_ticket(
                 f"{JIRA_ERROR_FIELDS_JSON_PARSE.format(field_name='update_fields')}: {exc}"
             ) from exc
 
+        if not isinstance(fields, dict):
+            raise ActionFailure("Please provide a valid JSON formatted dictionary")
+        if not fields:
+            raise ActionFailure("The input dictionary seems to be empty")
+
         has_fields_key = "fields" in fields
         has_update_key = "update" in fields
         body = fields if has_fields_key or has_update_key else {"fields": fields}
 
         # Legacy parity: translate custom-field display names → customfield_XXXXX ids
         body = apply_custom_field_names_to_ids(
-            body, get_custom_field_name_to_id_map(asset)
+            body, get_custom_field_name_to_id_map(asset, params.id)
         )
 
-        jira_request(asset, "PUT", f"rest/api/2/issue/{params.id}", json=body)
-        logger.info(JIRA_SUCCESS_TICKET_UPDATED)
-        soar.set_message(JIRA_SUCCESS_TICKET_UPDATED)
+        apply_issue_updates(client, params.id, body)
 
     if params.vault_id:
-        attachments = soar.vault.get_attachment(vault_id=params.vault_id)
-        if not attachments:
-            raise ActionFailure(JIRA_ERROR_FILE_NOT_IN_VAULT)
-
-        meta = attachments[0]
-        filename = meta.name
-        file_path = meta.path
-
-        # Strip non-ASCII from filename if needed (avoids Jira 500 on unicode filenames)
-        ascii_name = filename.encode("ascii", "ignore").decode("ascii")
-        if len(ascii_name) < len(filename):
-            filename = f"FILENAME_ASCII_{ascii_name}"
-
         try:
-            with open(file_path, "rb") as f:
-                jira_request(
-                    asset,
-                    "POST",
-                    f"rest/api/2/issue/{params.id}/attachments",
-                    files={"file": (filename, f, "application/octet-stream")},
-                    headers={"X-Atlassian-Token": "no-check"},
-                )
-        except ActionFailure as exc:
-            raise ActionFailure(JIRA_ERROR_ATTACH_FAILED.format(str(exc))) from exc
+            upload_vault_attachment(client, params.id, soar, params.vault_id)
         except Exception as exc:
             raise ActionFailure(JIRA_ERROR_ATTACH_FAILED.format(str(exc))) from exc
 
+    soar.set_message(JIRA_SUCCESS_TICKET_UPDATED)
+
     try:
-        issue = jira_request(asset, "GET", f"rest/api/2/issue/{params.id}")
-    except ActionFailure as exc:
+        issue = client.issue(params.id)
+    except Exception as exc:
         raise ActionFailure(f"{JIRA_ERROR_GET_TICKET}: {exc}") from exc
 
     raw_fields = issue.get("fields", {})
-    custom_field_map = get_custom_field_map(asset)
+    custom_field_map = get_custom_field_map(asset, params.id)
 
     def _name(obj):
         if isinstance(obj, dict):

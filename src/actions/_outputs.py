@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from typing import ClassVar
+
 from pydantic import ValidationError
 
 from soar_sdk.action_results import ActionOutput, OutputField, PermissiveActionOutput
@@ -37,6 +39,46 @@ class JiraPermissiveOutput(PermissiveActionOutput):
         except ValidationError as exc:
             _logger.warning(f"Ignoring validation error:\n {exc.with_traceback(None)}")
         self._permissive_raw = data
+
+    def model_dump(self, *args, **kwargs):
+        """Keep vendor fields alongside the declared SDK fields in action output."""
+        output = super().model_dump(*args, **kwargs)
+        output.update(self._permissive_raw)
+        return output
+
+
+class LegacyIssueFieldsOutput(JiraPermissiveOutput):
+    """Retain legacy selectable whole-field paths alongside SDK nested paths.
+
+    These manifest declarations describe existing playbook contracts. Runtime
+    values remain raw Jira dictionaries/lists through JiraPermissiveOutput.
+    """
+
+    legacy_whole_fields: ClassVar[tuple[str, ...]] = ("assignee", "resolution")
+    legacy_string_fields: ClassVar[tuple[str, ...]] = ()
+
+    @classmethod
+    def _to_json_schema(
+        cls, parent_datapath="action_result.data.*", column_order_counter=None
+    ):
+        emitted = set()
+        for specification in super()._to_json_schema(
+            parent_datapath, column_order_counter
+        ):
+            field_name = specification["data_path"].removeprefix(parent_datapath + ".")
+            output_specification = (
+                {**specification, "data_type": "string"}
+                if field_name in cls.legacy_string_fields
+                else specification
+            )
+            emitted.add(output_specification["data_path"])
+            yield output_specification
+        for field_name in cls.legacy_whole_fields:
+            path = f"{parent_datapath}.{field_name}"
+            if field_name in cls.model_fields and path not in emitted:
+                yield {"data_path": path, "data_type": "string"}
+        if "labels" in cls.model_fields:
+            yield {"data_path": f"{parent_datapath}.labels", "data_type": "string"}
 
 
 class AvatarurlsOutput(JiraPermissiveOutput):

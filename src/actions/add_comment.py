@@ -18,15 +18,15 @@ from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
-from ..helpers import jira_request
+from ..client import JiraClient
 
 
 class AddCommentParams(Params):
     id: str = Param(description="Issue ID", primary=True, cef_types=["jira ticket key"])
     comment: str = Param(description="Comment to add")
     internal: bool | None = Param(
-        description="Whether comment should be internal only or not in Jira Service Desk (if the value is not provided, it will internally be treated as 'false')",
-        default=False,
+        description="Whether comment should be internal only in Jira Service Desk. Defaults to true when omitted.",
+        default=True,
     )
 
 
@@ -35,22 +35,15 @@ def add_comment(
 ) -> ActionOutput:
     logger = getLogger()
 
+    client = JiraClient(asset)
     try:
-        jira_request(
-            asset=asset, method="GET", endpoint=f"rest/api/2/issue/{params.id}"
-        )
-    except ActionFailure as exc:
+        client.issue(params.id)
+        internal = True if params.internal is None else params.internal
+        client.add_comment(params.id, params.comment, internal=internal)
+    except Exception as exc:
         raise ActionFailure(
-            f"Unable to find ticket info.Please make sure that the issue exists: {exc}"
+            f"Unable to add comment. Please make sure that the issue exists: {exc}"
         ) from exc
-
-    body: dict = {"body": params.comment}
-
-    # Internal comments use the sd.public.comment property — same endpoint as regular comments
-    if params.internal:
-        body["properties"] = [{"key": "sd.public.comment", "value": {"internal": True}}]
-
-    jira_request(asset, "POST", f"rest/api/2/issue/{params.id}/comment", json=body)
     logger.info("Successfully added the comment")
     soar.set_message("Successfully added the comment")
     return ActionOutput()

@@ -19,8 +19,9 @@ from soar_sdk.models.artifact import Artifact
 from soar_sdk.logging import getLogger
 
 from .._asset import Asset
+from ..client import JiraClient
 from ..consts import DEFAULT_MAX_RESULTS_PER_PAGE
-from ..helpers import get_custom_field_map, jira_request
+from ..helpers import get_custom_field_map
 
 logger = getLogger()
 
@@ -48,8 +49,8 @@ def _migrate_legacy_ingest_state(asset: Asset) -> None:
     if needs_first_run and "first_run" in legacy_state:
         state["first_run"] = legacy_state["first_run"]
 
-    if needs_last_time and (legacy_last_time := legacy_state.get("last_time")):
-        state["last_time"] = legacy_last_time
+    if needs_last_time and "last_time" in legacy_state:
+        state["last_time"] = legacy_state["last_time"]
 
 
 def _resolve_timezone(asset: Asset) -> ZoneInfo:
@@ -65,7 +66,7 @@ def _resolve_timezone(asset: Asset) -> ZoneInfo:
         return asset.timezone
 
     try:
-        info = jira_request(asset, "GET", "rest/api/2/serverInfo")
+        info = JiraClient(asset).request_json("GET", "rest/api/2/serverInfo")
         tz_name: str = info.get("serverTimeZone") or "UTC"
         tz = ZoneInfo(tz_name)
         logger.info(f"Auto-detected Jira server timezone: {tz_name}")
@@ -113,17 +114,15 @@ def _paginate_issues(asset: Asset, jql: str, limit: int) -> list[dict]:
     """
     issues: list[dict] = []
     next_page_token: str | None = None
+    client = JiraClient(asset)
 
     while True:
-        params: dict = {
-            "jql": jql,
-            "maxResults": DEFAULT_MAX_RESULTS_PER_PAGE,
-            "fields": ["*all"],
-        }
-        if next_page_token:
-            params["nextPageToken"] = next_page_token
-
-        result = jira_request(asset, "GET", "rest/api/2/search/jql", params=params)
+        result = client.search_issues(
+            jql,
+            max_results=DEFAULT_MAX_RESULTS_PER_PAGE,
+            fields="*all",
+            next_page_token=next_page_token,
+        )
 
         page = result.get("issues", [])
         if not page:
@@ -152,46 +151,6 @@ def _get_global_custom_field_map(asset: Asset) -> dict[str, str]:
     an empty dict on failure (custom field resolution is skipped, not fatal).
     """
     return get_custom_field_map(asset)
-
-
-def _fetch_all_comments(asset: Asset, issue_key: str, comment_data: dict) -> list[dict]:
-    """Return the complete comment list for an issue.
-
-    `search/jql` with `*all` returns only the first page of comments
-    (typically 10). When `comment.total > len(comment.comments)` we fetch
-    the remaining pages from `GET rest/api/2/issue/{key}/comment` so behaviour
-    matches the legacy connector's per-issue fetch which always returned all comments.
-    """
-    comments = list(comment_data.get("comments") or [])
-    total = comment_data.get("total", len(comments))
-
-    if total <= len(comments):
-        return comments
-
-    start_at = len(comments)
-    while start_at < total:
-        try:
-            page = jira_request(
-                asset,
-                "GET",
-                f"rest/api/2/issue/{issue_key}/comment",
-                params={
-                    "startAt": start_at,
-                    "maxResults": DEFAULT_MAX_RESULTS_PER_PAGE,
-                },
-            )
-        except ActionFailure as exc:
-            logger.warning(
-                f"Failed to fetch remaining comments for {issue_key} at startAt={start_at}: {exc}"
-            )
-            break
-        batch = page.get("comments") or []
-        if not batch:
-            break
-        comments.extend(batch)
-        start_at += len(batch)
-
-    return comments
 
 
 def _get_existing_artifact(

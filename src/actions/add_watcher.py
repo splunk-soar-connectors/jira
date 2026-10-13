@@ -18,8 +18,8 @@ from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
+from ..client import JiraClient
 from ..consts import JIRA_WATCHERS_ERROR
-from ..helpers import jira_request
 
 
 class AddWatcherParams(Params):
@@ -48,10 +48,8 @@ def add_watcher(
     # username -> on-prem (matched by "name"); user_account_id -> cloud (matched by "accountId")
     user = params.username or params.user_account_id
 
-    watchers_response = jira_request(
-        asset, "GET", f"rest/api/2/issue/{params.id}/watchers"
-    )
-    existing_watchers = watchers_response.get("watchers", [])
+    client = JiraClient(asset)
+    existing_watchers = client.watchers(params.id).get("watchers", [])
 
     # Jira Cloud watcher entries have no "name" key, and pre-accountId on-prem
     # instances have no "accountId" key — a KeyError here means the caller
@@ -71,12 +69,7 @@ def add_watcher(
 
     # Jira's watchers POST body is just the identifier as a JSON string —
     # a username for on-prem, an accountId for cloud.
-    jira_request(
-        asset,
-        "POST",
-        f"rest/api/2/issue/{params.id}/watchers",
-        json=user,
-    )
+    client.add_watcher(params.id, user, account_id=bool(params.user_account_id))
 
     soar.set_message(
         f"Successfully added user to the watchers list of the issue ID: {params.id}"

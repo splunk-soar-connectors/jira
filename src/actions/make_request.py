@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import json as _json
+from typing import Any
 
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import MakeRequestOutput
@@ -21,7 +22,7 @@ from soar_sdk.params import MakeRequestParams
 
 
 from .._asset import Asset
-from ..client import call_jira
+from ..client import JiraClient
 
 
 def make_request(
@@ -36,41 +37,74 @@ def make_request(
     """
     logger = getLogger()
 
-    body_dict = None
+    raw_body: str | None = None
+    json_body: Any | None = None
     if params.body:
-        try:
-            body_dict = _json.loads(params.body)
-        except Exception as exc:
-            raise ActionFailure(f"Invalid JSON in 'body' parameter: {exc}") from exc
+        content_type = "application/json"
+        if params.headers:
+            try:
+                header_values = _json.loads(params.headers)
+                if isinstance(header_values, dict):
+                    content_type = next(
+                        (
+                            value
+                            for key, value in header_values.items()
+                            if isinstance(key, str) and key.lower() == "content-type"
+                        ),
+                        content_type,
+                    )
+            except (_json.JSONDecodeError, TypeError):
+                pass
+        if isinstance(content_type, str) and "json" in content_type.lower():
+            try:
+                json_body = _json.loads(params.body)
+            except (_json.JSONDecodeError, TypeError) as exc:
+                raise ActionFailure(f"Invalid JSON in 'body' parameter: {exc}") from exc
+        else:
+            raw_body = params.body
 
-    query_dict = None
+    query_dict: dict | None = None
+    endpoint = params.endpoint
     if params.query_parameters:
         try:
-            query_dict = _json.loads(params.query_parameters)
-        except Exception as exc:
-            raise ActionFailure(
-                f"Invalid JSON in 'query_parameters' parameter: {exc}"
-            ) from exc
+            parsed_query = _json.loads(params.query_parameters)
+        except (_json.JSONDecodeError, TypeError):
+            query_string = params.query_parameters.removeprefix("?")
+            separator = "&" if "?" in endpoint else "?"
+            endpoint = f"{endpoint}{separator}{query_string}"
+        else:
+            if not isinstance(parsed_query, dict):
+                raise ActionFailure("query_parameters JSON must be an object")
+            query_dict = parsed_query
 
     timeout = float(params.timeout) if params.timeout else 60.0
 
-    extra_headers: dict = {}
+    extra_headers: dict[str, str] = {}
     if params.headers:
         try:
-            extra_headers.update(_json.loads(params.headers))
-        except Exception as exc:
+            parsed_headers = _json.loads(params.headers)
+        except (_json.JSONDecodeError, TypeError) as exc:
             raise ActionFailure(f"Invalid JSON in 'headers' parameter: {exc}") from exc
+        if not isinstance(parsed_headers, dict) or not all(
+            isinstance(key, str) and isinstance(value, str)
+            for key, value in parsed_headers.items()
+        ):
+            raise ActionFailure(
+                "headers JSON must be an object with string keys and values"
+            )
+        extra_headers = parsed_headers
 
-    logger.info(f"Making {params.http_method} request to {params.endpoint}")
+    logger.info(f"Making {params.http_method} request to {endpoint}")
 
-    response = call_jira(
+    response = JiraClient(asset).request(
         params.http_method,
-        params.endpoint,
-        asset,
+        endpoint,
         params=query_dict,
-        json=body_dict,
+        json=json_body,
+        data=raw_body,
         headers=extra_headers,
         timeout=timeout,
+        verify_ssl=params.verify_ssl,
     )
 
     logger.info(f"Response: {response.status_code}")

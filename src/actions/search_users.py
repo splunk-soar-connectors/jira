@@ -18,12 +18,12 @@ from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
+from ..client import JiraClient
 from ..consts import (
     JIRA_SEARCH_USERS_ERROR,
     JIRA_LIMIT_VALIDATION_MESSAGE,
 )
-from ..helpers import jira_request
-from ._outputs import AvatarurlsOutput
+from ._outputs import AvatarurlsOutput, JiraPermissiveOutput
 
 
 class LookupUsersParams(Params):
@@ -46,7 +46,7 @@ class LookupUsersSummaryOutput(ActionOutput):
     total_users: int = OutputField(example_values=[5])
 
 
-class LookupUsersOutput(ActionOutput):
+class LookupUsersOutput(JiraPermissiveOutput):
     name: str = OutputField(
         cef_types=["user name"], example_values=["test"], column_name="Username"
     )
@@ -90,13 +90,6 @@ def lookup_users(
     if has_username == has_display_name:
         raise ActionFailure(JIRA_SEARCH_USERS_ERROR)
 
-    # Cloud only supports display_name; reject username-only on cloud
-    is_cloud = "atlassian.net" in asset.device_url.lower()
-    if is_cloud and has_username and not has_display_name:
-        raise ActionFailure(JIRA_SEARCH_USERS_ERROR)
-
-    query = params.display_name if has_display_name else params.username
-
     max_results = int(params.max_results) if params.max_results is not None else 1000
 
     if max_results <= 0:
@@ -107,20 +100,15 @@ def lookup_users(
     users: list[dict] = []
     start_at = 0
     page_size = 100
+    client = JiraClient(asset)
 
     while len(users) < max_results:
         fetch_count = min(page_size, max_results - len(users))
-        page = jira_request(
-            asset,
-            "GET",
-            "rest/api/2/user/search",
-            params={
-                "query": query,
-                "includeActive": "true",
-                "includeInactive": "false",
-                "maxResults": fetch_count,
-                "startAt": start_at,
-            },
+        page = client.search_users(
+            username=params.username,
+            display_name=params.display_name,
+            start_at=start_at,
+            max_results=fetch_count,
         )
 
         if not page:
@@ -135,25 +123,7 @@ def lookup_users(
     logger.info(f"Total users: {len(users)}")
     soar.set_message(f"Total users: {len(users)}")
 
-    results: list[LookupUsersOutput] = []
-    for user in users:
-        raw_avatar = user.get("avatarUrls")
-        avatar = AvatarurlsOutput.model_validate(raw_avatar) if raw_avatar else None
-        results.append(
-            LookupUsersOutput(
-                accountId=user.get("accountId", ""),
-                accountType=user.get("accountType", ""),
-                active=user.get("active", False),
-                avatarUrls=avatar,
-                displayName=user.get("displayName", ""),
-                emailAddress=user.get("emailAddress", ""),
-                key=user.get("key", ""),
-                locale=user.get("locale", ""),
-                name=user.get("name", ""),
-                self=user.get("self", ""),
-                timeZone=user.get("timeZone", ""),
-            )
-        )
+    results = [LookupUsersOutput(**user) for user in users]
 
     soar.set_summary(LookupUsersSummaryOutput(total_users=len(results)))
     return results

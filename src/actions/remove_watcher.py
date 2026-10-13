@@ -18,8 +18,8 @@ from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
+from ..client import JiraClient
 from ..consts import JIRA_WATCHERS_ERROR
-from ..helpers import jira_request
 
 
 class RemoveWatcherParams(Params):
@@ -48,10 +48,8 @@ def remove_watcher(
     # username -> on-prem (matched by "name"); user_account_id -> cloud (matched by "accountId")
     user = params.username or params.user_account_id
 
-    watchers_response = jira_request(
-        asset, "GET", f"rest/api/2/issue/{params.id}/watchers"
-    )
-    existing_watchers = watchers_response.get("watchers", [])
+    client = JiraClient(asset)
+    existing_watchers = client.watchers(params.id).get("watchers", [])
 
     if not existing_watchers:
         raise ActionFailure(f"No watchers found in the issue ID: {params.id}")
@@ -72,14 +70,7 @@ def remove_watcher(
         )
         return ActionOutput()
 
-    jira_request(
-        asset,
-        "DELETE",
-        f"rest/api/2/issue/{params.id}/watchers",
-        params={"username": params.username}
-        if params.username
-        else {"accountId": params.user_account_id},
-    )
+    client.remove_watcher(params.id, user, account_id=bool(params.user_account_id))
 
     soar.set_message(
         f"Successfully removed the user from the watchers list of the issue ID: {params.id}"

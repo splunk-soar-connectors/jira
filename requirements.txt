@@ -1,2 +1,1 @@
-python-dateutil==2.9.0
-splunk-soar-sdk>=3.25.1
+splunk-soar-sdk==6.0.1

@@ -17,7 +17,7 @@ from soar_sdk.exceptions import ActionFailure
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
-from ..helpers import jira_request
+from ..client import JiraClient, validate_issue_id
 
 
 class LinkTicketsParams(Params):
@@ -50,13 +50,25 @@ class LinkTicketsOutput(ActionOutput):
 def link_tickets(
     params: LinkTicketsParams, soar: SOARClient, asset: Asset
 ) -> LinkTicketsOutput:
-    link_types_resp = jira_request(asset, "GET", "rest/api/2/issueLinkType")
-    available = link_types_resp.get("issueLinkTypes") or []
+    validate_issue_id(params.from_id)
+    validate_issue_id(params.to_id)
+    from_id, to_id = params.from_id, params.to_id
+    client = JiraClient(asset)
+    available = client.issue_link_types()
     canonical_name: str | None = None
     for lt in available:
         if lt.get("name", "").lower() == params.link_type.lower():
             canonical_name = lt["name"]
             break
+    if canonical_name is None:
+        for lt in available:
+            if lt.get("outward", "").lower() == params.link_type.lower():
+                canonical_name = lt["name"]
+                break
+            if lt.get("inward", "").lower() == params.link_type.lower():
+                canonical_name = lt["name"]
+                from_id, to_id = to_id, from_id
+                break
     if canonical_name is None:
         raise ActionFailure(
             f"No issue link type with name '{params.link_type}' found. "
@@ -77,7 +89,12 @@ def link_tickets(
                 "value": params.comment_visibility_name,
             }
 
-    jira_request(asset, "POST", "rest/api/2/issueLink", json=payload)
+    client.create_issue_link(
+        canonical_name,
+        from_id,
+        to_id,
+        payload.get("comment"),
+    )
 
     soar.set_message("The ticket has been linked successfully")
     return LinkTicketsOutput(result="success")

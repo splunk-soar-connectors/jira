@@ -22,6 +22,7 @@ from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
+from ..client import JiraClient
 from ..consts import (
     DEFAULT_MAX_VALUE,
     JIRA_ERROR_LIST_TICKETS_FAILED,
@@ -31,11 +32,11 @@ from ..consts import (
 from ..helpers import (
     description_to_str,
     get_custom_field_map,
-    jira_request,
     sanitize_fields_dict,
 )
 from ._outputs import (
     JiraPermissiveOutput,
+    LegacyIssueFieldsOutput,
     AggregateprogressOutput,
     AssigneeOutput,
     CreatorOutput,
@@ -156,7 +157,7 @@ class _WorklogOutput(JiraPermissiveOutput):
     total: float
 
 
-class FieldsOutput(JiraPermissiveOutput):
+class FieldsOutput(LegacyIssueFieldsOutput):
     aggregateprogress: AggregateprogressOutput | None
     aggregatetimeestimate: str | None
     aggregatetimeoriginalestimate: str | None
@@ -167,7 +168,7 @@ class FieldsOutput(JiraPermissiveOutput):
     created: str | None = OutputField(example_values=["2018-09-23T19:40:35.000-0700"])
     creator: CreatorOutput | None
     description: str | None = OutputField(
-        cef_types=["url"], example_values=["This is a sample testing description"]
+        example_values=["This is a sample testing description"]
     )
     duedate: str | None
     environment: str | None
@@ -235,7 +236,6 @@ class ListTicketsOutput(ActionOutput):
         example_values=["Sub-taskofBigTask"], column_name="Summary"
     )
     description: str | None = OutputField(
-        cef_types=["url"],
         example_values=["This is a sample testing description"],
         column_name="Description",
     )
@@ -251,10 +251,10 @@ def list_tickets(
 
     start_index = int(params.start_index) if params.start_index is not None else 0
     max_results = (
-        min(int(params.max_results), DEFAULT_MAX_VALUE)
-        if params.max_results is not None
-        else DEFAULT_MAX_VALUE
+        int(params.max_results) if params.max_results is not None else DEFAULT_MAX_VALUE
     )
+    if max_results <= 0:
+        raise ActionFailure("Please provide a positive value for max_results")
     jql_query = params.query
 
     if start_index < 0:
@@ -274,37 +274,46 @@ def list_tickets(
         jql = jql_query
 
     issues: list[dict] = []
-
-    starts_at = start_index
-
     page_size = 100
+    client = JiraClient(asset)
 
-    while True:
-        fetch_limit = min(page_size, max_results - len(issues))
-        response = jira_request(
-            asset,
-            "GET",
-            "rest/api/3/search/jql",
-            params={
-                "jql": jql,
-                "startAt": starts_at,
-                "maxResults": fetch_limit,
-                "fields": "*all",
-            },
+    # Jira Cloud's enhanced search endpoint uses an opaque cursor rather than
+    # ``startAt``. To preserve the action's existing ``start_index`` contract,
+    # consume and skip complete pages until that offset is reached, then
+    # collect at most ``max_results`` issues.
+    next_page_token: str | None = None
+    traversed = 0
+
+    while len(issues) < max_results:
+        response = client.search_issues(
+            jql,
+            max_results=page_size,
+            fields="*all",
+            next_page_token=next_page_token,
         )
-        page_issues: list[dict] = response.get("issues", [])
-        issues.extend(page_issues)
-
-        logger.info(f"{JIRA_TOTAL_ISSUES} : {len(issues)}")
-
-        if len(page_issues) < page_size or len(issues) >= max_results:
+        page_issues = response.get("issues", [])
+        if not page_issues:
             break
-        starts_at += len(page_issues)
+
+        page_offset = max(0, start_index - traversed)
+        if page_offset < len(page_issues):
+            remaining = max_results - len(issues)
+            issues.extend(page_issues[page_offset : page_offset + remaining])
+        traversed += len(page_issues)
+
+        if len(issues) >= max_results or response.get("isLast", False):
+            break
+
+        new_token = response.get("nextPageToken")
+        if not new_token or new_token == next_page_token:
+            break
+        next_page_token = new_token
+
+    logger.info(f"{JIRA_TOTAL_ISSUES} : {len(issues)}")
 
     results: list[ListTicketsOutput] = []
-    custom_field_map = get_custom_field_map(asset)
-
     for issue in issues:
+        custom_field_map = get_custom_field_map(asset, issue.get("key") or issue["id"])
         fields = issue.get("fields") or {}
         results.append(
             ListTicketsOutput(

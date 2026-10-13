@@ -1,6 +1,6 @@
 [project]
-name = "jira"
-version = "4.1.0"
+name = "phantom_jira"
+version = "5.0.1"
 description = "This app integrates with JIRA to perform several ticket management actions"
 license = "Copyright (c) 2016-2026 Splunk Inc."
 requires-python = ">=3.13, <3.15"
@@ -8,7 +8,7 @@ authors = [
     { name = "Juliya Smith" },
 ]
 dependencies = [
-    "splunk-soar-sdk>=3.25.1",
+    "splunk-soar-sdk==6.0.1",
 ]
 
 [tool.soar.app]
@@ -45,6 +45,9 @@ required-environments = [
     "sys_platform == 'linux' and platform_machine == 'x86_64' and python_version == '3.13'",
     "sys_platform == 'linux' and platform_machine == 'x86_64' and python_version == '3.14'",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
 
 [tool.ruff]
 output-format = "full"  # <full|concise>

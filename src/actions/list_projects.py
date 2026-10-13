@@ -18,8 +18,8 @@ from soar_sdk.logging import getLogger
 from soar_sdk.params import Params
 
 from .._asset import Asset
+from ..client import JiraClient
 from ..consts import JIRA_ERROR_PROJECTS_INFO, JIRA_TOTAL_PROJECTS
-from ..helpers import jira_request
 
 
 class ListProjectsOutput(ActionOutput):
@@ -42,8 +42,8 @@ def list_projects(
     logger = getLogger()
 
     try:
-        projects = jira_request(asset, "GET", "rest/api/2/project")
-    except ActionFailure as exc:
+        projects = JiraClient(asset).projects()
+    except Exception as exc:
         raise ActionFailure(f"{JIRA_ERROR_PROJECTS_INFO}: {exc}") from exc
 
     if not projects:

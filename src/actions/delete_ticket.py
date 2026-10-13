@@ -18,8 +18,8 @@ from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
+from ..client import JiraClient
 from ..consts import JIRA_SUCCESS_TICKET_DELETED
-from ..helpers import jira_request
 
 
 class DeleteTicketParams(Params):
@@ -32,13 +32,11 @@ def delete_ticket(
     logger = getLogger()
 
     try:
-        jira_request(asset, "GET", f"rest/api/2/issue/{params.id}")
-    except ActionFailure as exc:
+        JiraClient(asset).delete_issue(params.id)
+    except Exception as exc:
         raise ActionFailure(
-            f"Unable to find ticket info. Please make sure the issue exists: {exc}"
+            f"Unable to delete the ticket. Please make sure the issue exists: {exc}"
         ) from exc
-
-    jira_request(asset, "DELETE", f"rest/api/2/issue/{params.id}")
 
     logger.info(JIRA_SUCCESS_TICKET_DELETED)
     soar.set_message(JIRA_SUCCESS_TICKET_DELETED)

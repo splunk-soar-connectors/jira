@@ -1,7 +1,7 @@
 # Jira
 
 Publisher: Splunk <br>
-Connector Version: 4.1.0 <br>
+Connector Version: 5.0.1 <br>
 Product Vendor: Atlassian <br>
 Product Name: Jira <br>
 Minimum Product Version: 7.0.0
@@ -17,32 +17,11 @@ This app integrates with JIRA to perform several ticket management actions
 **Major Changes**
 
 - **JIRA Cloud List Tickets Behavior Change**: Previously, if you provided an invalid project ID or query in the "list tickets" action, it would fail with an error. Now for JIRA Cloud instances, it will pass and return 0 tickets instead of failing. This provides better error handling and prevents workflow interruption.
-- **JIRA Server Behavior**: For JIRA Server instances, the behavior remains unchanged - invalid project ID or query will still fail as before.
-
-## oauthlib
-
-This app uses the python oauthlib module, which is licensed under the OSI Approved, BSD License
-(BSD), Copyright (c) 2001-2022. Python Software Foundation
-
-## pbr
-
-This app uses the python pbr module, which is licensed under the Apache Software License, Copyright
-(c) 2001-2022. Python Software Foundation
-
-## PyJWT
-
-This app uses the python PyJWT module, which is licensed under the MIT License (MIT), Copyright (c)
-2001-2022. Python Software Foundation
-
-## requests-oauthlib
-
-This app uses the python requests-oauthlib module, which is licensed under the BSD License (ISC),
-Copyright (c) 2001-2022. Python Software Foundation
-
-## requests-toolbelt
-
-This app uses the python requests-toolbelt module, which is licensed under the Apache Software
-License (Apache 2.0), Copyright (c) 2001-2022. Python Software Foundation
+- This SDK version supports Jira Cloud. Jira Server and Data Center deployments must continue using the legacy connector.
+- Existing gateway URLs (`https://api.atlassian.com/ex/jira/{cloudId}`) remain supported. Service-account assets may also use a site URL; the app resolves its cloud ID automatically.
+- OAuth requires both `client_id` and `client_secret`. Incomplete OAuth configuration is an error.
+- Existing ticket keys and positive numeric issue IDs remain supported. Custom-field names on existing issues are resolved using that issue's editable fields. For creation, supply explicit Jira field IDs.
+- SDK result tables replace the legacy custom widgets. Legacy selectable whole-field datapaths are retained alongside nested SDK paths.
 
 ## JIRA
 
@@ -73,8 +52,7 @@ information to assist in debugging.
     the specified search string.
   - Add Comment - The new [internal] parameter has been added for comment that whether it
     should be internal only or not in Jira Service Desk. This parameter is an optional Boolean
-    parameter. If the value is not provided for it, then it will be considered as a 'False'
-    value.
+    parameter. If the value is not provided for it, then it defaults to `True` (internal comment). Specify `False` explicitly for a public comment.
   - Get Attachments - Added a new action. The action will store specific attachments from a
     given Jira ticket inside the vault.
   - Make Request - Added a new action. This action allows playbooks to call any Jira REST API
@@ -107,147 +85,20 @@ information to assist in debugging.
   - HTTP basic authentication would require a username and API token to access REST APIs for
     Atlassian Cloud applications.
 
-**Authentication via Personal Access Token (PAT)**
+**Service-account authentication and migration**
 
-- [Click
-  here](https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html#UsingPersonalAccessTokens-CreatingPATsinapplication)
-  for instructions to create PATs
+Configure the service-account email and API token for Basic authentication, or provide both OAuth client credentials. OAuth takes priority. Existing gateway device URLs remain valid. Password-only Bearer authentication is retained; on-premises PAT deployments require the legacy connector.
 
-  Personal Access Tokens are a safe alternative to using username and password for authentication
-  with various services in **Data Center and server editions** of the following applications:
-
-  - Jira Core 8.14 and later
-  - Jira Software 8.14 and later
-  - Jira Service Management 4.15 and later
-  - Confluence 7.9 and later
-
-- Use a PAT
-
-  - A primary use case for PATs is to use scripts and integrate external apps with your
-    Atlassian application by leveraging REST APIs upon Bearer Token Authorization.
-  - To use Bearer Token Authorization, configure your asset with PAT in the "Password" field and
-    leave "Username" blank.
-
-- Note:
-
-  - For security reasons it isn't possible to view the token after closing the creation dialog;
-    if necessary, create a new token.
-  - For any invalid PAT value, the test_connectivity will pass as per the API behaviour.
+When upgrading an existing asset, verify test connectivity, Poll Now, its configured ingest label, existing playbook datapaths and attachment retrieval. The SDK's connectivity hook uses the identifier `test_connectivity`.
 
 **The functioning of On Poll**
 
-- **NOTE (Consider below points due to a minute's granularity (instead of a second or lesser) for
-  querying tickets in the JIRA)**
-
-  - It is highly recommended for configuring a significantly large value (larger than the number
-    of existing tickets on the user's instance) in the asset configuration parameter to bring
-    the ingested tickets in the Splunk SOAR in sync entirely with the JIRA instance in the first
-    run
-  - It is highly recommended for configuring a significantly large value (larger than the
-    possible number of tickets that can be updated in 1 minute or any value larger than the
-    average number of tickets getting created every unit of time (based on the frequency of
-    scheduled or interval polling)) in the asset configuration parameter to avoid the duplicate
-    tickets ingestion
-
-- The On Poll action works in 2 steps. In the first step, all the tickets (issues) in a defined
-  time duration will be fetched. In the second step, all the components (e.g. fields, comments,
-  and attachments) of the tickets (retrieved in the first step) will be fetched. A container will
-  be created for each ticket and for each ticket all the components will be created as the
-  respective artifacts.
-
-- The tickets will be fetched in the oldest first order based on the **updated** time in the On
-  Poll action
-
-- The updated timestamps of the components have been appended to the end of the artifact name to
-  maintain the uniqueness of a particular component
-
-- The timezone parameter in the asset configurations defines the timezone used to query the
-  tickets from the JIRA instance. If you do not find your exact timezone in the available list in
-  the dropdown, please select a timezone having the same time offset from the GMT timezone as
-  yours. Below are the details of setting the timezone parameter for on-prem and cloud JIRA
-  instances.
-
-  1. On-premise JIRA
-     - The timezone parameter here is the profile timezone of the JIRA instance
-     - For checking the profile timezone, navigate to the JIRA instance; navigate to the
-       profile settings; the value of the **Time Zone** parameter is the timezone that has to
-       be provided in the app asset configuration
-  1. Cloud JIRA
-     - The timezone parameter here is the system settings timezone of the JIRA instance
-     - For checking the system settings timezone, navigate to the JIRA instance; navigate to
-       the option **Jira Settings --> System** in the settings page; the value of the **Default
-       user time zone** parameter is the timezone that has to be provided in the app asset
-       configuration
-
-- Users can provide the JSON formatted list of names of the custom fields (to be considered for
-  the ingestion) in the asset configuration parameter **custom_fields** e.g. \["Test \\"CF\\" 1",
-  "test_cf_2"\]. It's a valid JSON formatted list of strings, so the user should use escape
-  sequences whenever needed. Please find the below points for getting exact names for the custom
-  fields.
-
-  1. On-premise JIRA
-     - Navigate to the JIRA instance; navigate to the issues settings; navigate to the **Custom
-       fields** section under the **Fields** section; in the **Name** column, search for the
-       custom field that the user wants to be added in the asset configuration parameter
-       **custom_fields**
-  1. Cloud JIRA
-     - The timezone parameter here is the system settings timezone of the JIRA instance
-     - For checking the system settings timezone, navigate to the JIRA instance; navigate to
-       the option **Jira Settings --> System** in the settings page; the value of the **Default
-       user time zone** parameter is the timezone that has to be provided in the app asset
-       configuration
-
-- If there is any error while fetching the custom fields metadata due to project configuration or
-  lack of permissions, then, the custom fields will be ignored and the ingestion based on the
-  system fields of the tickets (issues) will be executed successfully
-
-- Two approaches for fetching tickets
-
-  - Manual polling
-
-    - Fetch the tickets
-
-      - The tickets will be fetched from the project mentioned in the **Project key to
-        ingest tickets (issues) from** app configuration parameter
-      - The tickets will be fetched in the oldest first order based on the **updated** time
-        and governed by the **container_count** parameter in the On Poll action
-
-    - Fetch the components
-
-      - Fetch all created or updated components (e.g. fields, comments, and attachments) for
-        each ticket (retrieved in the previous step)
-
-    - Create containers for the tickets and artifacts for the fields, comments, and the
-      attachments
-
-    - It is recommended to provide a sufficiently large value in the **container_count**
-      parameter for polling because manual polling does not remember the timestamp of last
-      fetched ticket and it starts polling from the beginning every time. Hence, if the user
-      runs the manual polling with e.g. 10 as the container count (the tickets are ingested
-      successfully), then, the user again runs the manual polling with the same value in the
-      container count; the app will fetch the same 10 tickets from the beginning and it will
-      display the message as 'duplicate artifacts found' because the same artifacts were
-      already ingested in the earlier manual polling run.
-
-  - Scheduled Polling
-
-    - Follows the same steps as manual polling with the below-mentioned points getting
-      considered
-    - The application will fetch the number of tickets governed by the **Maximum tickets
-      (issues) for scheduled polling** parameter (default: 100) in the On Poll action, whose
-      **updated** time is greater than or equal to one minute less than the time stored in the
-      **last_time** variable in the state file. The reason for reducing one minute from the
-      **last_time** is to ensure that no tickets created or updated on the same minute are not
-      getting skipped due to the granularity of Jira being 1 minute for the time-based
-      filtering of the tickets.
-    - If the **last_time** variable is not present in the state file i.e. the On Poll is
-      executing for the first time, the application will fetch the last **M** tickets ( **M:**
-      Value provided in the **Maximum tickets (issues) to poll first time** app configuration
-      parameter (default: 1000)) and then, from the next consecutive runs, it will fetch **N**
-      tickets ( **N:** Value provided in the **Maximum tickets (issues) for scheduled
-      polling** app configuration parameter (default: 100)).
-    - The last_time will be updated by the **updated** time of the last ticket which was
-      ingested
+- Jira Cloud issue search returns the issue fields, comments and attachment metadata used to create or update one SOAR container per issue.
+- Poll Now uses the requested `container_count` and does not change scheduled polling state. The action form defaults to one container. Scheduled polling uses `max_tickets` (default 100); the first scheduled run uses `first_run_max_tickets` (default 1000).
+- Scheduled searches overlap the last checkpoint by one minute because Jira's updated-time filter has minute-level granularity. Legacy checkpoints are migrated when the asset runs the SDK app.
+- Container updates, artifact creation and attachment vault imports must succeed before the scheduled checkpoint advances. Polling downloads attachments to temporary files before vault import.
+- Set the optional timezone field when Jira's configured timezone differs from the connector host. Jira Cloud uses the instance's default user timezone. Leave it blank to use UTC.
+- The `custom_fields` asset setting accepts a JSON list of Jira custom-field names to include in ingested field artifacts. If field metadata cannot be read, ingestion continues with raw Jira field IDs.
 
 **Some example caveats**
 
@@ -262,9 +113,7 @@ information to assist in debugging.
 - Test connectivity may fail due to invalid credentials, such as accidentally using the user's
   email address as the authentication login instead of the user's login name.
 - While adding an attachment to the Jira ticket using 'Update ticket' or 'Create ticket' actions,
-  if the filename contains Unicode characters, the app will automatically strip non-ASCII characters
-  and prefix the filename with `FILENAME_ASCII_` before uploading. This avoids a 500 Internal
-  Server Error from the Jira API when Unicode filenames are used.
+  the app first uploads the original filename. If that attempt fails and the filename contains Unicode characters, it retries with non-ASCII characters removed and the prefix `FILENAME_ASCII_`. Vault metadata associated with the executing container is preferred.
 
 ## Port Information
 
@@ -304,31 +153,20 @@ Use this action to call any Jira REST API endpoint not covered by the other acti
 The endpoint parameter is the path after the base device URL,
 e.g. rest/api/2/issue/PROJ-1 or rest/api/2/project.
 The full response body is returned as a string in response_body. <br>
-[on poll](#action-on-poll) - Ingest Jira tickets as SOAR containers with field, comment, and attachment artifacts.
-
-State is stored in `asset.ingest_state` (SDK-managed, encrypted at rest):
-
-- `first_run` (bool): True until the first scheduled poll completes.
-- `last_time` (int): UTC epoch seconds of the `updated` field of the last ingested issue.
-
-Three execution modes (mirrors legacy connector):
-
-- Poll Now (params.is_manual_poll()): uses params.container_count as limit; never writes state.
-- First Run (state["first_run"] == True): uses asset.first_run_max_tickets; no time filter.
-- Scheduled (ongoing): uses asset.max_tickets; adds `updated>="..."` JQL filter. <br>
-  [add comment](#action-add-comment) - Add a comment to the ticket (issue) <br>
-  [add watcher](#action-add-watcher) - Add a user to an issue's watchers list <br>
-  [create ticket](#action-create-ticket) - Create a ticket (issue) <br>
-  [delete ticket](#action-delete-ticket) - Delete ticket (issue) <br>
-  [get attachments](#action-get-attachments) - Gets specific attachments from a Jira Ticket (issue) <br>
-  [get ticket](#action-get-ticket) - Get ticket (issue) information <br>
-  [link tickets](#action-link-tickets) - Create a link between two separate tickets <br>
-  [list projects](#action-list-projects) - List all projects <br>
-  [list tickets](#action-list-tickets) - Get a list of tickets (issues) in a specified project <br>
-  [lookup users](#action-lookup-users) - Get a list of user resources that match the specified search string <br>
-  [remove watcher](#action-remove-watcher) - Remove a user from an issue's watchers list <br>
-  [set status](#action-set-status) - Set ticket (issue) status <br>
-  [update ticket](#action-update-ticket) - Update ticket (issue)
+[on poll](#action-on-poll) - Ingest Jira issues using the configured container label. <br>
+[add comment](#action-add-comment) - Add a comment to the ticket (issue) <br>
+[add watcher](#action-add-watcher) - Add a user to an issue's watchers list <br>
+[create ticket](#action-create-ticket) - Create a ticket (issue) <br>
+[delete ticket](#action-delete-ticket) - Delete ticket (issue) <br>
+[get attachments](#action-get-attachments) - Gets specific attachments from a Jira Ticket (issue) <br>
+[get ticket](#action-get-ticket) - Get ticket (issue) information <br>
+[link tickets](#action-link-tickets) - Create a link between two separate tickets <br>
+[list projects](#action-list-projects) - List all projects <br>
+[list tickets](#action-list-tickets) - Get a list of tickets (issues) in a specified project <br>
+[lookup users](#action-lookup-users) - Get a list of user resources that match the specified search string <br>
+[remove watcher](#action-remove-watcher) - Remove a user from an issue's watchers list <br>
+[set status](#action-set-status) - Set ticket (issue) status <br>
+[update ticket](#action-update-ticket) - Update ticket (issue)
 
 ## action: 'test connectivity'
 
@@ -376,7 +214,7 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 **query_parameters** | optional | Parameters to append to the URL (JSON object or query string). An example is ?key=value&key2=value2 | string | |
 **body** | optional | The body to send with the request (JSON object). An example is {'key': 'value', 'key2': 'value2'} | string | |
 **timeout** | optional | The timeout for the request in seconds. | numeric | |
-**verify_ssl** | optional | Whether to verify the SSL certificate. Default is False. | boolean | |
+**verify_ssl** | optional | Whether to verify the SSL certificate. Default is True. | boolean | |
 
 #### Action Output
 
@@ -398,18 +236,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 ## action: 'on poll'
 
-Ingest Jira tickets as SOAR containers with field, comment, and attachment artifacts.
-
-State is stored in `asset.ingest_state` (SDK-managed, encrypted at rest):
-
-- `first_run` (bool): True until the first scheduled poll completes.
-- `last_time` (int): UTC epoch seconds of the `updated` field of the last ingested issue.
-
-Three execution modes (mirrors legacy connector):
-
-- Poll Now (params.is_manual_poll()): uses params.container_count as limit; never writes state.
-- First Run (state["first_run"] == True): uses asset.first_run_max_tickets; no time filter.
-- Scheduled (ongoing): uses asset.max_tickets; adds `updated>="..."` JQL filter.
+Ingest Jira issues using the configured container label.
 
 Type: **ingest** <br>
 Read only: **True**
@@ -443,7 +270,7 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
 **id** | required | Issue ID | string | `jira ticket key` |
 **comment** | required | Comment to add | string | |
-**internal** | optional | Whether comment should be internal only or not in Jira Service Desk (if the value is not provided, it will internally be treated as 'false') | boolean | |
+**internal** | optional | Whether comment should be internal only in Jira Service Desk. Defaults to true when omitted. | boolean | |
 
 #### Action Output
 
@@ -698,6 +525,7 @@ action_result.data.\*.fields.worklog.maxResults | numeric | | 20 |
 action_result.data.\*.fields.worklog.startAt | numeric | | 0 |
 action_result.data.\*.fields.worklog.total | numeric | | 0 |
 action_result.data.\*.fields.workratio | numeric | | -1 |
+action_result.data.\*.fields.assignee | string | | |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 
@@ -738,7 +566,7 @@ The function will store specific attachments from a given Jira ticket inside the
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
 **id** | required | The key of the Jira issue | string | `jira ticket key` |
-**retrieve_all** | optional | If this is set to true all attachments will be retrieved from the issue (if the value is not provided, it will internally be treated as 'false') | boolean | |
+**retrieve_all** | optional | If this is set to true all attachments will be retrieved from the issue. Defaults to true when omitted. | boolean | |
 **container_id** | required | The Container ID to associate the file with | string | |
 **extension_filter** | optional | Comma-separated list of file extensions to be returned from the issue | string | |
 
@@ -775,7 +603,7 @@ The keys in the <b>action_result.data.\*.fields</b> output section of the result
 
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**id** | required | Ticket (issue) key | string | `jira ticket key` |
+**id** | required | Ticket (issue) key or numeric ID | string | `jira ticket key` |
 
 #### Action Output
 
@@ -798,9 +626,9 @@ action_result.data.\*.fields.Epic Link | string | | |
 action_result.data.\*.fields.Sprint | string | | com.atlassian.greenhopper.service.sprint.Sprint@6bb9ab97\[id=1,rapidViewId=1,state=ACTIVE,name=MAN Sprint 1,startDate=2017-10-30T16:22:44.954-07:00,endDate=2017-11-13T16:22:00.000-08:00,completeDate=<null>,sequence=1\] |
 action_result.data.\*.fields.aggregateprogress.progress | numeric | | 0 |
 action_result.data.\*.fields.aggregateprogress.total | numeric | | 0 |
-action_result.data.\*.fields.aggregatetimeestimate | numeric | | |
-action_result.data.\*.fields.aggregatetimeoriginalestimate | numeric | | |
-action_result.data.\*.fields.aggregatetimespent | numeric | | |
+action_result.data.\*.fields.aggregatetimeestimate | string | | |
+action_result.data.\*.fields.aggregatetimeoriginalestimate | string | | |
+action_result.data.\*.fields.aggregatetimespent | string | | |
 action_result.data.\*.fields.assignee.accountId | string | `jira user account id` | 5d2ef6ab52a8370c567f27bb |
 action_result.data.\*.fields.assignee.accountType | string | | atlassian |
 action_result.data.\*.fields.assignee.active | boolean | | True False |
@@ -1008,9 +836,9 @@ action_result.data.\*.fields.status.statusCategory.name | string | | Done |
 action_result.data.\*.fields.status.statusCategory.self | string | `url` | http://jira.instance.ip/rest/api/2/statuscategory/3 |
 action_result.data.\*.fields.statuscategorychangedate | string | | 2019-07-22T22:43:07.771-0700 |
 action_result.data.\*.fields.summary | string | | Sample summary |
-action_result.data.\*.fields.timeestimate | numeric | | |
-action_result.data.\*.fields.timeoriginalestimate | numeric | | |
-action_result.data.\*.fields.timespent | numeric | | |
+action_result.data.\*.fields.timeestimate | string | | |
+action_result.data.\*.fields.timeoriginalestimate | string | | |
+action_result.data.\*.fields.timespent | string | | |
 action_result.data.\*.fields.updated | string | | 2018-09-25T06:21:27.802-0700 |
 action_result.data.\*.fields.versions.\*.archived | boolean | | True False |
 action_result.data.\*.fields.versions.\*.id | string | | 10000 |
@@ -1027,6 +855,9 @@ action_result.data.\*.fields.worklog.maxResults | numeric | | 20 |
 action_result.data.\*.fields.worklog.startAt | numeric | | 0 |
 action_result.data.\*.fields.worklog.total | numeric | | 0 |
 action_result.data.\*.fields.workratio | numeric | | -1 |
+action_result.data.\*.fields.assignee | string | | |
+action_result.data.\*.fields.resolution | string | | |
+action_result.data.\*.fields.labels | string | | |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 
@@ -1127,7 +958,7 @@ action_result.data.\*.priority | string | `jira ticket priority` | Medium |
 action_result.data.\*.resolution | string | `jira ticket resolution` | Unresolved |
 action_result.data.\*.reporter | string | `jira user display name` | Test Admin |
 action_result.data.\*.summary | string | | Sub-taskofBigTask |
-action_result.data.\*.description | string | `url` | This is a sample testing description |
+action_result.data.\*.description | string | | This is a sample testing description |
 action_result.data.\*.fields.aggregateprogress.progress | numeric | | 0 |
 action_result.data.\*.fields.aggregateprogress.total | numeric | | 0 |
 action_result.data.\*.fields.aggregatetimeestimate | string | | |
@@ -1167,7 +998,7 @@ action_result.data.\*.fields.creator.key | string | | admin |
 action_result.data.\*.fields.creator.name | string | `user name` | admin |
 action_result.data.\*.fields.creator.self | string | `url` | http://jira.instance.ip/rest/api/2/user?username=admin |
 action_result.data.\*.fields.creator.timeZone | string | | UTC |
-action_result.data.\*.fields.description | string | `url` | This is a sample testing description |
+action_result.data.\*.fields.description | string | | This is a sample testing description |
 action_result.data.\*.fields.duedate | string | | |
 action_result.data.\*.fields.environment | string | | |
 action_result.data.\*.fields.issuelinks.\*.id | string | | 10615 |
@@ -1324,6 +1155,8 @@ action_result.data.\*.fields.worklog.maxResults | numeric | | |
 action_result.data.\*.fields.worklog.startAt | numeric | | |
 action_result.data.\*.fields.worklog.total | numeric | | |
 action_result.data.\*.fields.workratio | numeric | | -1 |
+action_result.data.\*.fields.assignee | string | | |
+action_result.data.\*.fields.resolution | string | | |
 action_result.summary.total_issues | numeric | | 10 |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
@@ -1706,6 +1539,9 @@ action_result.data.\*.fields.worklog.worklogs.\*.updateAuthor.self | string | `u
 action_result.data.\*.fields.worklog.worklogs.\*.updateAuthor.timeZone | string | | UTC |
 action_result.data.\*.fields.worklog.worklogs.\*.updated | string | | 2021-12-06T06:35:45.703+0000 |
 action_result.data.\*.fields.workratio | numeric | | -1 |
+action_result.data.\*.fields.assignee | string | | |
+action_result.data.\*.fields.resolution | string | | |
+action_result.data.\*.fields.labels | string | | |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 
@@ -1749,9 +1585,9 @@ action_result.data.\*.fields.Epic Link | string | | |
 action_result.data.\*.fields.Sprint | string | | com.atlassian.greenhopper.service.sprint.Sprint@6bb9ab97\[id=1,rapidViewId=1,state=ACTIVE,name=MAN Sprint 1,startDate=2017-10-30T16:22:44.954-07:00,endDate=2017-11-13T16:22:00.000-08:00,completeDate=<null>,sequence=1\] |
 action_result.data.\*.fields.aggregateprogress.progress | numeric | | 0 |
 action_result.data.\*.fields.aggregateprogress.total | numeric | | 0 |
-action_result.data.\*.fields.aggregatetimeestimate | numeric | | |
-action_result.data.\*.fields.aggregatetimeoriginalestimate | numeric | | |
-action_result.data.\*.fields.aggregatetimespent | numeric | | |
+action_result.data.\*.fields.aggregatetimeestimate | string | | |
+action_result.data.\*.fields.aggregatetimeoriginalestimate | string | | |
+action_result.data.\*.fields.aggregatetimespent | string | | |
 action_result.data.\*.fields.assignee.accountId | string | `jira user account id` | 5d2ef6ab52a8370c567f27bb |
 action_result.data.\*.fields.assignee.accountType | string | | atlassian |
 action_result.data.\*.fields.assignee.active | boolean | | True False |
@@ -1959,9 +1795,9 @@ action_result.data.\*.fields.status.statusCategory.name | string | | Done |
 action_result.data.\*.fields.status.statusCategory.self | string | `url` | http://jira.instance.ip/rest/api/2/statuscategory/3 |
 action_result.data.\*.fields.statuscategorychangedate | string | | 2019-07-22T22:43:07.771-0700 |
 action_result.data.\*.fields.summary | string | | Sample summary |
-action_result.data.\*.fields.timeestimate | numeric | | |
-action_result.data.\*.fields.timeoriginalestimate | numeric | | |
-action_result.data.\*.fields.timespent | numeric | | |
+action_result.data.\*.fields.timeestimate | string | | |
+action_result.data.\*.fields.timeoriginalestimate | string | | |
+action_result.data.\*.fields.timespent | string | | |
 action_result.data.\*.fields.updated | string | | 2018-09-25T06:49:43.523-0700 |
 action_result.data.\*.fields.versions.\*.archived | boolean | | True False |
 action_result.data.\*.fields.versions.\*.id | string | | 10000 |
@@ -1978,6 +1814,9 @@ action_result.data.\*.fields.worklog.maxResults | numeric | | 20 |
 action_result.data.\*.fields.worklog.startAt | numeric | | 0 |
 action_result.data.\*.fields.worklog.total | numeric | | 0 |
 action_result.data.\*.fields.workratio | numeric | | -1 |
+action_result.data.\*.fields.assignee | string | | |
+action_result.data.\*.fields.resolution | string | | |
+action_result.data.\*.fields.labels | string | | |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 

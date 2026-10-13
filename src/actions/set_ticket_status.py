@@ -24,17 +24,19 @@ from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
+from ..client import JiraClient
 from ..consts import JIRA_ERROR_FIELDS_JSON_PARSE
 from ..helpers import (
     apply_custom_field_names_to_ids,
+    apply_issue_updates,
     description_to_str,
     get_custom_field_map,
     get_custom_field_name_to_id_map,
-    jira_request,
     sanitize_fields_dict,
 )
 from ._outputs import (
     JiraPermissiveOutput,
+    LegacyIssueFieldsOutput,
     AssigneeOutput,
     AttachmentOutput,
     AvatarurlsOutput,
@@ -141,7 +143,7 @@ class WorklogOutput(JiraPermissiveOutput):
     worklogs: list[WorklogsOutput]
 
 
-class FieldsOutput(JiraPermissiveOutput):
+class FieldsOutput(LegacyIssueFieldsOutput):
     Epic_Link: str | None = OutputField(alias="Epic Link")
     Severity: str | None
     Sprint: str | None = OutputField(
@@ -238,9 +240,10 @@ def set_status(
             return obj.get("name") or obj.get("displayName")
         return None
 
+    client = JiraClient(asset)
     try:
-        jira_request(asset, "GET", f"rest/api/2/issue/{params.id}")
-    except ActionFailure as exc:
+        client.issue(params.id)
+    except Exception as exc:
         raise ActionFailure(
             f"Unable to find ticket info. Please make sure the issue exists: {exc}"
         ) from exc
@@ -254,6 +257,11 @@ def set_status(
                 + f": {exc}"
             ) from exc
 
+        if not isinstance(fields, dict):
+            raise ActionFailure("Please provide a valid JSON formatted dictionary")
+        if not fields:
+            raise ActionFailure("The input dictionary seems to be empty")
+
         if "fields" in fields or "update" in fields:
             body = fields
         else:
@@ -261,15 +269,12 @@ def set_status(
 
         # Legacy parity: translate custom-field display names → customfield_XXXXX ids
         body = apply_custom_field_names_to_ids(
-            body, get_custom_field_name_to_id_map(asset)
+            body, get_custom_field_name_to_id_map(asset, params.id)
         )
 
-        jira_request(asset, "PUT", f"rest/api/2/issue/{params.id}", json=body)
+        apply_issue_updates(client, params.id, body)
 
-    transitions_resp = jira_request(
-        asset, "GET", f"rest/api/2/issue/{params.id}/transitions"
-    )
-    transitions = transitions_resp.get("transitions", [])
+    transitions = client.transitions(params.id)
     transition_id = None
     for t in transitions:
         if t.get("name") == params.status:
@@ -283,8 +288,7 @@ def set_status(
         )
 
     if params.resolution:
-        resolutions_resp = jira_request(asset, "GET", "rest/api/2/resolution")
-        resolutions = resolutions_resp if isinstance(resolutions_resp, list) else []
+        resolutions = client.resolutions()
         resolution_id = None
         for r in resolutions:
             if r.get("name") == params.resolution:
@@ -305,34 +309,30 @@ def set_status(
         transition_body = {"transition": {"id": transition_id}}
 
     if params.time_spent:
-        jira_request(
-            asset,
-            "POST",
-            f"rest/api/2/issue/{params.id}/worklog",
-            json={"timeSpent": params.time_spent},
-        )
+        client.add_worklog(params.id, params.time_spent)
 
-    jira_request(
-        asset, "POST", f"rest/api/2/issue/{params.id}/transitions", json=transition_body
+    client.transition_issue(
+        params.id,
+        transition_id,
+        fields=transition_body.get("fields"),
     )
 
+    comment_warning = ""
     # Soft failure — comment on a closed ticket may be rejected
     if params.comment:
         try:
-            jira_request(
-                asset,
-                "POST",
-                f"rest/api/2/issue/{params.id}/comment",
-                json={"body": params.comment},
-            )
+            client.add_comment(params.id, params.comment)
         except ActionFailure as exc:
-            logger.warning(f"Failed to add comment after status transition: {exc}")
+            comment_warning = (
+                f". NOTE: Failed to add comment after status transition: {exc}"
+            )
+            logger.warning(comment_warning)
 
-    issue = jira_request(asset, "GET", f"rest/api/2/issue/{params.id}")
+    issue = client.issue(params.id)
     raw_fields = issue["fields"]
-    custom_field_map = get_custom_field_map(asset)
+    custom_field_map = get_custom_field_map(asset, params.id)
 
-    soar.set_message("The status is updated successfully")
+    soar.set_message("The status is updated successfully" + comment_warning)
     return SetStatusOutput(
         id=issue["id"],
         name=issue["key"],

@@ -11,7 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from collections.abc import Iterator
+
 from soar_sdk.app import App
+from soar_sdk.abstract import SOARClient
+from soar_sdk.params import OnPollParams
+from soar_sdk.models.container import Container
+from soar_sdk.models.artifact import Artifact
+
+from .._asset import Asset
 
 from .add_comment import add_comment
 from .add_watcher import add_watcher
@@ -32,6 +40,16 @@ from .update_ticket import update_ticket
 __all__ = ["register_actions"]
 
 
+class LegacyPollManifestParams(OnPollParams):
+    """Preserve Poll Now's manifest default without changing scheduled runtime inputs."""
+
+    @classmethod
+    def _to_json_schema(cls):
+        schema = super()._to_json_schema()
+        schema["container_count"]["default"] = 1
+        return schema
+
+
 def register_actions(app: App) -> App:
     """Register every Jira action on the given App instance.
 
@@ -42,7 +60,18 @@ def register_actions(app: App) -> App:
     """
     # --- Special SDK hooks ---
     app.make_request()(make_request)
-    app.on_poll()(on_poll)
+
+    @app.on_poll()
+    def poll(
+        params: OnPollParams, soar: SOARClient, asset: Asset
+    ) -> Iterator[Container | Artifact]:
+        """Ingest Jira issues using the configured container label."""
+        ingest = app.actions_manager.get_config().get("ingest") or {}
+        yield from on_poll(
+            params, soar, asset, ingest_label=ingest.get("container_label")
+        )
+
+    poll.meta.parameters = LegacyPollManifestParams
 
     # --- add comment ---
     app.register_action(
@@ -94,6 +123,7 @@ def register_actions(app: App) -> App:
         action=get_ticket,
         description="Get ticket (issue) information",
         action_type="investigate",
+        read_only=True,
         render_as="table",
         verbose="The keys in the <b>action_result.data.*.fields</b> output section of the results can differ based on the JIRA server configuration.",
     )
@@ -113,6 +143,7 @@ def register_actions(app: App) -> App:
         action=list_projects,
         description="List all projects",
         action_type="investigate",
+        read_only=True,
         render_as="table",
         summary_type=ListProjectsSummaryOutput,
     )
@@ -122,6 +153,7 @@ def register_actions(app: App) -> App:
         action=list_tickets,
         description="Get a list of tickets (issues) in a specified project",
         action_type="investigate",
+        read_only=True,
         render_as="table",
         summary_type=ListTicketsSummaryOutput,
         verbose="The default value for the parameter <b>'start_index'</b> is <b>0</b> and for <b>'max_results'</b> is <b>1000</b>. The maximum number of tickets as specified by the parameter <b>'max_results'</b> will be fetched starting from the index specified by the parameter <b>'start_index'</b>.",
@@ -130,8 +162,11 @@ def register_actions(app: App) -> App:
     # --- lookup users ---
     app.register_action(
         action=lookup_users,
+        name="lookup users",
+        identifier="search_users",
         description="Get a list of user resources that match the specified search string",
         action_type="investigate",
+        read_only=True,
         render_as="table",
         summary_type=LookupUsersSummaryOutput,
         verbose="This action will be used to fetch the username of user resources for Jira on-prem and account_id of user resources for Jira cloud. The default value for [max_results] action parameter is <b>1000</b>. The maximum number of users as specified by the parameter [max_results] will be fetched starting from the first.<h3>Caveats</h3>Jira Cloud is removing the username field from user profiles in Atlassian Cloud sites. They are also removing username support from their product APIs for Jira Cloud. Since it is not possible to search users using username for Jira cloud, we will use the user's display name to search users. You can use the [display_name] action parameter to search users for Jira cloud, and, [username] action parameter will be used to search users for Jira on-prem.",
@@ -149,6 +184,8 @@ def register_actions(app: App) -> App:
     # --- set status ---
     app.register_action(
         action=set_status,
+        name="set status",
+        identifier="set_ticket_status",
         description="Set ticket (issue) status",
         action_type="generic",
         read_only=False,

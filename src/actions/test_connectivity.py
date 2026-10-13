@@ -17,7 +17,7 @@ from soar_sdk.logging import getLogger
 
 from .._asset import Asset
 from ..auth import resolve_jira_base_url
-from ..client import call_jira
+from ..client import JiraClient
 from ..consts import (
     JIRA_ERROR_CONNECTIVITY_TEST,
     JIRA_ERROR_SERVER_INFO,
@@ -40,7 +40,7 @@ def run_test_connectivity(soar: SOARClient, asset: Asset) -> None:
     # status, redirect chain and body — which is what diagnoses a 302 (SSO/login
     # interception) vs a real 401/403 auth failure.
     try:
-        response = call_jira("GET", "rest/api/2/myself", asset)
+        response = JiraClient(asset).request("GET", "rest/api/2/myself")
     except ActionFailure as exc:
         raise ActionFailure(
             f"{JIRA_ERROR_CONNECTIVITY_TEST}: {JIRA_ERROR_SERVER_INFO}: {exc.message}",

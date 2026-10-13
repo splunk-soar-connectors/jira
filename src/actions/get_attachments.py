@@ -14,8 +14,6 @@
 import os
 from pathlib import Path
 
-import httpx
-
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import ActionOutput, OutputField
 from soar_sdk.exceptions import ActionFailure
@@ -23,8 +21,8 @@ from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
+from ..client import JiraClient
 from ..consts import JIRA_ERROR_INVALID_FILE_PATH
-from ..helpers import get_auth, jira_request
 
 
 class GetAttachmentsParams(Params):
@@ -34,8 +32,8 @@ class GetAttachmentsParams(Params):
         cef_types=["jira ticket key"],
     )
     retrieve_all: bool | None = Param(
-        description="If this is set to true all attachments will be retrieved from the issue (if the value is not provided, it will internally be treated as 'false')",
-        default=False,
+        description="If this is set to true all attachments will be retrieved from the issue. Defaults to true when omitted.",
+        default=True,
     )
     container_id: str = Param(description="The Container ID to associate the file with")
     extension_filter: str | None = Param(
@@ -73,13 +71,8 @@ def get_attachments(
 ) -> list[GetAttachmentsOutput]:
     logger = getLogger()
 
-    retrieve_all = params.retrieve_all if params.retrieve_all is not None else False
+    retrieve_all = params.retrieve_all if params.retrieve_all is not None else True
     extension_filter = params.extension_filter or ""
-
-    if not retrieve_all and not extension_filter.strip():
-        raise ActionFailure(
-            "Please select retrieve all or pass in a list of extensions"
-        )
 
     allowed_extensions: list[str] = []
     if extension_filter.strip():
@@ -90,30 +83,30 @@ def get_attachments(
         ]
 
     ticket_key = params.id
-    issue = jira_request(
-        asset, "GET", f"rest/api/2/issue/{ticket_key}?fields=attachment"
-    )
+    client = JiraClient(asset)
+    try:
+        issue = client.issue(ticket_key, fields="attachment")
+    except Exception as exc:
+        raise ActionFailure(
+            "Please enter a valid Jira Ticket ID. Please check the provided parameters. "
+            f"{exc}"
+        ) from exc
 
     attachments = (issue.get("fields") or {}).get("attachment") or []
 
     if not attachments:
         logger.info(f"No attachments found on issue {ticket_key}")
-        return [
-            GetAttachmentsOutput(
-                container=float(params.container_id),
-                hash="",
-                id=0.0,
-                message="This issue has no attachments",
-                size=0.0,
-                succeeded=True,
-                vault_id="",
-            )
-        ]
+        soar.set_message(
+            "This issue has no attachments. Please check the Jira Ticket ID"
+        )
+        return []
+
+    if not retrieve_all and not allowed_extensions:
+        raise ActionFailure(
+            "Please select retrieve all or pass in a list of extensions"
+        )
 
     vault_tmp_dir = soar.vault.get_vault_tmp_dir()
-    auth = get_auth(asset)
-    verify = bool(asset.verify_server_cert)
-
     results: list[GetAttachmentsOutput] = []
 
     for attachment in attachments:
@@ -128,27 +121,18 @@ def get_attachments(
             logger.warning("Skipping attachment with empty filename")
             continue
 
-        if allowed_extensions:
-            ext = Path(filename).suffix
-            if ext.lower() not in [e.lower() for e in allowed_extensions]:
-                logger.info(f"Skipping {filename}: extension not in filter")
-                continue
-
         full_path = str(Path(vault_tmp_dir) / filename)
         if not _is_safe_path(vault_tmp_dir, full_path):
-            logger.error(f"{JIRA_ERROR_INVALID_FILE_PATH}: {filename}")
+            raise ActionFailure(f"{JIRA_ERROR_INVALID_FILE_PATH}: {filename}")
+
+        if (
+            allowed_extensions
+            and f".{filename.rsplit('.', 1)[-1]}" not in allowed_extensions
+        ):
             continue
 
         try:
-            with httpx.Client(verify=verify, follow_redirects=True) as client:
-                resp = client.get(
-                    content_url, auth=auth, timeout=60.0, headers={"Accept": "*/*"}
-                )
-            if not resp.is_success:
-                raise ActionFailure(
-                    f"Failed to download attachment: {resp.status_code}"
-                )
-            content = resp.content
+            content = client.download(content_url, attachment_id=str(attachment["id"]))
         except ActionFailure:
             raise
         except Exception as exc:

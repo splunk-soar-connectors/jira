@@ -13,20 +13,16 @@
 # limitations under the License.
 from __future__ import annotations
 
-import re
 from typing import TYPE_CHECKING, Any
 
 import httpx
-
 from soar_sdk.exceptions import ActionFailure
 from soar_sdk.logging import getLogger
 
 from .auth import resolve_jira_auth
-from .client import call_jira
+from .client import JiraClient, validate_issue_id
 from .consts import (
     JIRA_DEFAULT_TIMEOUT,
-    JIRA_RESPONSE_ERROR_MESSAGES_KEY,
-    JIRA_RESPONSE_ERRORS_KEY,
 )
 
 if TYPE_CHECKING:
@@ -42,34 +38,6 @@ def get_auth(asset: Asset) -> httpx.Auth:
     call ``resolve_jira_auth`` from ``src.auth`` directly.
     """
     return resolve_jira_auth(asset)
-
-
-def _parse_jira_error(response: httpx.Response) -> str:
-    """Extract a human-readable error string from a Jira error response body."""
-    content_type = response.headers.get("content-type", "")
-
-    if "json" in content_type:
-        try:
-            body = response.json()
-            parts: list[str] = []
-            error_messages: list[Any] = body.get(JIRA_RESPONSE_ERROR_MESSAGES_KEY) or []
-            parts.extend(str(m) for m in error_messages if m)
-            errors: dict[str, Any] = body.get(JIRA_RESPONSE_ERRORS_KEY) or {}
-            parts.extend(f"{k}: {v}" for k, v in errors.items())
-            if parts:
-                return "; ".join(parts)
-        except Exception:  # noqa: S110
-            pass
-
-    if "xml" in content_type or (response.text or "").lstrip().startswith("<"):
-        # Strip XML tags to extract the readable message
-        text = re.sub(r"<[^>]+>", " ", response.text or "").split()
-        # Drop numeric status code tokens, rejoin
-        readable = " ".join(t for t in text if not t.isdigit())
-        if readable:
-            return readable
-
-    return response.text or f"HTTP {response.status_code}"
 
 
 def description_to_str(value: Any) -> str | None:
@@ -90,14 +58,24 @@ def description_to_str(value: Any) -> str | None:
     return str(value)
 
 
-def get_custom_field_map(asset: Asset) -> dict[str, str]:
-    """Return ``{customfield_XXXXX: "Human Name"}`` for every custom field in the instance.
+def get_custom_field_map(asset: Asset, issue_id: str | None = None) -> dict[str, str]:
+    """Map custom IDs to names using issue edit metadata, or global fields for polling.
 
-    One ``GET rest/api/2/field`` call resolves the opaque ``customfield_*`` IDs
-    to their display names. Falls back to an empty dict on failure so callers
-    degrade gracefully (fields keep their raw IDs) rather than aborting.
+    Failure preserves raw IDs, matching the legacy fallback. Existing-issue
+    actions must pass issue_id so global same-name fields cannot select a
+    field from another issue context.
     """
     try:
+        if issue_id is not None:
+            metadata = jira_request(
+                asset, "GET", f"rest/api/2/issue/{validate_issue_id(issue_id)}/editmeta"
+            )
+            fields = metadata.get("fields") or {}
+            return {
+                field_id: field["name"]
+                for field_id, field in fields.items()
+                if "customfield" in field_id and field.get("name")
+            }
         all_fields = jira_request(asset, "GET", "rest/api/2/field")
         return {
             f["id"]: f["name"]
@@ -109,14 +87,21 @@ def get_custom_field_map(asset: Asset) -> dict[str, str]:
         return {}
 
 
-def get_custom_field_name_to_id_map(asset: Asset) -> dict[str, str]:
+def get_custom_field_name_to_id_map(asset: Asset, issue_id: str) -> dict[str, str]:
     """Return ``{"Human Name": customfield_XXXXX}`` — the inverse of the read map.
 
-    Used on the write path to let clients reference custom fields by display
-    name (legacy parity — see ``_replace_custom_name_with_id``). Falls back to
-    an empty dict on failure so name→id translation is skipped, not fatal.
+    Resolve only the fields editable on this issue. If metadata is unavailable,
+    preserve explicit field IDs. Reject ambiguous names rather than selecting
+    whichever field happened to occur last.
     """
-    return {name: field_id for field_id, name in get_custom_field_map(asset).items()}
+    inverse: dict[str, str] = {}
+    for field_id, name in get_custom_field_map(asset, issue_id).items():
+        if name in inverse:
+            raise ActionFailure(
+                f"Multiple editable custom fields are named '{name}'; use customfield IDs instead"
+            )
+        inverse[name] = field_id
+    return inverse
 
 
 def apply_custom_field_names_to_ids(
@@ -181,13 +166,12 @@ def jira_request(
 ) -> Any:
     """Make an authenticated request to the Jira REST API.
 
-    Delegates the actual transport to :func:`call_jira` and returns the
+    Delegates the actual transport and response parsing to :class:`JiraClient` and returns the
     parsed JSON body. Raises ActionFailure on HTTP errors or network failures.
     """
-    response = call_jira(
+    return JiraClient(asset).request_json(
         method,
         endpoint,
-        asset,
         params=params,
         json=json,
         data=data,
@@ -196,14 +180,46 @@ def jira_request(
         timeout=timeout,
     )
 
-    if not response.is_success:
-        error_msg = _parse_jira_error(response)
-        raise ActionFailure(f"Jira API error {response.status_code}: {error_msg}")
 
-    if not response.content:
-        return {}
+def apply_issue_updates(client: JiraClient, issue_id: str, payload: dict) -> None:
+    """Apply wrappers then simple fields, retaining the legacy request order."""
+    for wrapper in ("fields", "update"):
+        if wrapper in payload and not isinstance(payload[wrapper], dict):
+            raise ActionFailure(f"'{wrapper}' must be a JSON formatted dictionary")
+    if "fields" in payload:
+        client.update_issue(issue_id, fields=payload["fields"])
+    if "update" in payload:
+        client.update_issue(issue_id, update=payload["update"])
+    remaining = {
+        key: value for key, value in payload.items() if key not in ("fields", "update")
+    }
+    if remaining:
+        client.update_issue(issue_id, fields=remaining)
 
+
+def upload_vault_attachment(
+    client: JiraClient, issue_id: str, soar, vault_id: str
+) -> None:
+    """Select the current container association and retry Unicode names on failure."""
+    attachments = soar.vault.get_attachment(vault_id=vault_id)
+    if not attachments:
+        raise ActionFailure("File not found in vault")
+    container_id = soar.get_executing_container_id()
+    meta = next(
+        (item for item in attachments if item.container_id == container_id),
+        attachments[0],
+    )
     try:
-        return response.json()
-    except Exception as exc:
-        raise ActionFailure(f"Failed to parse Jira response as JSON: {exc}") from exc
+        with open(meta.path, "rb") as handle:
+            client.add_attachment(issue_id, handle, meta.name)
+    except Exception:
+        ascii_name = (
+            meta.name.encode("ascii", "ignore")
+            .decode("ascii")
+            .replace("\r", " ")
+            .replace("\n", " ")
+        )
+        if len(ascii_name) >= len(meta.name):
+            raise
+        with open(meta.path, "rb") as handle:
+            client.add_attachment(issue_id, handle, f"FILENAME_ASCII_{ascii_name}")

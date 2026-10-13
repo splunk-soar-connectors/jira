@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import re
-
 from soar_sdk.abstract import SOARClient
 from soar_sdk.action_results import (
     ActionOutput,
@@ -23,15 +21,15 @@ from soar_sdk.exceptions import ActionFailure
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
-from ..consts import JIRA_ERROR_INVALID_ISSUE_KEY
+from ..client import JiraClient
 from ..helpers import (
     description_to_str,
     get_custom_field_map,
-    jira_request,
     sanitize_fields_dict,
 )
 from ._outputs import (
     JiraPermissiveOutput,
+    LegacyIssueFieldsOutput,
     AggregateprogressOutput,
     AssigneeOutput,
     AttachmentOutput,
@@ -56,7 +54,9 @@ from ._outputs import (
 
 class GetTicketParams(Params):
     id: str = Param(
-        description="Ticket (issue) key", primary=True, cef_types=["jira ticket key"]
+        description="Ticket (issue) key or numeric ID",
+        primary=True,
+        cef_types=["jira ticket key"],
     )
 
 
@@ -101,7 +101,16 @@ class IssuelinksOutput(JiraPermissiveOutput):
     type: TypeOutput
 
 
-class FieldsOutput(JiraPermissiveOutput):
+class FieldsOutput(LegacyIssueFieldsOutput):
+    legacy_string_fields = (
+        "aggregatetimeestimate",
+        "aggregatetimeoriginalestimate",
+        "aggregatetimespent",
+        "timeestimate",
+        "timeoriginalestimate",
+        "timespent",
+    )
+
     Epic_Link: str | None = OutputField(alias="Epic Link")
     Sprint: str | None = OutputField(
         example_values=[
@@ -198,14 +207,14 @@ def get_ticket(
             return obj.get("name") or obj.get("displayName")
         return None
 
-    if not re.fullmatch(
-        r"[A-Z][A-Z0-9_]*-[1-9][0-9]*", params.id, flags=re.ASCII | re.IGNORECASE
-    ):
-        raise ActionFailure(JIRA_ERROR_INVALID_ISSUE_KEY)
-
-    issue = jira_request(asset, "GET", f"rest/api/2/issue/{params.id}")
+    try:
+        issue = JiraClient(asset).issue(params.id)
+    except ActionFailure:
+        raise
+    except Exception as exc:
+        raise ActionFailure(f"Failed to get ticket info: {exc}") from exc
     raw_fields = issue["fields"]
-    custom_field_map = get_custom_field_map(asset)
+    custom_field_map = get_custom_field_map(asset, params.id)
 
     soar.set_message("The ticket has been retrieved successfully")
     return GetTicketOutput(

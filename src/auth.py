@@ -17,11 +17,9 @@
 
 Jira normally authenticates with HTTP Basic Auth: the username (Jira Cloud
 email or on-prem username) plus the password (Jira Cloud API token or
-on-prem password). Atlassian service accounts (username ending in
-``@serviceaccount.atlassian.com``) issue scoped tokens that reject Basic Auth
-entirely — per Atlassian's docs, these authenticate as a Bearer token against
-the ``api.atlassian.com`` gateway (``/ex/jira/{cloud_id}/...``) instead of the
-site's own domain.
+on-prem password). Atlassian service-account API tokens also use Basic Auth,
+but must be sent to the ``api.atlassian.com`` gateway
+(``/ex/jira/{cloud_id}/...``) instead of the site's own domain.
 
 Atlassian service accounts can alternatively authenticate via OAuth 2.0
 client credentials (``client_id``/``client_secret``), which is the preferred
@@ -38,6 +36,7 @@ coupled for service accounts and OAuth.
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+from urllib.parse import urlsplit
 
 import httpx
 
@@ -67,6 +66,10 @@ _CLOUD_ID_STATE_KEY = "jira_cloud_id"
 
 def is_oauth_configured(asset: Asset) -> bool:
     """Whether OAuth 2.0 client credentials are configured for this asset."""
+    if bool(asset.client_id) != bool(asset.client_secret):
+        raise ActionFailure(
+            "Configure both client_id and client_secret for OAuth authentication"
+        )
     return bool(asset.client_id and asset.client_secret)
 
 
@@ -74,10 +77,7 @@ def is_service_account(asset: Asset) -> bool:
     """Whether the configured username is an Atlassian service account."""
     username = asset.username or ""
     result = username.lower().endswith(JIRA_SERVICE_ACCOUNT_USERNAME_SUFFIX)
-    logger.info(
-        f"[auth] is_service_account check: username={username!r} suffix="
-        f"{JIRA_SERVICE_ACCOUNT_USERNAME_SUFFIX!r} -> {result}"
-    )
+    logger.info(f"[auth] is_service_account check -> {result}")
     return result
 
 
@@ -110,22 +110,23 @@ def resolve_jira_auth(asset: Asset) -> httpx.Auth:
     """Return the httpx auth for Jira, or raise if credentials are missing.
 
     OAuth client credentials (``client_id``/``client_secret``) take priority
-    when configured. Otherwise, service accounts (see
-    :func:`is_service_account`) authenticate with ``password`` sent as a
-    Bearer token, since Atlassian's scoped service-account tokens reject
-    Basic Auth. Everyone else uses standard Basic Auth (``Authorization:
-    Basic <base64(username:password)>``). Raises ``ActionFailure`` (not a
-    bare exception) when no credentials are configured, so SOAR shows a
-    clean error instead of a traceback.
+    when configured and use a Bearer access token. API tokens, including
+    service-account API tokens, use Basic Auth
+    (``Authorization: Basic <base64(username:password)>``). Raises
+    ``ActionFailure`` (not a bare exception) when no credentials are
+    configured, so SOAR shows a clean error instead of a traceback.
     """
     if is_oauth_configured(asset):
         return _resolve_oauth_auth(asset)
+    if asset.password and not asset.username:
+        logger.info("[auth] resolve_jira_auth: using StaticTokenAuth (Bearer)")
+        return StaticTokenAuth(asset.password)
     if not (asset.username and asset.password):
         logger.info("[auth] resolve_jira_auth: no credentials configured")
         raise ActionFailure(JIRA_CONFIG_PARAMS_REQUIRED)
     if is_service_account(asset):
-        logger.info("[auth] resolve_jira_auth: using StaticTokenAuth (Bearer)")
-        return StaticTokenAuth(asset.password)
+        logger.info("[auth] resolve_jira_auth: using BasicAuth for service account")
+        return BasicAuth(asset.username, asset.password)
     logger.info("[auth] resolve_jira_auth: using BasicAuth")
     return BasicAuth(asset.username, asset.password)
 
@@ -147,6 +148,25 @@ def resolve_jira_base_url(asset: Asset) -> str:
             f"[auth] resolve_jira_base_url: not a service account or OAuth client, using {site_url}"
         )
         return site_url
+
+    configured = urlsplit(site_url)
+    gateway_prefix = "/ex/jira/"
+    if (
+        configured.scheme == "https"
+        and configured.netloc.lower() == "api.atlassian.com"
+        and configured.path.startswith(gateway_prefix)
+    ):
+        cloud_id = configured.path[len(gateway_prefix) :]
+        if (
+            cloud_id
+            and "/" not in cloud_id
+            and not configured.query
+            and not configured.fragment
+        ):
+            return site_url
+        raise ActionFailure(
+            "Invalid Jira gateway URL; use https://api.atlassian.com/ex/jira/{cloudId}"
+        )
 
     cached = asset.auth_state.get(_CLOUD_ID_STATE_KEY)
     if cached:

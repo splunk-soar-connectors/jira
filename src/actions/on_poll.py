@@ -16,7 +16,8 @@ from collections.abc import Iterator
 from datetime import UTC, datetime
 from zoneinfo import ZoneInfo
 
-import httpx as _httpx
+from pathlib import Path
+from tempfile import NamedTemporaryFile
 
 from soar_sdk.abstract import SOARClient
 from soar_sdk.exceptions import ActionFailure
@@ -32,13 +33,12 @@ from ..consts import (
     JIRA_LIMIT_VALIDATION_MESSAGE,
     JIRA_TIME_FORMAT,
 )
-from ..helpers import get_auth
+from ..client import JiraClient
 from .on_poll_helpers import (
     _build_attachment_artifact,
     _build_comment_artifact,
     _build_fields_artifact,
     _build_jql,
-    _fetch_all_comments,
     _get_existing_artifact,
     _get_global_custom_field_map,
     _migrate_legacy_ingest_state,
@@ -59,8 +59,36 @@ def _parse_dt(value: str) -> datetime:
     return datetime.fromisoformat(value)
 
 
+def _save_poll_attachment(
+    client: JiraClient, soar: SOARClient, container_id: int, attachment: dict
+) -> str:
+    """Stream to a unique temporary file, import it, and clean up on every exit."""
+    with NamedTemporaryFile(
+        dir=soar.vault.get_vault_tmp_dir(), delete=False
+    ) as temporary:
+        path = Path(temporary.name)
+    try:
+        client.download_to_file(
+            attachment.get("content", ""),
+            str(path),
+            attachment_id=str(attachment["id"]),
+            timeout=120.0,
+        )
+        return soar.vault.add_attachment(
+            container_id=container_id,
+            file_location=str(path),
+            file_name=attachment.get("filename", "attachment"),
+        )
+    finally:
+        path.unlink(missing_ok=True)
+
+
 def on_poll(
-    params: OnPollParams, soar: SOARClient, asset: Asset
+    params: OnPollParams,
+    soar: SOARClient,
+    asset: Asset,
+    *,
+    ingest_label: str | None = None,
 ) -> Iterator[Container | Artifact]:
     """Ingest Jira tickets as SOAR containers with field, comment, and attachment artifacts.
 
@@ -73,7 +101,13 @@ def on_poll(
       - First Run (state["first_run"] == True): uses asset.first_run_max_tickets; no time filter.
       - Scheduled (ongoing): uses asset.max_tickets; adds `updated>="..."` JQL filter.
     """
+    if params.container_count is not None and params.container_count <= 0:
+        raise ActionFailure(
+            JIRA_LIMIT_VALIDATION_MESSAGE.format(parameter="container_count")
+        )
+
     state = asset.ingest_state
+    client = JiraClient(asset)
     _migrate_legacy_ingest_state(asset)
 
     # `first_run` defaults True so a missing key = treat as first run.
@@ -87,16 +121,22 @@ def on_poll(
     is_manual = params.is_manual_poll()
 
     if is_manual:
-        # Poll Now: SOAR passes the user-supplied count; fall back to 100
-        limit = int(
-            params.container_count or DEFAULT_SCHEDULED_INTERVAL_INGESTION_COUNT
-        )
+        # Preserve the legacy Poll Now default when SOAR does not supply a count.
+        limit = int(params.container_count if params.container_count is not None else 1)
         limit_param_name = "container_count"
     elif first_run:
-        limit = int(asset.first_run_max_tickets or 1000)
+        limit = int(
+            asset.first_run_max_tickets
+            if asset.first_run_max_tickets is not None
+            else 1000
+        )
         limit_param_name = "first_run_max_tickets"
     else:
-        limit = int(asset.max_tickets or DEFAULT_SCHEDULED_INTERVAL_INGESTION_COUNT)
+        limit = int(
+            asset.max_tickets
+            if asset.max_tickets is not None
+            else DEFAULT_SCHEDULED_INTERVAL_INGESTION_COUNT
+        )
         limit_param_name = "max_tickets"
 
     if limit <= 0:
@@ -193,6 +233,7 @@ def on_poll(
                 description=fields.get("summary") or "",
                 source_data_identifier=issue_key,
                 data=issue,
+                label=ingest_label,
             )
             yield new_container
             container_id = (
@@ -205,6 +246,7 @@ def on_poll(
                 logger.warning(
                     f"Failed to create container for {issue_key}; skipping its artifacts"
                 )
+                failed += 1
                 if issue_updated_utc > last_updated_utc:
                     last_updated_utc = issue_updated_utc
                 continue
@@ -215,37 +257,29 @@ def on_poll(
                     art.container_id = container_id
                     content_url = attachment.get("content", "")
                     if content_url:
-                        with _httpx.Client(
-                            verify=bool(asset.verify_server_cert), follow_redirects=True
-                        ) as hclient:
-                            dl = hclient.get(
-                                content_url, auth=get_auth(asset), timeout=120.0
-                            )
-                        if dl.is_success:
-                            vault_id = soar.vault.create_attachment(
-                                container_id=container_id,
-                                file_content=dl.content,
-                                file_name=attachment.get("filename", "attachment"),
-                            )
-                            art.cef = {**(art.cef or {}), "vault_id": vault_id}
+                        vault_id = _save_poll_attachment(
+                            client, soar, container_id, attachment
+                        )
+                        art.cef = {**(art.cef or {}), "vault_id": vault_id}
                     yield art
                 except Exception as exc:
+                    attachment_id = str(attachment.get("id") or "unknown ID")
                     logger.warning(
-                        f"Failed to ingest attachment for {issue_key}: {exc}"
+                        f"Failed to ingest attachment {attachment_id!r} for {issue_key}: {exc}"
                     )
+                    failed += 1
 
-            # _fetch_all_comments handles the case where search/jql truncated the list
-            for comment in _fetch_all_comments(
-                asset, issue_key, fields.get("comment") or {}
-            ):
+            for comment in (fields.get("comment") or {}).get("comments") or []:
                 try:
                     art = _build_comment_artifact(comment)
-                    art.container_id = container_id
-                    yield art
                 except Exception as exc:
                     logger.warning(
                         f"Failed to build comment artifact for {issue_key}: {exc}"
                     )
+                    failed += 1
+                    continue
+                art.container_id = container_id
+                yield art
 
             try:
                 fields_art = _build_fields_artifact(issue, cf_map, custom_fields_list)
@@ -258,10 +292,16 @@ def on_poll(
                 failed += 1
 
         else:
-            soar.post(
+            container_response = soar.post(
                 f"rest/container/{container_id}",
                 json={"data": issue, "description": fields.get("summary") or ""},
             )
+            body = container_response.json() if container_response.is_success else {}
+            if not container_response.is_success or body.get("failed"):
+                raise ActionFailure(
+                    f"Failed to update Jira container {container_id}: "
+                    f"HTTP {container_response.status_code}: {body.get('failed', '')}"
+                )
 
             artifact_batch: list[Artifact] = []
 
@@ -275,29 +315,19 @@ def on_poll(
                     art.container_id = container_id
                     content_url = attachment.get("content", "")
                     if content_url:
-                        with _httpx.Client(
-                            verify=bool(asset.verify_server_cert), follow_redirects=True
-                        ) as hclient:
-                            dl = hclient.get(
-                                content_url, auth=get_auth(asset), timeout=120.0
-                            )
-                        if dl.is_success:
-                            vault_id = soar.vault.create_attachment(
-                                container_id=container_id,
-                                file_content=dl.content,
-                                file_name=attachment.get("filename", "attachment"),
-                            )
-                            art.cef = {**(art.cef or {}), "vault_id": vault_id}
+                        vault_id = _save_poll_attachment(
+                            client, soar, container_id, attachment
+                        )
+                        art.cef = {**(art.cef or {}), "vault_id": vault_id}
                     artifact_batch.append(art)
                 except Exception as exc:
+                    attachment_id = str(attachment.get("id") or "unknown ID")
                     logger.warning(
-                        f"Failed to ingest attachment for {issue_key}: {exc}"
+                        f"Failed to ingest attachment {attachment_id!r} for {issue_key}: {exc}"
                     )
+                    failed += 1
 
-            # _fetch_all_comments handles truncation from search/jql *all response
-            for comment in _fetch_all_comments(
-                asset, issue_key, fields.get("comment") or {}
-            ):
+            for comment in (fields.get("comment") or {}).get("comments") or []:
                 comment_sdi = str(comment.get("id", ""))
                 existing_artifact = _get_existing_artifact(
                     soar, container_id, comment_sdi
@@ -332,6 +362,7 @@ def on_poll(
                     logger.warning(
                         f"Failed to build comment artifact for {issue_key}: {exc}"
                     )
+                    failed += 1
 
             # Same SDI (issue key) overwrites the previous fields artifact
             try:
@@ -350,11 +381,11 @@ def on_poll(
         if issue_updated_utc > last_updated_utc:
             last_updated_utc = issue_updated_utc
 
+    if failed:
+        raise ActionFailure(JIRA_ERROR_FAILED)
+
     if not is_manual:
         if issues and last_updated_utc > 0:
             # Store as UTC epoch int — unambiguous, no time.mktime(local timetuple) drift
             state["last_time"] = last_updated_utc
         state["first_run"] = False
-
-    if failed:
-        raise ActionFailure(JIRA_ERROR_FAILED)

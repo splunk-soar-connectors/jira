@@ -24,26 +24,25 @@ from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
 from .._asset import Asset
+from ..client import JiraClient
 from ..consts import (
     JIRA_ASSIGNEE_ERROR,
     JIRA_ERROR_ATTACH_FAILED,
+    JIRA_ERROR_CREATE_TICKET_FAILED,
     JIRA_ERROR_FIELDS_JSON_PARSE,
-    JIRA_ERROR_FILE_NOT_IN_VAULT,
     JIRA_ERROR_GET_TICKET,
     JIRA_ERROR_INPUT_FIELDS_NOT_THE_ONLY_ONE,
     JIRA_ERROR_TICKET_ASSIGNMENT_FAILED,
     JIRA_SUCCESS_TICKET_CREATED,
 )
 from ..helpers import (
-    apply_custom_field_names_to_ids,
     description_to_str,
     get_custom_field_map,
-    get_custom_field_name_to_id_map,
-    jira_request,
+    upload_vault_attachment,
     sanitize_fields_dict,
 )
 from ._outputs import (
-    JiraPermissiveOutput,
+    LegacyIssueFieldsOutput,
     AggregateprogressOutput,
     AssigneeOutput,
     AttachmentOutput,
@@ -95,7 +94,9 @@ class CreateTicketParams(Params):
     )
 
 
-class FieldsOutput(JiraPermissiveOutput):
+class FieldsOutput(LegacyIssueFieldsOutput):
+    legacy_whole_fields = ("assignee",)
+
     Epic_Link: str | None = OutputField(alias="Epic Link")
     Epic_Name: str | None = OutputField(example_values=["Test epic"], alias="Epic Name")
     Severity: str | None
@@ -199,10 +200,15 @@ def create_ticket(
                 f"{JIRA_ERROR_FIELDS_JSON_PARSE.format(field_name='fields')}: {exc}"
             ) from exc
 
+        if not isinstance(fields, dict):
+            raise ActionFailure("Please provide a valid JSON formatted dictionary")
+
         if "fields" in fields:
             if len(fields) > 1:
                 raise ActionFailure(JIRA_ERROR_INPUT_FIELDS_NOT_THE_ONLY_ONE)
             fields = fields["fields"]
+            if not isinstance(fields, dict):
+                raise ActionFailure("Please provide a valid JSON formatted dictionary")
 
     if params.project_key and "project" not in fields:
         fields["project"] = {"key": params.project_key}
@@ -215,13 +221,13 @@ def create_ticket(
     if params.priority and "priority" not in fields:
         fields["priority"] = {"name": params.priority}
 
-    # Legacy parity: translate custom-field display names → customfield_XXXXX ids
-    fields = apply_custom_field_names_to_ids(
-        {"fields": fields}, get_custom_field_name_to_id_map(asset)
-    )["fields"]
-
     logger.info("Creating Jira ticket")
-    new_issue = jira_request(asset, "POST", "rest/api/2/issue", json={"fields": fields})
+    client = JiraClient(asset)
+    try:
+        new_issue = client.create_issue(fields)
+    except Exception as exc:
+        raise ActionFailure(f"{JIRA_ERROR_CREATE_TICKET_FAILED}. {exc}") from exc
+
     issue_key = new_issue.get("key")
     issue_id = new_issue.get("id")
     logger.info(f"Created ticket {issue_key}")
@@ -229,14 +235,17 @@ def create_ticket(
     assign_error = ""
     attach_error = ""
 
-    if params.assignee_account_id:
+    if params.assignee:
         try:
-            jira_request(
-                asset,
-                "PUT",
-                f"rest/api/2/issue/{issue_key}/assignee",
-                json={"accountId": params.assignee_account_id},
+            client.assign_issue(issue_key, params.assignee)
+        except Exception as exc:
+            assign_error = JIRA_ERROR_TICKET_ASSIGNMENT_FAILED.format(
+                params.assignee, str(exc)
             )
+            logger.warning(assign_error)
+    elif params.assignee_account_id:
+        try:
+            client.assign_issue(issue_key, params.assignee_account_id, account_id=True)
         except ActionFailure as exc:
             assign_error = JIRA_ERROR_TICKET_ASSIGNMENT_FAILED.format(
                 params.assignee_account_id, str(exc)
@@ -245,27 +254,7 @@ def create_ticket(
 
     if params.vault_id:
         try:
-            attachments = soar.vault.get_attachment(vault_id=params.vault_id)
-            if not attachments:
-                attach_error = JIRA_ERROR_FILE_NOT_IN_VAULT
-            else:
-                meta = attachments[0]
-                filename = meta.name
-                file_path = meta.path
-
-                # Strip non-ASCII from filename if needed (avoids Jira 500 on unicode filenames)
-                ascii_name = filename.encode("ascii", "ignore").decode("ascii")
-                if len(ascii_name) < len(filename):
-                    filename = f"FILENAME_ASCII_{ascii_name}"
-
-                with open(file_path, "rb") as f:
-                    jira_request(
-                        asset,
-                        "POST",
-                        f"rest/api/2/issue/{issue_key}/attachments",
-                        files={"file": (filename, f, "application/octet-stream")},
-                        headers={"X-Atlassian-Token": "no-check"},
-                    )
+            upload_vault_attachment(client, issue_key, soar, params.vault_id)
         except ActionFailure as exc:
             attach_error = JIRA_ERROR_ATTACH_FAILED.format(str(exc))
             logger.warning(attach_error)
@@ -274,12 +263,12 @@ def create_ticket(
             logger.warning(attach_error)
 
     try:
-        issue = jira_request(asset, "GET", f"rest/api/2/issue/{issue_key}")
-    except ActionFailure as exc:
+        issue = client.issue(issue_key)
+    except Exception as exc:
         raise ActionFailure(f"{JIRA_ERROR_GET_TICKET}: {exc}") from exc
 
     raw_fields = issue.get("fields", {})
-    custom_field_map = get_custom_field_map(asset)
+    custom_field_map = get_custom_field_map(asset, issue_key)
 
     def _name(obj):
         if isinstance(obj, dict):
