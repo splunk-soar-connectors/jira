@@ -2536,14 +2536,14 @@ class JiraConnector(phantom.BaseConnector):
 
         # If it's the first poll, don't filter based on update time
         elif state.get("first_run", True):
-            max_tickets = int(config.get("first_run_max_tickets", DEFAULT_SCHEDULED_INTERVAL_INGESTION_COUNT))
+            max_tickets = config.get("first_run_max_tickets", DEFAULT_SCHEDULED_INTERVAL_INGESTION_COUNT)
             max_tickets = self._validate_integers(action_result, max_tickets, "first_run_max_tickets config")
             if max_tickets is None:
                 return action_result.get_status()
 
         # If it's scheduled polling add a filter for update time being greater than the last poll time
         else:
-            max_tickets = int(config.get("max_tickets", DEFAULT_SCHEDULED_INTERVAL_INGESTION_COUNT))
+            max_tickets = config.get("max_tickets", DEFAULT_SCHEDULED_INTERVAL_INGESTION_COUNT)
             max_tickets = self._validate_integers(action_result, max_tickets, "max_tickets config")
             if max_tickets is None:
                 return action_result.get_status()
