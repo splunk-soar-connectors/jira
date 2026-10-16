@@ -1785,10 +1785,12 @@ class JiraConnector(phantom.BaseConnector):
     def _handle_comment(self, comment, container_id, base_name, artifact_list, action_result):
         try:
             artifact_json = {}
+            author_info = getattr(comment, "author", None)
+            update_author_info = getattr(comment, "updateAuthor", None)
 
             try:
-                author = comment.author.name
-                updateAuthor = comment.updateAuthor.name
+                author = author_info.name if author_info is not None else "Unknown"
+                updateAuthor = update_author_info.name if update_author_info is not None else "Unknown"
                 author_account_id = None
                 updateAuthor_account_id = None
                 is_on_prem = True
@@ -1797,11 +1799,29 @@ class JiraConnector(phantom.BaseConnector):
                     "Error occurred while fetching author name as server is Jira cloud. \
                     So try to fetch author display name and account ID"
                 )
-                author = comment.author.displayName
-                updateAuthor = comment.updateAuthor.displayName
-                author_account_id = comment.author.accountId
-                updateAuthor_account_id = comment.updateAuthor.accountId
+                author = author_info.displayName if author_info is not None else "Unknown"
+                updateAuthor = update_author_info.displayName if update_author_info is not None else "Unknown"
+                author_account_id = author_info.accountId if author_info is not None else None
+                updateAuthor_account_id = update_author_info.accountId if update_author_info is not None else None
                 is_on_prem = False
+
+            if author_info is None or update_author_info is None:
+                raw_comment = getattr(comment, "raw", None)
+                self.debug_print(
+                    "Jira comment identity metadata unavailable.",
+                    {
+                        "comment_id": comment.id,
+                        "container_id": container_id,
+                        "author_missing": author_info is None,
+                        "update_author_missing": update_author_info is None,
+                        "author_field_present": "author" in raw_comment if isinstance(raw_comment, dict) else None,
+                        "update_author_field_present": "updateAuthor" in raw_comment if isinstance(raw_comment, dict) else None,
+                    },
+                )
+                self.debug_print(
+                    f"Jira raw comment with unavailable identity. Comment: {comment.id}; container: {container_id}",
+                    raw_comment,
+                )
 
             artifact_json["name"] = f"{base_name} by {author}"
             artifact_json["label"] = "comment"
@@ -1813,7 +1833,8 @@ class JiraConnector(phantom.BaseConnector):
             artifact_cef["body"] = comment.body
             artifact_cef["created"] = comment.created
             artifact_cef["updated"] = comment.updated
-            artifact_cef["is_on_prem"] = is_on_prem
+            if author_info is not None or update_author_info is not None:
+                artifact_cef["is_on_prem"] = is_on_prem
             artifact_cef["author"] = author
             artifact_cef["author_account_id"] = author_account_id
             artifact_cef["updateAuthor"] = updateAuthor
@@ -2243,8 +2264,8 @@ class JiraConnector(phantom.BaseConnector):
                         self.debug_print(f"Issue key: {issue.key}. {action_result.get_message()}")
                         self.save_progress(f"Issue key: {issue.key}. {action_result.get_message()}")
                         return phantom.APP_ERROR
-        except Exception:
-            pass
+        except Exception as e:
+            self.debug_print(f"Jira ingestion ignored attachment update exception. Issue: {issue.key}; container: {container_id}", e)
 
         try:
             for comment in issue.fields.comment.comments:
@@ -2295,8 +2316,8 @@ class JiraConnector(phantom.BaseConnector):
                         self.save_progress(f"Issue key: {issue.key}. {action_result.get_message()}")
                         return phantom.APP_ERROR
 
-        except Exception:
-            pass
+        except Exception as e:
+            self.debug_print(f"Jira ingestion ignored comment update exception. Issue: {issue.key}; container: {container_id}", e)
 
         artifact_json = self._build_fields_artifact(issue, container_id, action_result)
 
@@ -2310,8 +2331,26 @@ class JiraConnector(phantom.BaseConnector):
         if artifact_list:
             ret_val, message, _resp = self.save_artifacts(artifact_list)
 
+            if isinstance(_resp, list):
+                for result_index, result in enumerate(_resp):
+                    if isinstance(result, dict):
+                        outcome = {
+                            key: result[key]
+                            for key in ("id", "artifact_id", "existing_artifact_id", "success", "failed", "duplicate", "message", "error")
+                            if key in result
+                        }
+                    else:
+                        outcome = {"artifact_id": result} if isinstance(result, (int, str)) else {"returned_type": type(result).__name__}
+                    self.debug_print(
+                        f"Jira artifact result. Issue: {issue.key}; container: {container_id}; result index: {result_index}; batch return: {ret_val}",
+                        outcome,
+                    )
+
             if not ret_val:
-                self.debug_print("Error saving the artifact: ", message)
+                self.debug_print(
+                    f"Error saving Jira artifacts. Issue: {issue.key}; container: {container_id}; return value: {ret_val}",
+                    message,
+                )
                 action_result.set_status(phantom.APP_ERROR, "Error occurred while saving the artifact. Error message: {0}", message)
                 return phantom.APP_ERROR
 
@@ -2355,8 +2394,8 @@ class JiraConnector(phantom.BaseConnector):
                     self.debug_print(f"Issue key: {issue.key}. {action_result.get_message()}")
                     self.save_progress(f"Issue key: {issue.key}. {action_result.get_message()}")
                     return phantom.APP_ERROR
-        except Exception:
-            pass
+        except Exception as e:
+            self.debug_print(f"Jira ingestion ignored attachment creation exception. Issue: {issue.key}; container: {container_id}", e)
 
         # Check for and save comments as artifacts
         try:
@@ -2367,8 +2406,8 @@ class JiraConnector(phantom.BaseConnector):
                     self.debug_print(f"Issue key: {issue.key}. {action_result.get_message()}")
                     self.save_progress(f"Issue key: {issue.key}. {action_result.get_message()}")
                     return phantom.APP_ERROR
-        except Exception:
-            pass
+        except Exception as e:
+            self.debug_print(f"Jira ingestion ignored comment creation exception. Issue: {issue.key}; container: {container_id}", e)
 
         # Create the main artifact of the container that will hold the ticket's fields
         artifact_json = self._build_fields_artifact(issue, container_id, action_result)
@@ -2382,7 +2421,26 @@ class JiraConnector(phantom.BaseConnector):
 
         ret_val, _message, _resp = self.save_artifacts(artifact_list)
 
+        if isinstance(_resp, list):
+            for result_index, result in enumerate(_resp):
+                if isinstance(result, dict):
+                    outcome = {
+                        key: result[key]
+                        for key in ("id", "artifact_id", "existing_artifact_id", "success", "failed", "duplicate", "message", "error")
+                        if key in result
+                    }
+                else:
+                    outcome = {"artifact_id": result} if isinstance(result, (int, str)) else {"returned_type": type(result).__name__}
+                self.debug_print(
+                    f"Jira artifact result. Issue: {issue.key}; container: {container_id}; result index: {result_index}; batch return: {ret_val}",
+                    outcome,
+                )
+
         if not ret_val:
+            self.debug_print(
+                f"Error saving Jira artifacts. Issue: {issue.key}; container: {container_id}; return value: {ret_val}",
+                _message,
+            )
             return phantom.APP_ERROR
 
         return phantom.APP_SUCCESS
@@ -2478,14 +2536,14 @@ class JiraConnector(phantom.BaseConnector):
 
         # If it's the first poll, don't filter based on update time
         elif state.get("first_run", True):
-            max_tickets = int(config.get("first_run_max_tickets", DEFAULT_SCHEDULED_INTERVAL_INGESTION_COUNT))
+            max_tickets = config.get("first_run_max_tickets", DEFAULT_SCHEDULED_INTERVAL_INGESTION_COUNT)
             max_tickets = self._validate_integers(action_result, max_tickets, "first_run_max_tickets config")
             if max_tickets is None:
                 return action_result.get_status()
 
         # If it's scheduled polling add a filter for update time being greater than the last poll time
         else:
-            max_tickets = int(config.get("max_tickets", DEFAULT_SCHEDULED_INTERVAL_INGESTION_COUNT))
+            max_tickets = config.get("max_tickets", DEFAULT_SCHEDULED_INTERVAL_INGESTION_COUNT)
             max_tickets = self._validate_integers(action_result, max_tickets, "max_tickets config")
             if max_tickets is None:
                 return action_result.get_status()
@@ -2522,6 +2580,7 @@ class JiraConnector(phantom.BaseConnector):
                 failed += 1
 
         if failed:
+            self.debug_print("Jira ingestion failed; checkpoint not saved.", {"failed_issues": failed, "last_time": state.get("last_time")})
             return action_result.set_status(phantom.APP_ERROR, JIRA_ERROR_FAILED)
 
         if not self.is_poll_now() and issues:
