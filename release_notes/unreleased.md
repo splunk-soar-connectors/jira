@@ -2,4 +2,3 @@
 
 * Fixed scheduled ingestion failures when Jira comments omit author or updater metadata.
 * Applied the documented defaults when optional polling limits are missing or null: 1000 tickets for the first poll and 100 for subsequent scheduled polls.
-* Added native debug diagnostics for polling limits, comment identity metadata, artifact saves and retained checkpoints.
