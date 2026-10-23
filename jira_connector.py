@@ -1785,10 +1785,12 @@ class JiraConnector(phantom.BaseConnector):
     def _handle_comment(self, comment, container_id, base_name, artifact_list, action_result):
         try:
             artifact_json = {}
+            author_info = getattr(comment, "author", None)
+            update_author_info = getattr(comment, "updateAuthor", None)
 
             try:
-                author = comment.author.name
-                updateAuthor = comment.updateAuthor.name
+                author = author_info.name if author_info is not None else "Unknown"
+                updateAuthor = update_author_info.name if update_author_info is not None else "Unknown"
                 author_account_id = None
                 updateAuthor_account_id = None
                 is_on_prem = True
@@ -1797,10 +1799,10 @@ class JiraConnector(phantom.BaseConnector):
                     "Error occurred while fetching author name as server is Jira cloud. \
                     So try to fetch author display name and account ID"
                 )
-                author = comment.author.displayName
-                updateAuthor = comment.updateAuthor.displayName
-                author_account_id = comment.author.accountId
-                updateAuthor_account_id = comment.updateAuthor.accountId
+                author = author_info.displayName if author_info is not None else "Unknown"
+                updateAuthor = update_author_info.displayName if update_author_info is not None else "Unknown"
+                author_account_id = author_info.accountId if author_info is not None else None
+                updateAuthor_account_id = update_author_info.accountId if update_author_info is not None else None
                 is_on_prem = False
 
             artifact_json["name"] = f"{base_name} by {author}"
@@ -1813,7 +1815,8 @@ class JiraConnector(phantom.BaseConnector):
             artifact_cef["body"] = comment.body
             artifact_cef["created"] = comment.created
             artifact_cef["updated"] = comment.updated
-            artifact_cef["is_on_prem"] = is_on_prem
+            if author_info is not None or update_author_info is not None:
+                artifact_cef["is_on_prem"] = is_on_prem
             artifact_cef["author"] = author
             artifact_cef["author_account_id"] = author_account_id
             artifact_cef["updateAuthor"] = updateAuthor
@@ -2478,14 +2481,18 @@ class JiraConnector(phantom.BaseConnector):
 
         # If it's the first poll, don't filter based on update time
         elif state.get("first_run", True):
-            max_tickets = int(config.get("first_run_max_tickets", DEFAULT_SCHEDULED_INTERVAL_INGESTION_COUNT))
+            max_tickets = config.get("first_run_max_tickets")
+            if max_tickets is None:
+                max_tickets = DEFAULT_MAX_VALUE
             max_tickets = self._validate_integers(action_result, max_tickets, "first_run_max_tickets config")
             if max_tickets is None:
                 return action_result.get_status()
 
         # If it's scheduled polling add a filter for update time being greater than the last poll time
         else:
-            max_tickets = int(config.get("max_tickets", DEFAULT_SCHEDULED_INTERVAL_INGESTION_COUNT))
+            max_tickets = config.get("max_tickets")
+            if max_tickets is None:
+                max_tickets = DEFAULT_SCHEDULED_INTERVAL_INGESTION_COUNT
             max_tickets = self._validate_integers(action_result, max_tickets, "max_tickets config")
             if max_tickets is None:
                 return action_result.get_status()
