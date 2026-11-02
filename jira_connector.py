@@ -308,44 +308,6 @@ class JiraConnector(phantom.BaseConnector):
 
         return error_text
 
-    def _load_state(self):
-        dirpath = os.path.split(os.path.abspath(__file__))[0]
-        asset_id = self.get_asset_id()
-        state_file_path = f"{dirpath}/{asset_id}_state.json"
-
-        state = {}
-
-        try:
-            with open(state_file_path) as f:
-                in_json = f.read()
-                state = json.loads(in_json)
-        except Exception as e:
-            error_text = self._get_error_message_from_exception(e)
-            self.debug_print(f"In _load_state: Exception: {error_text}")
-
-        self.debug_print("Loaded state: ", state)
-
-        return state
-
-    def _save_state(self, state):
-        self.debug_print("Saving state: ", state)
-
-        dirpath = os.path.split(os.path.abspath(__file__))[0]
-        asset_id = self.get_asset_id()
-        state_file_path = f"{dirpath}/{asset_id}_state.json"
-
-        if not state_file_path:
-            self.debug_print("state_file_path is None in _save_state")
-            return phantom.APP_SUCCESS
-
-        try:
-            with open(state_file_path, "w+") as f:
-                f.write(json.dumps(state))
-        except Exception:
-            pass
-
-        return phantom.APP_SUCCESS
-
     def _set_jira_error(self, result_object, message, e):
         # Newer versions of Jira API may not include the error messages in
         # e.text. Instead, these messages are included in e.response,
@@ -2404,11 +2366,7 @@ class JiraConnector(phantom.BaseConnector):
         if phantom.is_fail(self._create_jira_object(action_result)):
             return action_result.get_status()
 
-        # Check for load_state API, use it if it is present
-        if hasattr(self, "load_state"):
-            state = self.load_state()
-        else:
-            state = self._load_state()
+        state = self.load_state()
 
         # Get config
         config = self.get_config()
@@ -2417,10 +2375,7 @@ class JiraConnector(phantom.BaseConnector):
             self.debug_print(JIRA_ERROR_STATE_FILE_CORRUPT_ERROR)
             self.save_progress(JIRA_ERROR_STATE_FILE_CORRUPT_ERROR)
             state = {"app_version": self.get_app_json().get("app_version")}
-            if hasattr(self, "save_state"):
-                self.save_state(state)
-            else:
-                self._save_state(state)
+            self.save_state(state)
             return action_result.set_status(phantom.APP_ERROR, JIRA_ERROR_STATE_FILE_CORRUPT_ERROR)
 
         # Get time from last poll, save now as time for this poll
@@ -2552,11 +2507,7 @@ class JiraConnector(phantom.BaseConnector):
         if not self.is_poll_now():
             state["first_run"] = False
 
-        # Check for save_state API, use it if it is present
-        if hasattr(self, "save_state"):
-            self.save_state(state)
-        else:
-            self._save_state(state)
+        self.save_state(state)
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
